@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: demo
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/next_level
+    username: root
+    password: root
+
+jwt:
+  secret: very-very-strong-secret-key
+  access-token-time: 360 # 60 * 60 1??
+  refresh-token-time: 604800 # 60 * 60 * 24 * 7 1??

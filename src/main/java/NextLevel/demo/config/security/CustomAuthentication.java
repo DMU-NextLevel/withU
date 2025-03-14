@@ -1,0 +1,59 @@
+package NextLevel.demo.config.security;
+
+import NextLevel.demo.role.UserRole;
+import java.util.Collection;
+import java.util.List;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+
+public class CustomAuthentication implements Authentication {
+    private Collection<? extends GrantedAuthority> authorities;
+    private Long principal;
+
+    public CustomAuthentication(Long userId, String role) {
+        principal = userId;
+        authorities = UserRole.getRole(role).getAuthorities();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+    @Override
+    public Object getPrincipal() {
+        return principal;
+    }
+
+    // no uses
+    @Override
+    public Object getCredentials() {
+        return null;
+    }
+    @Override
+    public Object getDetails() {
+        return null;
+    }
+    @Override
+    public boolean isAuthenticated() {
+        return true;
+    }
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+    }
+    @Override
+    public boolean equals(Object another) {
+        return false;
+    }
+    @Override
+    public String toString() {
+        return "";
+    }
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+    @Override
+    public String getName() {
+        return "";
+    }
+}
