@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +43,9 @@ public class RefreshTokenFilter extends CustomTokenFilter {
             SecurityContextHolder.getContext().setAuthentication(new CustomAuthentication(userId, dbUser.getRole()));
 
             // publish new access token
-
+            Map<String, String>puts = new HashMap<>();
+            puts.put("ip", getIpFromRequest(request));
+            jwtUtil.addAccess(response, userId, puts);
         }
 
         filterChain.doFilter(request, response);

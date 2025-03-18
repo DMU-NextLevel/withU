@@ -41,7 +41,10 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// mybatis
-	implementation("org.mybatis:mybatis:3.5.16")
+	implementation 'org.mybatis:mybatis:3.5.16'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'  // JDBC 지원
 }
 
 tasks.named('test') {

@@ -7,6 +7,10 @@ spring:
     username: root
     password: root
 
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: NextLevel.demo.repository
+
 jwt:
   secret: very-very-strong-secret-key
   access-token-time: 360 # 60 * 60 1??

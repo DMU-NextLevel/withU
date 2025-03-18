@@ -5,6 +5,8 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,9 +18,9 @@ public class JWTUtil {
     @Value("${jwt.secret}")
     private String SECRET;
     @Value("${jwt.access-token-time}")
-    public static Long ACCESS_TOKEN_TIME;
+    public static int ACCESS_TOKEN_TIME;
     @Value("${jwt.refresh-token-time}")
-    public static Long REFRESH_TOKEN_TIME;
+    public static int REFRESH_TOKEN_TIME;
 
     public static final String ACCESS_TOKEN = "access";
     public static final String REFRESH_TOKEN = "refresh";
@@ -27,7 +29,17 @@ public class JWTUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String makeToken(String userId, Map<String, String> claims, Long time) {
+    public void addAccess(HttpServletResponse response, Long userId, Map<String, String> claims) {
+        String token = makeToken(userId.toString(), claims, ACCESS_TOKEN_TIME);
+        response.addCookie(createCookie(ACCESS_TOKEN, token, ACCESS_TOKEN_TIME));
+    }
+
+    public void addRefresh(HttpServletResponse response, Long userId, Map<String, String> claims) {
+        String token = makeToken(userId.toString(), claims, REFRESH_TOKEN_TIME);
+        response.addCookie(createCookie(REFRESH_TOKEN, token, REFRESH_TOKEN_TIME));
+    }
+
+    private String makeToken(String userId, Map<String, String> claims, int time) {
         JwtBuilder builder = Jwts.builder().setSubject(userId);
 
         claims.forEach((k, v) -> builder.claim(k, v));
@@ -53,5 +65,13 @@ public class JWTUtil {
         }
 
         return claims;
+    }
+
+    private Cookie createCookie(String object, String token, int age){
+        Cookie cookie = new Cookie(object, token);
+        cookie.setHttpOnly(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(age);
+        return cookie;
     }
 }

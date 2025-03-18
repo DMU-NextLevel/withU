@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="NextLevel.demo.repository">
+
+  <select id="findUserDetailByUserId" resultType="UserDetail">
+    SELECT id, password, role, social_provider, social_pk, uuid as UUID, email
+    FROM user_detail
+    WHERE id = #{userId}
+  </select>
+
+  <insert id="insertUser" useGeneratedKeys="true" parameterType="User">
+    insert into user(id, name, address, number)
+    values(#{user.id} #{user.name}, #{user.address}, #{user.number})
+  </insert>
+
+  <insert id="insertUserDetail" parameterType="UserDetail">
+    insert into user(id, role, uuid, email, password, social_provider, social_id)
+    values(#{userDetail.id} #{userDetail.role}, #{userDetail.UUID}, #{userDetail.email}, #{userDetail.password}, #{userDetail.social_provider}, #{userDetail.social_id})
+  </insert>
+
+</mapper>
