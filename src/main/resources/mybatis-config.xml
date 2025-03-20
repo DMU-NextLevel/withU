@@ -17,6 +17,6 @@
 
   <mappers>
     <!-- XML 매퍼 등록 -->
-    <mapper resource="NextLevel.demo.repository.UserRepository"/>
+    <mapper resource="NextLevel.demo.myBatisRepository.UserRepository"/>
   </mappers>
 </configuration>

@@ -1,4 +1,21 @@
 package NextLevel.demo.oauth;
 
-public class OAuthFailureHandler {
+import NextLevel.demo.exception.CustomException;
+import NextLevel.demo.exception.ErrorCode;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+
+public class OAuthFailureHandler implements AuthenticationFailureHandler {
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+        AuthenticationException exception) throws IOException, ServletException {
+        exception.printStackTrace();
+
+        throw new CustomException(ErrorCode.LOGIN_FAILED);
+    }
 }

@@ -1,12 +1,12 @@
-package NextLevel.demo.service;
+package NextLevel.demo.oauth;
 
 import NextLevel.demo.dto.UserDto.RequestUserCreateDto;
 import NextLevel.demo.entity.UserDetailEntity;
+import NextLevel.demo.entity.UserEntity;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.repository.UserDetailRepository;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,12 +27,9 @@ public class SocialLoginService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = super.loadUser(userRequest).getAttributes();
         String social_provider = userRequest.getClientRegistration().getRegistrationId();
 
-        log.info("social_provider=%s", social_provider);
-        attributes.keySet().forEach(key -> log.info("%s : %s", key, attributes.get(key)));
+        RequestUserCreateDto requestDto = getInfoFromSocialProvider(social_provider, attributes);
 
-        userDetailRepository.findBySocialId("id");
-
-        return new PrincipalDetails
+        return new NextLevel.demo.oauth.OAuth2User(requestDto);
     }
 
     private RequestUserCreateDto getInfoFromSocialProvider(String socialProvider, Map<String, Object> attributes) {
@@ -42,26 +39,30 @@ public class SocialLoginService extends DefaultOAuth2UserService {
         switch (socialProvider) {
             case "google":
                 return builder
-                    .socialId()
-                    .address()
-                    .email()
-                    .number()
+                    .socialId((String)attributes.get("id"))
+                    .email((String) attributes.get("email"))
+                    .name((String) attributes.get("name"))
+                    .nickName((String) attributes.get("given_name"))
+                    .img((String) attributes.get("picture"))
                     .build();
 
             case "naver":
+                Map<String, Object> response = (Map<String, Object>) attributes.get("response");
                 return builder
-                    .socialId()
-                    .address()
-                    .email()
-                    .number()
+                    .socialId((String) response.get("id"))
+                    .name((String) response.get("name"))
+                    .nickName((String) response.get("nickname"))
+                    .email((String) response.get("email"))
+                    .number((String) response.get("mobile"))
+                    .img((String) response.get("profile_image"))
                     .build();
 
             case "kakao":
                 return builder
-                    .socialId()
-                    .address()
-                    .email()
-                    .number()
+                    .socialId(String.valueOf(attributes.get("id")))
+                    .email((String) ((Map<String, Object>) attributes.get("kakao_account")).get("email"))
+                    .nickName((String) ((Map<String, Object>)attributes.get("properties")).get("nickname"))
+                    .img((String) ((Map<String, Object>)attributes.get("properties")).get("profile_image"))
                     .build();
 
             default:

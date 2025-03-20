@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public enum UserRole {
+    SOCIAL("ROLE_SOCIAL") ,
     USER("ROLE_USER") ,
     ADMIN("ROLE_ADMIN", "ROLE_USER");
 

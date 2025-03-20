@@ -2,26 +2,25 @@ package NextLevel.demo.config.security;
 
 import NextLevel.demo.role.UserRole;
 import java.util.Collection;
-import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 public class CustomAuthentication implements Authentication {
     private Collection<? extends GrantedAuthority> authorities;
-    private Long principal;
+    private Long userId;
 
     public CustomAuthentication(Long userId, String role) {
-        principal = userId;
+        this.userId = userId;
         authorities = UserRole.getRole(role).getAuthorities();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
     @Override
     public Object getPrincipal() {
-        return principal;
+        return userId;
     }
 
     // no uses

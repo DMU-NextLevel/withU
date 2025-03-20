@@ -12,7 +12,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JWTUtil {
 
     @Value("${jwt.secret}")
@@ -29,12 +31,18 @@ public class JWTUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public void addAccess(HttpServletResponse response, Long userId, Map<String, String> claims) {
+    public void addAccess(HttpServletResponse response, Long userId, String ip, String role) {
+        HashMap<String, String> claims = new HashMap<>();
+        claims.put("ip", ip);
+        claims.put("role", role);
         String token = makeToken(userId.toString(), claims, ACCESS_TOKEN_TIME);
         response.addCookie(createCookie(ACCESS_TOKEN, token, ACCESS_TOKEN_TIME));
     }
 
-    public void addRefresh(HttpServletResponse response, Long userId, Map<String, String> claims) {
+    public void addRefresh(HttpServletResponse response, Long userId, String uuid) {
+        HashMap<String, String> claims = new HashMap<>();
+        claims.put("uuid", uuid);
+
         String token = makeToken(userId.toString(), claims, REFRESH_TOKEN_TIME);
         response.addCookie(createCookie(REFRESH_TOKEN, token, REFRESH_TOKEN_TIME));
     }
