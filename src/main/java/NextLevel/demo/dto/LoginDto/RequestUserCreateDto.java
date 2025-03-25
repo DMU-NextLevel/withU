@@ -1,4 +1,4 @@
-package NextLevel.demo.dto.UserDto;
+package NextLevel.demo.dto.LoginDto;
 
 import NextLevel.demo.entity.UserDetailEntity;
 import NextLevel.demo.entity.UserEntity;
@@ -40,7 +40,7 @@ public class RequestUserCreateDto {
     }
 
     public UserEntity toUserEntity() {
-        return new UserEntity(name, 0, address, number);
+        return new UserEntity(name,nickName, 0, address, number, img);
     }
 
     public UserDetailEntity toUserDetailEntity(Long id){

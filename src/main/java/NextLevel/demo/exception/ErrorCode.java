@@ -6,6 +6,10 @@ public enum ErrorCode {
     // login
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "Login failed"),
 
+    // no authentication
+    NEED_ADDITIONAL_DATA(HttpStatus.FORBIDDEN, "Additional data required"),
+    NO_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "No authentication please login"),
+
     // 시발 이게 뭐지? error
     SIBAL_WHAT_IS_IT(HttpStatus.INTERNAL_SERVER_ERROR, "알지 모르는 error 발생 : %s"),
 

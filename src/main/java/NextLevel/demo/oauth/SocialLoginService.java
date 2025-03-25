@@ -1,8 +1,6 @@
 package NextLevel.demo.oauth;
 
-import NextLevel.demo.dto.UserDto.RequestUserCreateDto;
-import NextLevel.demo.entity.UserDetailEntity;
-import NextLevel.demo.entity.UserEntity;
+import NextLevel.demo.dto.LoginDto.RequestUserCreateDto;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.repository.UserDetailRepository;

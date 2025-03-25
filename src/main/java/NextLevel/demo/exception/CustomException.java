@@ -1,6 +1,8 @@
 package NextLevel.demo.exception;
 
-public class CustomException extends RuntimeException {
+import NextLevel.demo.config.security.AuthenticationException;
+
+public class CustomException extends AuthenticationException {
     public ErrorCode errorCode;
 
     public CustomException(ErrorCode errorCode, String... args) {

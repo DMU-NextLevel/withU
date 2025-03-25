@@ -26,6 +26,9 @@ public class UserEntity {
     private String name;
 
     @Column(nullable = false)
+    private String nickName;
+
+    @Column(nullable = false)
     @ColumnDefault("'0'")
     private int point;
 
@@ -35,13 +38,18 @@ public class UserEntity {
     @Column(nullable = false)
     private String number;
 
+    @Column(nullable = false)
+    private String img;
+
     @OneToOne(mappedBy = "user")
     UserDetailEntity userDetail;
 
-    public UserEntity(String name, int point, String address, String number) {
+    public UserEntity(String name,String nickName, int point, String address, String number, String img) {
         this.name = name;
+        this.nickName = nickName;
         this.point = point;
         this.address = address;
         this.number = number;
+        this.img = img;
     }
 }

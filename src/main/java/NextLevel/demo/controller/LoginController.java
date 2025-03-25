@@ -1,8 +1,8 @@
 package NextLevel.demo.controller;
 
-import NextLevel.demo.dto.UserDto.RequestUserCreateDto;
-import NextLevel.demo.dto.UserDto.RequestUserLoginDto;
-import NextLevel.demo.service.UserService;
+import NextLevel.demo.dto.LoginDto.RequestUserCreateDto;
+import NextLevel.demo.dto.LoginDto.RequestUserLoginDto;
+import NextLevel.demo.service.LoginService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/public/login")
 @RequiredArgsConstructor
 public class LoginController {
-    private final UserService userService;
+    private final LoginService loginService;
 
     @PutMapping
     public ResponseEntity<?> register(@RequestBody RequestUserCreateDto requestUserCreateDto, HttpServletResponse httpServletResponse) {
-        userService.register(requestUserCreateDto, httpServletResponse);
+        loginService.register(requestUserCreateDto, httpServletResponse);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("");
     }
 
     @PostMapping
     public ResponseEntity<?> login(@RequestBody RequestUserLoginDto requestUserLogin, HttpServletResponse httpServletResponse) {
-        userService.login(requestUserLogin, httpServletResponse);
+        loginService.login(requestUserLogin, httpServletResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body("");
     }

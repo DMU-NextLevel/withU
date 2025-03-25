@@ -1,30 +1,45 @@
 package NextLevel.demo.config;
 
+import NextLevel.demo.config.security.filter.AccessTokenFilter;
+import NextLevel.demo.config.security.filter.RefreshTokenFilter;
+import NextLevel.demo.exception.CustomException;
+import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.oauth.OAuthFailureHandler;
 import NextLevel.demo.oauth.OAuthSuccessHandler;
 import NextLevel.demo.oauth.SocialLoginService;
-import NextLevel.demo.repository.UserDetailRepository;
-import NextLevel.demo.service.UserService;
-import NextLevel.demo.util.JWTUtil;
+import NextLevel.demo.service.LoginService;
+import NextLevel.demo.util.jwt.JWTUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserService userService;
+    private final JWTUtil jwtUtil;
+    private final LoginService loginService;
     private final SocialLoginService socialLoginService;
+
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        OAuthSuccessHandler oAuthSuccessHandler = new OAuthSuccessHandler(userService);
+        OAuthSuccessHandler oAuthSuccessHandler = new OAuthSuccessHandler(loginService);
         OAuthFailureHandler oAuthFailureHandler = new OAuthFailureHandler();
 
         http
@@ -34,9 +49,12 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안함
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login/**").permitAll()
+                .requestMatchers("/login/**").permitAll() // social login 요청 url
                 .requestMatchers("/public/**").permitAll() // 특정 경로만 허용
-                .anyRequest().authenticated() // 그 외 요청은 인증 필요
+                .requestMatchers("/payment/**").permitAll()
+                .requestMatchers("/api1/**").hasRole("USER")
+                .requestMatchers("/social/**").hasRole("SOCIAL")
+                .anyRequest().denyAll() // 그 외 요청은 모두 거절
             )
 
             .oauth2Login((social) -> social
@@ -46,14 +64,29 @@ public class SecurityConfig {
                 .failureHandler(oAuthFailureHandler)
             )
 
-            //.addFilterBefore(, )
+            .addFilterBefore(refreshTokenFilter(), LogoutFilter.class) // 2 번쨰
+            .addFilterBefore(accessTokenFilter(), RefreshTokenFilter.class) // 1 번째
 
-//            .exceptionHandling((exceptions) -> exceptions
-//                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-//                .accessDeniedHandler(new CustomAccessDeniedHandler()))
+            .exceptionHandling((exceptions) -> exceptions
+                .authenticationEntryPoint((request, response, authenticationException)->{
+                    handlerExceptionResolver.resolveException(request, response, null, new CustomException(ErrorCode.NO_AUTHENTICATED));
+                })
+                .accessDeniedHandler((request, response, accessDeniedException)-> {
+                    handlerExceptionResolver.resolveException(request, response, null, new CustomException(ErrorCode.NEED_ADDITIONAL_DATA));
+                })
+            )
 
             ;
 
         return http.build();
+    }
+
+    @Bean
+    public AccessTokenFilter accessTokenFilter() {
+        return new AccessTokenFilter(jwtUtil);
+    }
+    @Bean
+    public RefreshTokenFilter refreshTokenFilter() {
+        return new RefreshTokenFilter(jwtUtil, loginService);
     }
 }
