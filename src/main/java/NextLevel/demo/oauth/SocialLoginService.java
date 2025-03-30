@@ -1,9 +1,10 @@
 package NextLevel.demo.oauth;
 
-import NextLevel.demo.dto.LoginDto.RequestUserCreateDto;
+import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
-import NextLevel.demo.repository.UserDetailRepository;
+import NextLevel.demo.user.repository.UserDetailRepository;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class SocialLoginService extends DefaultOAuth2UserService {
 
     private final UserDetailRepository userDetailRepository;
+    private final ImgService imgService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -41,7 +43,7 @@ public class SocialLoginService extends DefaultOAuth2UserService {
                     .email((String) attributes.get("email"))
                     .name((String) attributes.get("name"))
                     .nickName((String) attributes.get("given_name"))
-                    .img((String) attributes.get("picture"))
+                    .imgEntity(imgService.saveSocialImg((String)attributes.get("picture")))
                     .build();
 
             case "naver":
@@ -52,7 +54,7 @@ public class SocialLoginService extends DefaultOAuth2UserService {
                     .nickName((String) response.get("nickname"))
                     .email((String) response.get("email"))
                     .number((String) response.get("mobile"))
-                    .img((String) response.get("profile_image"))
+                    .imgEntity(imgService.saveSocialImg((String) response.get("profile_image")))
                     .build();
 
             case "kakao":
@@ -60,7 +62,7 @@ public class SocialLoginService extends DefaultOAuth2UserService {
                     .socialId(String.valueOf(attributes.get("id")))
                     .email((String) ((Map<String, Object>) attributes.get("kakao_account")).get("email"))
                     .nickName((String) ((Map<String, Object>)attributes.get("properties")).get("nickname"))
-                    .img((String) ((Map<String, Object>)attributes.get("properties")).get("profile_image"))
+                    .imgEntity(imgService.saveSocialImg((String) ((Map<String, Object>)attributes.get("properties")).get("profile_image")))
                     .build();
 
             default:

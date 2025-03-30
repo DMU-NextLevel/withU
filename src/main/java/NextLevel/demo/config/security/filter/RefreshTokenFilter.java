@@ -1,8 +1,8 @@
 package NextLevel.demo.config.security.filter;
 
 import NextLevel.demo.config.security.CustomAuthentication;
-import NextLevel.demo.entity.UserDetailEntity;
-import NextLevel.demo.service.LoginService;
+import NextLevel.demo.user.entity.UserDetailEntity;
+import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import NextLevel.demo.util.jwt.NoTokenException;
 import NextLevel.demo.util.jwt.StrangeTokenException;

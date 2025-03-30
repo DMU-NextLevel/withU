@@ -1,6 +1,6 @@
 package NextLevel.demo.oauth;
 
-import NextLevel.demo.service.LoginService;
+import NextLevel.demo.user.service.LoginService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,6 +1,6 @@
 package NextLevel.demo.oauth;
 
-import NextLevel.demo.dto.LoginDto.RequestUserCreateDto;
+import NextLevel.demo.user.dto.RequestUserCreateDto;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

@@ -1,5 +1,6 @@
 package NextLevel.demo.entity;
 
+import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
