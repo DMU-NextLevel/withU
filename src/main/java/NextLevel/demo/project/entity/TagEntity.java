@@ -1,4 +1,4 @@
-package NextLevel.demo.entity;
+package NextLevel.demo.project.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

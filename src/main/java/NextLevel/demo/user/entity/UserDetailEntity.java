@@ -53,7 +53,16 @@ public class UserDetailEntity {
         this.socialId = socialId;
     }
 
+    // used at user info update
+    public UserDetailEntity(Long id, String UUID, String role, String email) {
+        this.id = id;
+        this.UUID = UUID;
+        this.email = email;
+        this.role = role;
+    }
+
     public void setRole(String role) {
         this.role = role;
     }
+    public void setEmail(String email) {this.email = email;}
 }

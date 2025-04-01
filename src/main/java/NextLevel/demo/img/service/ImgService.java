@@ -51,9 +51,9 @@ public class ImgService {
 
             return saved;
         }catch (Exception e){
-            log.error(e.getMessage());
+            e.printStackTrace();
             log.info("save img fail");
-            throw new CustomException(ErrorCode.ERROR_ON_SAVE_IMG);
+            return null;
         }
     }
 
@@ -63,8 +63,11 @@ public class ImgService {
     }
 
     public void deleteImg(ImgEntity img) {
+        if(img == null)
+            return;
+        
         try {
-            Files.delete(Paths.get(System.getProperty("user.dir") ,IMG_DEFAULT_PATH, img.getUri()));
+            Files.deleteIfExists(Paths.get(System.getProperty("user.dir") ,IMG_DEFAULT_PATH, img.getUri()));
         } catch (IOException e) {
             log.info(e.getMessage());
             throw new CustomException(ErrorCode.ERROR_ON_DELETE_IMG);

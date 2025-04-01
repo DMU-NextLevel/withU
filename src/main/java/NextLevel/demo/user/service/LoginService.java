@@ -32,13 +32,20 @@ public class LoginService {
     // user UserController : post register
     @Transactional
     public UserDetailEntity register(RequestUserCreateDto requestUserCreateDto) {
-        if(userDetailRepository.findByEmail(requestUserCreateDto.getEmail()).isPresent())
-            throw new CustomException(ErrorCode.ALREADY_EXISTS);
+        checkEmailIsNotExist(requestUserCreateDto.getEmail());
+
+        if(requestUserCreateDto.validateAllData())
+            requestUserCreateDto.setRole(UserRole.USER.name());
 
         UserEntity user = userRepository.save(requestUserCreateDto.toUserEntity());
         UserDetailEntity userDetail = userDetailRepository.save(requestUserCreateDto.toUserDetailEntity(user.getId()));
 
         return userDetail;
+    }
+
+    public void checkEmailIsNotExist(String email) {
+        if(userDetailRepository.findByEmail(email).isPresent())
+            throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
     }
 
     @Transactional

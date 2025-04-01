@@ -33,6 +33,8 @@ public class RequestUserCreateDto {
     private MultipartFile img;
     private ImgEntity imgEntity;
 
+    private String role = UserRole.SOCIAL.name();
+
     @Builder
     public RequestUserCreateDto(Long id, String name, String nickName, String email, String address, String number,
         String password, String socialProvider, String socialId, ImgEntity imgEntity) {
@@ -53,7 +55,14 @@ public class RequestUserCreateDto {
     }
 
     public UserDetailEntity toUserDetailEntity(Long id){
-        return new UserDetailEntity(id, UUID.randomUUID().toString(), UserRole.USER.name(), email, password, socialProvider, socialId);
+        return new UserDetailEntity(id, UUID.randomUUID().toString(), role, email, password, socialProvider, socialId);
+    }
+
+    public boolean validateAllData() {
+        if(name != null && !name.isEmpty() && nickName != null && !nickName.isEmpty()
+            && address != null && !address.isEmpty() && number != null && !number.isEmpty())
+            return true;
+        return false;
     }
 
     @Override

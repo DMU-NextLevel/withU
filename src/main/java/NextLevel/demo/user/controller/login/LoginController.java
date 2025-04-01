@@ -9,6 +9,8 @@ import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +33,10 @@ public class LoginController {
 
     @PutMapping
     public ResponseEntity<?> register(
-        @ModelAttribute RequestUserCreateDto requestUserCreateDto,
+        @ModelAttribute @Valid RequestUserCreateDto requestUserCreateDto,
         HttpServletResponse httpServletResponse) {
+
+        loginService.checkEmailIsNotExist(requestUserCreateDto.getEmail());
 
         // save img get uri
         ImgEntity savedImg = imgService.saveImg(requestUserCreateDto.getImg());
@@ -47,7 +51,7 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<?> login(
-        @RequestBody RequestUserLoginDto requestUserLoginDto,
+        @RequestBody @Valid RequestUserLoginDto requestUserLoginDto,
         HttpServletResponse httpServletResponse) {
 
         UserDetailEntity user = loginService.login(requestUserLoginDto);

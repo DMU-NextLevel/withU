@@ -16,11 +16,13 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "user")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
     @Id
@@ -43,8 +45,8 @@ public class UserEntity {
     @Column(nullable = false)
     private String number;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "imgId")
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST}, optional = true)
+    @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
 
     @OneToOne(mappedBy = "user")

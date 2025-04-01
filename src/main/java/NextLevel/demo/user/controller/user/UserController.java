@@ -6,20 +6,18 @@ import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.dto.user.ResponseUserInfoDto;
 import NextLevel.demo.user.entity.UserEntity;
+import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.user.service.UserService;
 import NextLevel.demo.util.jwt.JWTUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
     private final ImgService imgService;
+    private final LoginService loginService;
 
     @GetMapping
     public ResponseEntity<?> getUserInfo() {
@@ -40,14 +39,9 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUserInfo(@ModelAttribute RequestUserCreateDto dto) {
+    public ResponseEntity<?> updateUserInfo(@ModelAttribute @Valid RequestUserCreateDto dto) {
         Long userId = JWTUtil.getUserIdFromSecurityContext();
         dto.setId(userId);
-
-        UserEntity oldUser = userService.getUserInfo(userId);
-
-        ImgEntity updatedImg = imgService.updateImg(dto.getImg(), oldUser.getImg());
-        dto.setImgEntity(updatedImg);
 
         userService.updateUserInfo(dto);
 

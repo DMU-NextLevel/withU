@@ -43,6 +43,8 @@ public class AccessTokenFilter extends CustomTokenFilter {
             SecurityContextHolder.getContext()
                 .setAuthentication(new CustomAuthentication(userId, role));
 
+            log.info("access token :: success");
+
         } catch (NoTokenException | StrangeTokenException e) {
             log.info("access token fail");
         } catch (Exception e) {

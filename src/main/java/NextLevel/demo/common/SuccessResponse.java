@@ -7,14 +7,11 @@ import lombok.Getter;
 public class SuccessResponse {
 
     private String message;
-    private Map<String, Object> data;
+    private Object data;
 
     public SuccessResponse(String message, Object data) {
         this.message = message;
-        if(data != null)
-            this.data = Map.of("data", data);
-        else
-            this.data = Map.of("data", "null");
+        this.data = data;
     }
 
 }

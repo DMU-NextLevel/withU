@@ -1,5 +1,6 @@
-package NextLevel.demo.entity;
+package NextLevel.demo.project.entity;
 
+import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,7 +35,8 @@ public class ProjectEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = true)
-    private String img;
+    @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER, cascade={CascadeType.PERSIST}, optional = true)
+    @JoinColumn(name = "img_id")
+    private ImgEntity img;
 
 }

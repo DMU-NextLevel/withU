@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
     //register
-    ALREADY_EXISTS(HttpStatus.CONFLICT, "The email already exists"),
+    ALREADY_EXISTS_EMAIL(HttpStatus.CONFLICT, "The email already exists"),
 
     // login
-    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "Login failed"),
+    LOGIN_FAILED(HttpStatus.CONFLICT, "Login failed"),
 
     // no authentication
     NEED_ADDITIONAL_DATA(HttpStatus.FORBIDDEN, "Additional data required"),
