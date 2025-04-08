@@ -1,5 +1,7 @@
 package NextLevel.demo.exception;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class CustomExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleCustomException(CustomException e) {
-        return ResponseEntity.status(e.errorCode.errorCode).body(e.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", e.errorCode.CustomErrorCode);
+        map.put("message", e.getMessage());
+        return ResponseEntity.status(e.errorCode.statusCode).body(map);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
@@ -25,6 +30,9 @@ public class CustomExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error 발생 !! \n"+e.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", "05000");
+        map.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
     }
 }

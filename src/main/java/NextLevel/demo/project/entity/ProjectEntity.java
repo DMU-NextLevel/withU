@@ -1,8 +1,6 @@
 package NextLevel.demo.project.entity;
 
-import NextLevel.demo.funding.entity.FundingEntity;
 import NextLevel.demo.img.entity.ImgEntity;
-import NextLevel.demo.recommend.entity.RecommendEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,26 +10,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Table(name = "project")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
 public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +41,9 @@ public class ProjectEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false,name="created_at", columnDefinition = " datetime default NOW() ")
+    private Date createdAt = new Date();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "img_id")
@@ -63,17 +61,28 @@ public class ProjectEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
     private List<ProjectImgEntity> imgs;
 
-    @OneToMany(mappedBy="project", fetch = FetchType.LAZY)
-    private List<FundingEntity> fundings;
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<RecommendEntity> recommends;
-
     public void setImgs(List<ProjectImgEntity> imgs) {
         this.imgs = imgs;
     }
     public void setTags(List<ProjectTagEntity> tags) {
         this.tags = tags;
+    }
+
+    @Builder
+    public ProjectEntity(Long id, UserEntity user, String title, String content,
+        Long goal, ImgEntity titleImg, String expired, List<ProjectTagEntity> tags,
+        List<ProjectImgEntity> imgs) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.id = id;
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.createdAt = new Date();
+        this.goal = goal;
+        this.titleImg = titleImg;
+        this.expired = new SimpleDateFormat("yyyy-MM-dd").parse(expired);
+        this.tags = tags;
+        this.imgs = imgs;
     }
 
     @Override

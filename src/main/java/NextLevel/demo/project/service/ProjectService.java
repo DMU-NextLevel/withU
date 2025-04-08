@@ -6,6 +6,7 @@ import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.project.ProjectOrderType;
 import NextLevel.demo.project.dto.request.CreateProjectDto;
+import NextLevel.demo.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.entity.ProjectEntity;
 import NextLevel.demo.project.entity.ProjectImgEntity;
 import NextLevel.demo.project.entity.ProjectTagEntity;
@@ -20,8 +21,11 @@ import NextLevel.demo.user.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -168,8 +172,18 @@ public class ProjectService {
     }
 
     // get list
-    public List<ProjectEntity> getAllProjects(Long tagId, ProjectOrderType orderType, int page) {
-        List<ProjectEntity> entities = projectActivityRepository.getAll(tagId, orderType, page);
+    public List<ResponseProjectListDto> getAllProjects(Long tagId, ProjectOrderType orderType, Integer page) {
+        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(tagId, orderType, page);
+
+        Map<Long, ResponseProjectListDto> dtoMap = new HashMap<>();
+        entities.forEach(e -> {dtoMap.put(e.getId(), e);});
+
+        List<ProjectEntity> tags = projectRepository.findTagsByIds(dtoMap.keySet().stream().toList());
+        tags.forEach((e)->
+            dtoMap.get(e.getId()).setTags(
+                e.getTags().stream().map(pt->pt.getTag().getName()).toList()
+            )
+        );
 
         return entities;
     }

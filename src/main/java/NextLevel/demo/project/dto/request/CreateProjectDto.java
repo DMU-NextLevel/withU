@@ -1,5 +1,7 @@
 package NextLevel.demo.project.dto.request;
 
+import NextLevel.demo.exception.CustomException;
+import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.entity.ProjectEntity;
 import NextLevel.demo.project.entity.ProjectImgEntity;
@@ -28,6 +30,9 @@ public class CreateProjectDto {
     // @NotEmpty
     private String content;
 
+    private String expired;
+    private Long goal;
+
     private List<Long> tags;
     // @NotNull
     private MultipartFile titleImg;
@@ -39,7 +44,8 @@ public class CreateProjectDto {
     private List<ProjectImgEntity> imgEntitys;
 
     public ProjectEntity toEntity() {
-        return ProjectEntity.builder()
+        try {
+            return ProjectEntity.builder()
                 .id(id)
                 .user(user)
                 .title(title)
@@ -47,6 +53,12 @@ public class CreateProjectDto {
                 .tags(tagEntitys)
                 .titleImg(titleImgEntity)
                 .imgs(imgEntitys)
+                .expired(expired)
+                .goal(goal)
                 .build();
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.ERROR_EXPIRED_DATE_CONVERSION, expired);
+        }
     }
 }

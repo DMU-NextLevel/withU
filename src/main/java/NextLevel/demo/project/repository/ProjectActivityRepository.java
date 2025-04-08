@@ -25,33 +25,48 @@ public class ProjectActivityRepository {
     // tag 값이 있느면 where 추가
     // order by type에 맞게 order
     @Transactional
-    public List<ProjectEntity> getAll(Long tagId, ProjectOrderType orderType, int page) {
+    public List<ResponseProjectListDto> getAll(Long tagId, ProjectOrderType orderType, Integer page) {
         String select = """ 
-            select p from ProjectEntity p 
-            left join fetch p.titleImg 
-            left join fetch p.tags pt 
-            left join fetch TagEntity t on t = pt.tag 
-            left join fetch FundingEntity f on f.user.id = p.user.id
-            left join fetch RecommendEntity r on r.user.id = p.user.id
+            WITH filtered_projects AS (
+                SELECT p.*
+                FROM project p
+                JOIN project_tag pt ON p.id = pt.project_id
+                %s
+            ),
+            project_count AS (
+                SELECT COUNT(*) AS total_count
+                FROM filtered_projects
+            )
+            SELECT fp.id, fp.title, fp.user_id, fp.created_at,\s
+                (CAST((SELECT SUM(f.price) FROM funding f WHERE f.project_id = fp.id) AS DOUBLE) * 100.0 / fp.goal) AS completion_rate,
+                (SELECT COUNT(DISTINCT r.user_id) FROM recommend r WHERE r.project_id = fp.id) AS recommend_count,
+                (SELECT COUNT(f.user_id) FROM funding f WHERE f.project_id = fp.id) AS user_count,
+                (SELECT i.uri FROM img i WHERE i.id = fp.img_id) AS title_img,
+                pc.total_count
+            FROM filtered_projects fp
+            CROSS JOIN project_count pc
+            %s 
+            %s
             """;
         String where = "";
         String order = "";
-        String groupBy = "";
+        String limit = "";
 
         if(tagId != null) {
-            where = " where t.id = " + tagId + " ";
+            where = " where pt.tag_id = "+ tagId + " ";
         }
 
         if(orderType == null)
             orderType = ProjectOrderType.RECOMMEND;
 
-        groupBy = " group by p.id ";
-        // order = " order by " + orderType.type +" ";
+        if(page == null)
+            page = 1;
 
-        Query query = entityManager.createQuery(select + where + groupBy + order, ProjectEntity.class);
+        limit = " limit " + pageCount + " offset " + (page-1) * pageCount + " ";
 
-        List<ProjectEntity> dtos = query.getResultList();
-        dtos.forEach(dto -> {log.info(dto.toString());});
+        Query query = entityManager.createNativeQuery(String.format(select, where, order, limit), ResponseProjectListDto.class);
+
+        List<ResponseProjectListDto> dtos = query.getResultList();
         return dtos;
     }
 }
