@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -54,8 +53,8 @@ public class RequestUserCreateDto {
         return new UserEntity(id, name, nickName, 0, address, number, imgEntity);
     }
 
-    public UserDetailEntity toUserDetailEntity(Long id){
-        return new UserDetailEntity(id, UUID.randomUUID().toString(), role, email, password, socialProvider, socialId);
+    public UserDetailEntity toUserDetailEntity(UserEntity user){
+        return new UserDetailEntity(user, UUID.randomUUID().toString(), role, email, password, socialProvider, socialId);
     }
 
     public boolean validateAllData() {

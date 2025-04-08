@@ -4,10 +4,12 @@ import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @Setter
 public class ResponseUserInfoDto {
+
     private String name;
     private String nickName;
     private int point;
@@ -31,6 +33,10 @@ public class ResponseUserInfoDto {
         }
 
         return dto;
+    }
+
+    public void setImg(String imgUri) {
+        img = String.valueOf("/img/"+imgUri);
     }
 
     public ResponseUserInfoDto(String name, String nickName, int point, String address,

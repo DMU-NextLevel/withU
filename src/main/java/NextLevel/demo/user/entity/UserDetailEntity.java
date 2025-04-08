@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -19,18 +20,19 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDetailEntity {
     @Id
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
 
+    @MapsId
     @OneToOne(targetEntity = UserEntity.class, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name="id", nullable = false)
+    @JoinColumn(name="user_id")
     private UserEntity user;
 
     @Column(length = 36, columnDefinition = "CHAR(36)", unique = true, nullable = false) // default 값 없음 무조건 코드로 넣기 필수 !!
     private String UUID;
 
-    @Column(length=5, columnDefinition = "char(6)", nullable = false)
-    @ColumnDefault("USER")
+    @Column(length=5, columnDefinition = "char(6)")
+    @ColumnDefault("'USER'")
     private String role;
 
     @Column(nullable = true) // 추후 변경
@@ -42,9 +44,9 @@ public class UserDetailEntity {
     @Column(nullable = true)
     private String socialId;
 
-    public UserDetailEntity(Long id, String UUID, String role, String email, String password,
+    public UserDetailEntity(UserEntity user, String UUID, String role, String email, String password,
         String socialProvider, String socialId) {
-        this.id = id;
+        this.user = user;
         this.UUID = UUID;
         this.role = role;
         this.email = email;
@@ -54,8 +56,8 @@ public class UserDetailEntity {
     }
 
     // used at user info update
-    public UserDetailEntity(Long id, String UUID, String role, String email) {
-        this.id = id;
+    public UserDetailEntity(UserEntity user, String UUID, String role, String email) {
+        this.user = user;
         this.UUID = UUID;
         this.email = email;
         this.role = role;

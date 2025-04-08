@@ -38,7 +38,7 @@ public class LoginService {
             requestUserCreateDto.setRole(UserRole.USER.name());
 
         UserEntity user = userRepository.save(requestUserCreateDto.toUserEntity());
-        UserDetailEntity userDetail = userDetailRepository.save(requestUserCreateDto.toUserDetailEntity(user.getId()));
+        UserDetailEntity userDetail = userDetailRepository.save(requestUserCreateDto.toUserDetailEntity(user));
 
         return userDetail;
     }
@@ -68,13 +68,13 @@ public class LoginService {
         if(userDetailOptional.isEmpty()) {
             UserEntity user = userRepository.save(socialLoginDto.toUserEntity());
 
-            UserDetailEntity userDetailEntity = socialLoginDto.toUserDetailEntity(user.getId());
+            UserDetailEntity userDetailEntity = socialLoginDto.toUserDetailEntity(user);
             userDetailEntity.setRole(UserRole.SOCIAL.name());
             userDetail = userDetailRepository.save(userDetailEntity);
         }else{
             userDetail = userDetailOptional.get();
         }
 
-        jwtUtil.addRefresh(response, userDetail.getId(), userDetail.getUUID());
+        jwtUtil.addRefresh(response, userDetail.getUser().getId(), userDetail.getUUID());
     }
 }

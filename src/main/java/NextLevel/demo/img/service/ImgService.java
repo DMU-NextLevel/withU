@@ -5,6 +5,7 @@ import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.repository.ImgRepository;
 import jakarta.servlet.ServletContext;
+import jakarta.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class ImgService {
     private final ServletContext servletContext;
     private final ImgRepository imgRepository;
 
+    @Transactional
     public ImgEntity saveImg(MultipartFile imgFile) {
         try {
             byte[] bytes = imgFile.getBytes();
@@ -47,19 +49,34 @@ public class ImgService {
 
             ImgEntity saved = imgRepository.save(new ImgEntity(fileName));
 
-            log.info("Saved image :" + saved.getUri());
+            log.info("Saved image :" + saved.getUri() + " id :" + saved.getId());
 
             return saved;
         }catch (Exception e){
             e.printStackTrace();
-            log.info("save img fail");
+            log.info("save img fail ");
             return null;
         }
     }
 
+    // img uri 변경 없이 진짜 파일 값만 덮어쓰기
     public ImgEntity updateImg(MultipartFile imgFile, ImgEntity oldImg) {
-        deleteImg(oldImg);
-        return saveImg(imgFile);
+        try {
+            Path path = Paths.get(System.getProperty("user.dir"), IMG_DEFAULT_PATH,
+                oldImg.getUri());
+
+            Files.write(path, imgFile.getBytes());
+
+            ImgEntity newImg = imgRepository.save(ImgEntity.builder().id(oldImg.getId()).uri(oldImg.getUri()).build());
+
+            log.info("updated image :" + newImg.getUri() + " id :" + newImg.getId());
+
+            return newImg;
+        }catch (Exception e){
+            e.printStackTrace();
+            log.info("update img fail");
+            return null;
+        }
     }
 
     public void deleteImg(ImgEntity img) {
@@ -68,11 +85,12 @@ public class ImgService {
         
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") ,IMG_DEFAULT_PATH, img.getUri()));
+            imgRepository.delete(img);
+            log.info("deleted image id : " + img.getId());
         } catch (IOException e) {
             log.info(e.getMessage());
             throw new CustomException(ErrorCode.ERROR_ON_DELETE_IMG);
         }
-        imgRepository.delete(img);
     }
 
     public ImgEntity saveSocialImg(String imgURL) {
@@ -115,11 +133,11 @@ public class ImgService {
             imgName = imgUri;
         }else{
             extension = imgUri.substring(imgUri.lastIndexOf('.'));
-            imgName = imgUri.substring(0, imgUri.lastIndexOf('.') -1 );
+            imgName = imgUri.substring(0, imgUri.lastIndexOf('.'));
         }
 
-        List<ImgEntity> savedImgs = imgRepository.findContainImgUri(imgName);
+        Long imgCount = imgRepository.getImgCount(imgName.length()+1, imgName);
 
-        return imgName + savedImgs.size() + extension;
+        return imgName + imgCount + extension;
     }
 }

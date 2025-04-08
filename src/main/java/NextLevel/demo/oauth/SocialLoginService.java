@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SocialLoginService extends DefaultOAuth2UserService {
 
-    private final UserDetailRepository userDetailRepository;
     private final ImgService imgService;
 
     @Override

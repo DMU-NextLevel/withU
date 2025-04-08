@@ -44,7 +44,7 @@ public class LoginController {
 
         UserDetailEntity createdUser = loginService.register(requestUserCreateDto);
 
-        jwtUtil.addRefresh(httpServletResponse, createdUser.getId(), createdUser.getUUID());
+        jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("success", null));
     }
@@ -56,7 +56,7 @@ public class LoginController {
 
         UserDetailEntity user = loginService.login(requestUserLoginDto);
 
-        jwtUtil.addRefresh(httpServletResponse, user.getId(), user.getUUID());
+        jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }

@@ -10,6 +10,7 @@ import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class UserService {
         return userRepository.findUserFullInfoByUserId(userId);
     }
 
+    @Transactional
     public UserEntity updateUserInfo(RequestUserCreateDto dto) {
         UserEntity oldUser = getUserInfo(dto.getId());
         UserDetailEntity oldUserDetail = oldUser.getUserDetail();

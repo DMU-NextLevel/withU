@@ -29,23 +29,23 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String nickName;
 
     @Column(nullable = false)
     @ColumnDefault("'0'")
     private int point;
 
-    @Column(nullable = false)
+    @Column
     private String address;
 
-    @Column(nullable = false)
+    @Column
     private String number;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST}, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE, optional = true)
     @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
 
