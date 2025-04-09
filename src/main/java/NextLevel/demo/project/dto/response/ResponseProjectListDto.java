@@ -33,21 +33,22 @@ public class ResponseProjectListDto {
 
     private Date createdAt;
 
-    //for db
-    private Long authorId;
+    private Boolean isRecommend;
+    private Boolean isExpired; // 만뢰 된 project인지?
 
-    public ResponseProjectListDto(Long id, String title, Long userId, Date created_at
-                , Double completionRate, Long recommendCount, Long userCount, String titleImg, Long totalCount) {
+    public ResponseProjectListDto(Long id, String title, Date created_at, Date expired
+                , Double completionRate, Long recommendCount, Long userCount, String titleImg, Long isRecommend ,Long totalCount) {
         this.id = id;
         this.title = title;
         this.titleImg = "/src/"+titleImg;
         this.completionRate = completionRate == null ? 0.0 : completionRate;
         this.recommendCount = recommendCount;
-        this.authorId = authorId;
         this.pageCount = totalCount / PAGE_COUNT;
         this.createdAt = created_at;
         this.totalCount = totalCount;
         this.userCount = userCount;
+        this.isRecommend = isRecommend == 1;
+        this.isExpired = expired.before(new Date());
     }
 
 }

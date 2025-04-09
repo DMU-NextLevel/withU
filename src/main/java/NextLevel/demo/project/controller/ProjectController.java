@@ -55,13 +55,14 @@ public class ProjectController {
     // 모두 조회
     @GetMapping("/public/project/all")
     public ResponseEntity<?> getAllProjects(@RequestParam("order") String order, @RequestParam("tag") Long tagId, @RequestParam("page") Integer page) {
-        List<ResponseProjectListDto> dto = projectService.getAllProjects(tagId, ProjectOrderType.getType(order), page);
+        Long userId = JWTUtil.getUserIdFromSecurityContext();
+        List<ResponseProjectListDto> dto = projectService.getAllProjects(tagId, userId, ProjectOrderType.getType(order), page);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     // 상세 조회
     @GetMapping("/public/project/{projectId}")
     public ResponseEntity<?> getProjectById(@PathVariable("projectId") Long projectId) {
-
+        return null;
     }
 }

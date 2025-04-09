@@ -172,8 +172,8 @@ public class ProjectService {
     }
 
     // get list
-    public List<ResponseProjectListDto> getAllProjects(Long tagId, ProjectOrderType orderType, Integer page) {
-        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(tagId, orderType, page);
+    public List<ResponseProjectListDto> getAllProjects(Long tagId, Long userId, ProjectOrderType orderType, Integer page) {
+        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(tagId, userId, orderType, page);
 
         Map<Long, ResponseProjectListDto> dtoMap = new HashMap<>();
         entities.forEach(e -> {dtoMap.put(e.getId(), e);});

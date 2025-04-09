@@ -25,7 +25,7 @@ public class ProjectActivityRepository {
     // tag 값이 있느면 where 추가
     // order by type에 맞게 order
     @Transactional
-    public List<ResponseProjectListDto> getAll(Long tagId, ProjectOrderType orderType, Integer page) {
+    public List<ResponseProjectListDto> getAll(Long userId, Long tagId, ProjectOrderType orderType, Integer page) {
         String select = """ 
             WITH filtered_projects AS (
                 SELECT p.*
@@ -37,11 +37,12 @@ public class ProjectActivityRepository {
                 SELECT COUNT(*) AS total_count
                 FROM filtered_projects
             )
-            SELECT fp.id, fp.title, fp.user_id, fp.created_at,\s
+            SELECT fp.id, fp.title, fp.created_at, fp.expired ,
                 (CAST((SELECT SUM(f.price) FROM funding f WHERE f.project_id = fp.id) AS DOUBLE) * 100.0 / fp.goal) AS completion_rate,
                 (SELECT COUNT(DISTINCT r.user_id) FROM recommend r WHERE r.project_id = fp.id) AS recommend_count,
                 (SELECT COUNT(f.user_id) FROM funding f WHERE f.project_id = fp.id) AS user_count,
                 (SELECT i.uri FROM img i WHERE i.id = fp.img_id) AS title_img,
+                if (exists (select r.id from recommend r where r.project_id = fp.id and r.user_id = %d), true, false) as is_recommend,
                 pc.total_count
             FROM filtered_projects fp
             CROSS JOIN project_count pc
@@ -64,7 +65,7 @@ public class ProjectActivityRepository {
 
         limit = " limit " + pageCount + " offset " + (page-1) * pageCount + " ";
 
-        Query query = entityManager.createNativeQuery(String.format(select, where, order, limit), ResponseProjectListDto.class);
+        Query query = entityManager.createNativeQuery(String.format(select, where, userId ,order, limit), ResponseProjectListDto.class);
 
         List<ResponseProjectListDto> dtos = query.getResultList();
         return dtos;
