@@ -30,7 +30,6 @@ public class ProjectActivityRepository {
             WITH filtered_projects AS (
                 SELECT p.*
                 FROM project p
-                JOIN project_tag pt ON p.id = pt.project_id
                 %s
             ),
             project_count AS (
@@ -54,11 +53,10 @@ public class ProjectActivityRepository {
         String limit = "";
 
         if(tagId != null) {
-            where = " where pt.tag_id = "+ tagId + " ";
+            where = " JOIN project_tag pt ON p.id = pt.project_id where pt.tag_id = "+ tagId + " ";
         }
 
-        if(orderType == null)
-            orderType = ProjectOrderType.RECOMMEND;
+        order = " order by "+orderType.type+" ";
 
         if(page == null)
             page = 1;

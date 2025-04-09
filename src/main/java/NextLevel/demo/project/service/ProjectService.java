@@ -10,22 +10,16 @@ import NextLevel.demo.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.entity.ProjectEntity;
 import NextLevel.demo.project.entity.ProjectImgEntity;
 import NextLevel.demo.project.entity.ProjectTagEntity;
-import NextLevel.demo.project.entity.TagEntity;
 import NextLevel.demo.project.repository.ProjectActivityRepository;
-import NextLevel.demo.project.repository.ProjectImgRepository;
 import NextLevel.demo.project.repository.ProjectRepository;
-import NextLevel.demo.project.repository.ProjectTagRepository;
-import NextLevel.demo.project.repository.TagRepository;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.service.UserService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,10 +30,10 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final TagRepository tagRepository;
     private final UserService userService;
     private final ImgService imgService;
     private final ProjectActivityRepository projectActivityRepository;
+    private final TagService tagService;
 
     // 추가
     @Transactional
@@ -54,7 +48,7 @@ public class ProjectService {
         ProjectEntity newProject = dto.toEntity();
 
         // tag 처리
-        newProject.setTags(getTagEntitysByIds(dto.getTags())
+        newProject.setTags(tagService.getTagEntitysByIds(dto.getTags())
             .stream()
             .map((t)->{
                 return ProjectTagEntity
@@ -108,7 +102,7 @@ public class ProjectService {
         ProjectEntity newProject = dto.toEntity();
 
         // tag 처리
-        newProject.setTags(getTagEntitysByIds(dto.getTags())
+        newProject.setTags(tagService.getTagEntitysByIds(dto.getTags())
             .stream()
             .map((t)->{
                 return ProjectTagEntity
@@ -145,15 +139,6 @@ public class ProjectService {
 
         projectRepository.save(newProject);
     }
-    private List<TagEntity> getTagEntitysByIds(List<Long> tagIds) {
-        List<TagEntity> tagEntitys = tagRepository.findAllById(tagIds);
-
-        if(tagEntitys.size() != tagIds.size()) {
-            throw new CustomException(ErrorCode.NOT_CORRECT_TAG_SIZE);
-        }
-
-        return tagEntitys;
-    }
 
     // 삭제
     public void deleteProject(Long id) {
@@ -173,7 +158,7 @@ public class ProjectService {
 
     // get list
     public List<ResponseProjectListDto> getAllProjects(Long tagId, Long userId, ProjectOrderType orderType, Integer page) {
-        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(tagId, userId, orderType, page);
+        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(userId,tagId, orderType, page);
 
         Map<Long, ResponseProjectListDto> dtoMap = new HashMap<>();
         entities.forEach(e -> {dtoMap.put(e.getId(), e);});
@@ -186,6 +171,22 @@ public class ProjectService {
         );
 
         return entities;
+    }
+
+    public ProjectEntity getProjectDetailById(Long id) {
+        return projectRepository.findProjectDetailById(id).orElseThrow(
+            () -> new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString())
+        );
+    }
+
+    public ProjectEntity getProjectById(Long id) {
+        return projectRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString()));
+    }
+
+    public ProjectEntity getProjectCommunityAndNoticeById(Long id) {
+        return projectRepository.findProjectWithNoticesAndCommunity(id).orElseThrow(
+                ()-> new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString())
+        );
     }
 
 }

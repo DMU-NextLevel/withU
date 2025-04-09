@@ -1,7 +1,5 @@
 package NextLevel.demo.project;
 
-import NextLevel.demo.exception.CustomException;
-import NextLevel.demo.exception.ErrorCode;
 import java.util.Arrays;
 
 public enum ProjectOrderType {
@@ -17,8 +15,6 @@ public enum ProjectOrderType {
     }
 
     public static ProjectOrderType getType(String type) {
-        return Arrays.stream(ProjectOrderType.values()).filter(t -> t.name().equals(type)).findFirst().orElseThrow(
-            () -> new CustomException(ErrorCode.INVALIDATE_TYPE, type)
-        );
+        return Arrays.stream(ProjectOrderType.values()).filter(t -> t.name().equals(type)).findFirst().orElse(ProjectOrderType.RECOMMEND);
     }
 }

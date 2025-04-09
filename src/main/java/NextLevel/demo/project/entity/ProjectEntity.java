@@ -1,6 +1,8 @@
 package NextLevel.demo.project.entity;
 
+import NextLevel.demo.funding.entity.FundingEntity;
 import NextLevel.demo.img.entity.ImgEntity;
+import NextLevel.demo.recommend.entity.RecommendEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -60,6 +62,18 @@ public class ProjectEntity {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
     private List<ProjectImgEntity> imgs;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<FundingEntity> fundings;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<RecommendEntity> recommends;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<ProjectCommunityEntity> communities;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<ProjectNoticeEntity> notices;
 
     public void setImgs(List<ProjectImgEntity> imgs) {
         this.imgs = imgs;
