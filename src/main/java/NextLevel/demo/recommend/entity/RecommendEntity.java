@@ -1,6 +1,6 @@
 package NextLevel.demo.recommend.entity;
 
-import NextLevel.demo.project.entity.ProjectEntity;
+import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
