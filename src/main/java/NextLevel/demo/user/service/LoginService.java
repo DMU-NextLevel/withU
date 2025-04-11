@@ -23,39 +23,11 @@ public class LoginService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
     private final JWTUtil jwtUtil;
+    private final EmailService emailService;
 
     // use refresh token filter
     public UserDetailEntity findUserDetailByUserId(Long userId) {
         return userDetailRepository.findUserDetailByUserId(userId);
-    }
-
-    // user UserController : post register
-    @Transactional
-    public UserDetailEntity register(RequestUserCreateDto requestUserCreateDto) {
-        checkEmailIsNotExist(requestUserCreateDto.getEmail());
-
-        if(requestUserCreateDto.validateAllData())
-            requestUserCreateDto.setRole(UserRole.USER.name());
-
-        UserEntity user = userRepository.save(requestUserCreateDto.toUserEntity());
-        UserDetailEntity userDetail = userDetailRepository.save(requestUserCreateDto.toUserDetailEntity(user));
-
-        return userDetail;
-    }
-
-    public void checkEmailIsNotExist(String email) {
-        if(userDetailRepository.findByEmail(email).isPresent())
-            throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
-    }
-
-    @Transactional
-    public UserDetailEntity login(RequestUserLoginDto loginDto) {
-        Optional<UserDetailEntity> user = userDetailRepository.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword());
-
-        if(user.isEmpty()) {
-            throw new CustomException(ErrorCode.LOGIN_FAILED);
-        }
-        return user.get();
     }
 
     @Transactional
@@ -76,5 +48,44 @@ public class LoginService {
         }
 
         jwtUtil.addRefresh(response, userDetail.getUser().getId(), userDetail.getUUID());
+    }
+
+    // user UserController : post register
+    @Transactional
+    public UserDetailEntity register(RequestUserCreateDto dto) {
+        if(!checkEmailIsNotExist(dto.getEmail()))
+            throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
+
+        emailService.checkEmailKeyAtRegister(dto.getEmail(), dto.getKey());
+
+        if(dto.validateAllData())
+            dto.setRole(UserRole.USER.name());
+
+        UserEntity user = userRepository.save(dto.toUserEntity());
+        UserDetailEntity userDetail = userDetailRepository.save(dto.toUserDetailEntity(user));
+
+        return userDetail;
+    }
+
+    public boolean checkEmailIsNotExist(String email) {
+        if(userDetailRepository.findByEmail(email).isEmpty())
+            return true;
+        else
+            return false;
+    }
+
+    @Transactional
+    public UserDetailEntity login(RequestUserLoginDto loginDto) {
+        Optional<UserDetailEntity> user = userDetailRepository.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword());
+
+        if(user.isEmpty()) {
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
+        }
+        return user.get();
+    }
+
+    // check nickname
+    public boolean checkNickName(String nickName) {
+        return userRepository.findUserByNickName(nickName).isEmpty();
     }
 }

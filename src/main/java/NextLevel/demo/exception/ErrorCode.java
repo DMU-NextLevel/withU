@@ -10,6 +10,8 @@ public enum ErrorCode {
 
     //register
     ALREADY_EXISTS_EMAIL(HttpStatus.BAD_REQUEST, "01001","email already exists"),
+    SEND_EMAIL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "01002", "send email error"),
+    NOT_CORRECT_EMAIL_KEY(HttpStatus.BAD_REQUEST, "01003", "wrong email key"),
 
     // login
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "02001","Login failed"),

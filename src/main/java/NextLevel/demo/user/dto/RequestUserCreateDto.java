@@ -22,6 +22,8 @@ public class RequestUserCreateDto {
     private String nickName;
     @NotEmpty
     private String email;
+    @NotEmpty
+    private String key;
     private String address;
     private String number;
 
