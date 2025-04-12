@@ -51,3 +51,41 @@ jobs:
 
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel
+
+    - name: ssh
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+
+          echo "remove old container"
+          docker stop container
+          docker rm container
+        
+          echo "pull docker at ssh server"
+          docker pull ${{ secret.DOCKER_USERNAME}}/nextlevel:latest
+
+          echo "start new container"
+          docker run -d \
+            --name container \
+            -p 8080:8080 \
+            -e DB_HOST=${{ secrets.DB_HOST }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e GOOGLE_ID=${{ secrets.GOOGLE_ID }} \
+            -e GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }} \
+            -e KAKAO_ID=${{ secrets.KAKAO_ID }} \
+            -e KAKAO_SECRET=${{ secrets.KAKAO_SECRET }} \
+            -e NAVER_ID=${{ secrets.NAVER_ID }} \
+            -e NAVER_SECRET=${{ secrets.NAVER_SECRET }} \
+            -e TOSS_CLIENT=${{ secrets.TOSS_CLIENT }} \
+            -e TOSS_SECRET=${{ secrets.TOSS_SECRET }} \
+            -e EMAIL=${{ secrets.EMAIL }} \
+            -e EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} \
+            -e SSL_TYPE=${{ secrets.SSL_TYPR }} \
+            -e SSL_PASSWORD=${{ secrets.SSL_PASSWORD }} \
+            ${{ secrets.DOCKER_USERNAME }}/nextlevel:latest
