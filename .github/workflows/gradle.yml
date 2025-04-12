@@ -72,7 +72,7 @@ jobs:
           docker run -d \
             --name container \
             -p 8080:8080 \
-            -e DB_HOST=${{ secrets.DB_HOST }} \
+            -e DB_URL=${{ secrets.DB_URL }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
@@ -86,6 +86,6 @@ jobs:
             -e TOSS_SECRET=${{ secrets.TOSS_SECRET }} \
             -e EMAIL=${{ secrets.EMAIL }} \
             -e EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} \
-            -e SSL_TYPE=${{ secrets.SSL_TYPR }} \
+            -e SSL_TYPE=${{ secrets.SSL_TYPE }} \
             -e SSL_PASSWORD=${{ secrets.SSL_PASSWORD }} \
             ${{ secrets.DOCKER_USERNAME }}/nextlevel:latest
