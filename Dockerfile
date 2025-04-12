@@ -1,4 +1,4 @@
-FROM openjdk:21.0.4-jdk
+FROM openjdk:21-slim
 
 ENV APP_HOME=/app
 
