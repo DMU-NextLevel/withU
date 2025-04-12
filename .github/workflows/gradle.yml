@@ -41,7 +41,7 @@ jobs:
       run: ./gradlew build
 
     - name: docker image build
-      run: docker build -t lkh8033/nextlevel .
+      run: docker build -t lkh8033@gmail.com/nextlevel .
 
     - name: docker login
       uses: docker/login-action@v2
