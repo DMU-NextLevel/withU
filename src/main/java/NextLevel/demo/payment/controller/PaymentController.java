@@ -2,7 +2,6 @@ package NextLevel.demo.payment.controller;
 
 import NextLevel.demo.common.SuccessResponse;
 import NextLevel.demo.payment.dto.RequestTossPaymentDto;
-import NextLevel.demo.payment.service.NaverPaymentService;
 import NextLevel.demo.payment.service.TossPaymentService;
 import jakarta.websocket.server.PathParam;
 import java.util.Map;

@@ -25,7 +25,6 @@ import javax.mail.MessagingException;
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final LoginService loginService;
     @Value("${email.EMAIL_TIME}")
     private Long emailTime;
     @Value("${email.EMAIL}")

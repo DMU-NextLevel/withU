@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class TossPaymentService {
 
-    @Value("${payment.toss.secret_key_test}")
+    @Value("${payment.toss.secret_key}")
     private String secretKey;
     @Value("${payment.toss.approve_url}")
     private String approveUrl;
