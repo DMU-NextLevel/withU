@@ -8,6 +8,6 @@ WORKDIR $APP_HOME
 
 COPY $JAR_FILE_PATH app.jar
 
-EEXPOSE 8080
+EXPOSE 8080
 
-ENTERYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
