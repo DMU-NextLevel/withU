@@ -38,7 +38,7 @@ jobs:
       run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo .
 
     - name: docker login
-      uses: odcker/login-action@v2
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
