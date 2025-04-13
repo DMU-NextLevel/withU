@@ -52,26 +52,27 @@ jobs:
     # - name: docker Hub push
     #   run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel
 
-    - name: test ssh connection
-      run: |
-        echo "${{ secrets.SERVER_KEY }}" > temp_key.pem
-        chmod 600 temp_key.pem
+    # - name: test ssh connection
+    #   run: |
+    #     echo "${{ secrets.SERVER_KEY }}" > temp_key.pem
+    #     chmod 600 temp_key.pem
   
-        ssh -i temp_key.pem -p 22 -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}
-        echo "success ssh"
+    #     ssh -i temp_key.pem -p 22 -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}
+    #     echo "success ssh"
 
-    # - name: ssh
-    #   uses: appleboy/ssh-action@v0.1.6
-    #   with:
-    #     host: ${{ secrets.SERVER_HOST }}
-    #     username: ${{ secrets.SERVER_USERNAME }}
-    #     key: ${{ secrets.SERVER_KEY }}
-    #     port: 22
-    #     script: |
+    - name: ssh
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        key: ${{ secrets.SERVER_KEY }}
+        port: 22
+        script: |
 
-    #       echo "remove old container"
-    #       docker stop container
-    #       docker rm container
+          echo "remove old container"
+          docker stop container
+          docker rm container
         
     #       echo "pull docker at ssh server"
     #       docker pull ${{ secrets.DOCKER_USERNAME}}/nextlevel:latest
