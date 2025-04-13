@@ -8,7 +8,7 @@ WORKDIR $APP_HOME
 
 RUN mkdir -p /app/img/
 
-COPY src/resources/keystore.p12 $APP_HOME/keystore.p12
+COPY src/main/resources/keystore.p12 $APP_HOME/keystore.p12
 
 COPY $JAR_FILE_PATH app.jar
 
