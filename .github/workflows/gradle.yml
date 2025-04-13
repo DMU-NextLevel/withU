@@ -60,6 +60,10 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port: 22
         script: |
+         echo "remove old docker container"
+         docker stop container
+         docker rm container
+        
          echo "pull docker at ssh server"
          docker pull lkh8033/nextlevel:latest
            
