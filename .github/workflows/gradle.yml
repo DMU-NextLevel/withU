@@ -70,8 +70,8 @@ jobs:
         script: |
 
           echo "remove old container"
-          docker stop container
-          docker rm container
+          # docker stop container
+          # docker rm container
         
     #       echo "pull docker at ssh server"
     #       docker pull ${{ secrets.DOCKER_USERNAME}}/nextlevel:latest
