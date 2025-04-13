@@ -60,32 +60,45 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port: 22
         script: |
-
-         echo "remove old container"
-         docker stop container
-         docker rm container
-        
          echo "pull docker at ssh server"
-         docker pull ${{ secrets.DOCKER_USERNAME}}/nextlevel:latest
+         docker pull $DOCKER_USERNAME/nextlevel:latest
 
          echo "start new container"
          docker run -d \
-           --name container \
-           -p 8080:8080 \
-           -e DB_URL=${{ secrets.DB_URL }} \
-           -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-           -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-           -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-           -e GOOGLE_ID=${{ secrets.GOOGLE_ID }} \
-           -e GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }} \
-           -e KAKAO_ID=${{ secrets.KAKAO_ID }} \
-           -e KAKAO_SECRET=${{ secrets.KAKAO_SECRET }} \
-           -e NAVER_ID=${{ secrets.NAVER_ID }} \
-           -e NAVER_SECRET=${{ secrets.NAVER_SECRET }} \
-           -e TOSS_CLIENT=${{ secrets.TOSS_CLIENT }} \
-           -e TOSS_SECRET=${{ secrets.TOSS_SECRET }} \
-           -e EMAIL=${{ secrets.EMAIL }} \
-           -e EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} \
-           -e SSL_TYPE=${{ secrets.SSL_TYPE }} \
-           -e SSL_PASSWORD=${{ secrets.SSL_PASSWORD }} \
-           ${{ secrets.DOCKER_USERNAME }}/nextlevel:latest
+          --name container \
+          -p 8080:8080 \
+          -e DB_URL=$DB_URL \
+          -e DB_USERNAME=$DB_USERNAME \
+          -e DB_PASSWORD=$DB_PASSWORD \
+          -e JWT_SECRET=$JWT_SECRET \
+          -e GOOGLE_ID=$GOOGLE_ID \
+          -e GOOGLE_SECRET=$GOOGLE_SECRET \
+          -e KAKAO_ID=$KAKAO_ID \
+          -e KAKAO_SECRET=$KAKAO_SECRET \
+          -e NAVER_ID=$NAVER_ID \
+          -e NAVER_SECRET=$NAVER_SECRET \
+          -e TOSS_CLIENT=$TOSS_CLIENT \
+          -e TOSS_SECRET=$TOSS_SECRET \
+          -e EMAIL=$EMAIL \
+          -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
+          -e SSL_TYPE=$SSL_TYPE \
+          -e SSL_PASSWORD=$SSL_PASSWORD \
+          $DOCKER_USERNAME/nextlevel:latest
+      env:
+       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+       DB_URL: ${{ secrets.DB_URL }}
+       DB_USERNAME: ${{ secrets.DB_USERNAME }}
+       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+       GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+       GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+       KAKAO_ID: ${{ secrets.KAKAO_ID }}
+       KAKAO_SECRET: ${{ secrets.KAKAO_SECRET }}
+       NAVER_ID: ${{ secrets.NAVER_ID }}
+       NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
+       TOSS_CLIENT: ${{ secrets.TOSS_CLIENT }}
+       TOSS_SECRET: ${{ secrets.TOSS_SECRET }}
+       EMAIL: ${{ secrets.EMAIL }}
+       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+       SSL_TYPE: ${{ secrets.SSL_TYPE }}
+       SSL_PASSWORD: ${{ secrets.SSL_PASSWORD }}
