@@ -64,7 +64,26 @@ jobs:
          docker pull $DOCKERHUB_USERNAME/nextlevel:latest
            
          echo "start new container"
-         docker run -d --name container -p 8080:8080 -e DB_URL=$DB_URL -e DB_USERNAME=$DB_USERNAME -e DB_PASSWORD=$DB_PASSWORD -e JWT_SECRET=$JWT_SECRET -e GOOGLE_ID=$GOOGLE_ID -e GOOGLE_SECRET=$GOOGLE_SECRET -e KAKAO_ID=$KAKAO_ID -e KAKAO_SECRET=$KAKAO_SECRET -e NAVER_ID=$NAVER_ID -e NAVER_SECRET=$NAVER_SECRET -e TOSS_CLIENT=$TOSS_CLIENT -e TOSS_SECRET=$TOSS_SECRET -e EMAIL=$EMAIL -e EMAIL_PASSWORD=$EMAIL_PASSWORD -e SSL_TYPE=$SSL_TYPE -e SSL_PASSWORD=$SSL_PASSWORD $DOCKERHUB_USERNAME/nextlevel:latest
+         docker run -d \
+           --name container \
+           -p 8080:8080 \
+           -e DB_URL=$DB_URL \
+           -e DB_USERNAME=$DB_USERNAME \
+           -e DB_PASSWORD=$DB_PASSWORD \
+           -e JWT_SECRET=$JWT_SECRET \
+           -e GOOGLE_ID=$GOOGLE_ID \
+           -e GOOGLE_SECRET=$GOOGLE_SECRET \
+           -e KAKAO_ID=$KAKAO_ID \
+           -e KAKAO_SECRET=$KAKAO_SECRET \
+           -e NAVER_ID=$NAVER_ID \
+           -e NAVER_SECRET=$NAVER_SECRET \
+           -e TOSS_CLIENT=$TOSS_CLIENT \
+           -e TOSS_SECRET=$TOSS_SECRET \
+           -e EMAIL=$EMAIL \
+           -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
+           -e SSL_TYPE=$SSL_TYPE \
+           -e SSL_PASSWORD=$SSL_PASSWORD \
+           lkh0833/nextlevel:latest
       env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DB_URL: ${{ secrets.DB_URL }}
