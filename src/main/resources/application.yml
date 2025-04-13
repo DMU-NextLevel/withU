@@ -85,7 +85,7 @@ server:
     context-path: /
   ssl:
     enabled: true
-    key-store: src/main/resources/keystore.p12
+    key-store: file:/app/keystore.p12
     key-store-type: ${SSL_TYPE}
     key-alias: ssl
     key-store-password: ${SSL_PASSWORD}
@@ -101,7 +101,7 @@ payment:
 
 img:
   max_len: 20
-  default_dir: /src/main/resources/static/img/
+  default_dir: file:/app/img
 page_count: 20
 
 email:
