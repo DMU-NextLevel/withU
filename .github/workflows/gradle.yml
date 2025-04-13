@@ -87,6 +87,8 @@ jobs:
            -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
            -e SSL_TYPE=$SSL_TYPE \
            -e SSL_PASSWORD=$SSL_PASSWORD \
+           -e SSL_PATH=$SSL_PATH \
+           -e IMG_PATH=$IMG_PATH \
            lkh8033/nextlevel:latest
       env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -106,3 +108,5 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           SSL_TYPE: ${{ secrets.SSL_TYPE }}
           SSL_PASSWORD: ${{ secrets.SSL_PASSWORD }}
+          SSL_PATH: ${{SSL_PATH}}
+          IMG_PATH: ${{IMG_PATH}}
