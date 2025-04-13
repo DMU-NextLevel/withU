@@ -108,5 +108,5 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           SSL_TYPE: ${{ secrets.SSL_TYPE }}
           SSL_PASSWORD: ${{ secrets.SSL_PASSWORD }}
-          SSL_PATH: ${{SSL_PATH}}
-          IMG_PATH: ${{IMG_PATH}}
+          SSL_PATH: ${{ secrets.SSL_PATH}}
+          IMG_PATH: ${{ secrets.IMG_PATH}}
