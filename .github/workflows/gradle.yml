@@ -61,7 +61,7 @@ jobs:
         port: 22
         script: |
          echo "pull docker at ssh server"
-         docker pull $DOCKER_USERNAME/nextlevel:latest
+         docker pull $DOCKERHUB_USERNAME/nextlevel:latest
            
          echo "start new container"
          docker run -d \
@@ -83,9 +83,9 @@ jobs:
           -e EMAIL_PASSWORD=$EMAIL_PASSWORD \
           -e SSL_TYPE=$SSL_TYPE \
           -e SSL_PASSWORD=$SSL_PASSWORD \
-          $DOCKER_USERNAME/nextlevel:latest
+          $DOCKERHUB_USERNAME/nextlevel:latest
       env:
-          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
