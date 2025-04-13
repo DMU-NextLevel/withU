@@ -52,6 +52,15 @@ jobs:
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel
 
+    - name: pring key for debug
+      run: |
+        echo "host : ${{secrets.SERVER_HOST }}
+        echo "user: ${{secrets.SERVER_USERNAME}}
+        echo "key: "
+        echo "${{ secrets.SERVER_KEY}}" | head -n 2
+        echo "${{ secrets.SERVER_KEY}}" | tail -n 2
+        echo "end check"
+
     - name: ssh
       uses: appleboy/ssh-action@v0.1.6
       with:
