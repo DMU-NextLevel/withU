@@ -84,7 +84,7 @@ jobs:
           -e SSL_TYPE=$SSL_TYPE \
           -e SSL_PASSWORD=$SSL_PASSWORD \
           $DOCKER_USERNAME/nextlevel:latest
-         env:
+      env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
