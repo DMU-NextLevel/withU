@@ -65,7 +65,7 @@ jobs:
          docker rm container
         
          echo "pull docker at ssh server"
-         docker pull lkh8033/nextlevel:latest
+         docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel:latest
            
          echo "start new container"
          docker run -d \
@@ -89,7 +89,7 @@ jobs:
            -e SSL_PASSWORD=$SSL_PASSWORD \
            -e SSL_PATH=$SSL_PATH \
            -e IMG_PATH=$IMG_PATH \
-           lkh8033/nextlevel:latest
+           ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel:latest
       env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DB_URL: ${{ secrets.DB_URL }}
