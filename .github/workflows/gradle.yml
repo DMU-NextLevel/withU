@@ -52,14 +52,13 @@ jobs:
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel
 
-    - name: pring key for debug
+    - name: test ssh connection
       run: |
-        echo "host : ${{secrets.SERVER_HOST }}
-        echo "user: ${{secrets.SERVER_USERNAME}}
-        echo "key: "
-        echo "${{ secrets.SERVER_KEY}}" | head -n 2
-        echo "${{ secrets.SERVER_KEY}}" | tail -n 2
-        echo "end check"
+        echo "${{ secrets.OCI_SSH_PRIVATE_KEY }}" > temp_key.pem
+        chmod 600 temp_key.pem
+  
+        ssh -i temp_key.pem -p 22 ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}
+        echo "success ssh"
 
     - name: ssh
       uses: appleboy/ssh-action@v0.1.6
