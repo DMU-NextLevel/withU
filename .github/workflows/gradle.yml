@@ -54,7 +54,10 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port: 22
         script: |
-         echo "remove old docker container" > log.text
+         rm -rf log.text
+         echo "rm log file and start first" >> log.text
+        
+         echo "remove old docker container" >> log.text
          docker stop container
          docker rm container
         
