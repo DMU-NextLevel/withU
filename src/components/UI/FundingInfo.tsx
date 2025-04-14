@@ -7,31 +7,30 @@ import StarterInfo from './StarterInfo'
 const FundingInfo = (): JSX.Element => {
 	return (
 		<FundingInfoWrapper>
-			<InfoImage src={ExamImage} />
-			<InfoTagWrapper>
-				<Tag>고양이</Tag>
-				<Tag>장난감</Tag>
-			</InfoTagWrapper>
-			<Title>글로벌 1위! 미국 2년 연속 1등 브랜드의 펫 공기털청기!</Title>
-			<Description>
-				이건 공기 청정기가 아닌 털청기입니다! 공기 청정은 기본, 공중에 날리는 털까지 모두 포집해버리니까요. 홈런펫 털청기로 집사와 주인님의 호흡기까지 건강하게 관리해보세요.
-			</Description>
-			<Rate>
-				<PeopleNum>
-					<span>194</span>명 참여
-				</PeopleNum>
-				<Amount>
-					<span>47,756,000</span>원 달성
-				</Amount>
-			</Rate>
-			<RowBox>
-				<ColumBox>
-					<Like src={LikeImage} />
-					<Liker>2,551</Liker>
-				</ColumBox>
-				<PayButton>스타터와 함께하기</PayButton>
-			</RowBox>
-			<StarterInfo />
+				<InfoImage src={ExamImage} />
+				<InfoTagWrapper>
+					<Tag>고양이</Tag>
+					<Tag>장난감</Tag>
+				</InfoTagWrapper>
+				<Title>글로벌 1위! 미국 2년 연속 1등 브랜드의 펫 공기털청기!</Title>
+				<Description>
+					이건 공기 청정기가 아닌 털청기입니다! 공기 청정은 기본, 공중에 날리는 털까지 모두 포집해버리니까요. 홈런펫 털청기로 집사와 주인님의 호흡기까지 건강하게 관리해보세요.
+				</Description>
+				<Rate>
+					<PeopleNum>
+						<span>194</span>명 참여
+					</PeopleNum>
+					<Amount>
+						<span>47,756,000</span>원 달성
+					</Amount>
+				</Rate>
+				<RowBox>
+					<ColumBox>
+						<Like src={LikeImage} />
+						<Liker>2,551</Liker>
+					</ColumBox>
+					<PayButton>스타터와 함께하기</PayButton>
+				</RowBox>
 		</FundingInfoWrapper>
 	)
 }
@@ -41,10 +40,10 @@ export default FundingInfo
 const FundingInfoWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	width: 20%;
+	width: 90%;
+	border-radius: 15px;
 	border: 3px solid #f3f3f3;
-	border-radius: 10px;
-	padding: 15px;
+	padding: 5%;
 `
 
 const InfoImage = styled.img`
