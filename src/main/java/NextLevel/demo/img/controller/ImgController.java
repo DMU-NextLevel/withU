@@ -25,10 +25,10 @@ public class ImgController {
 
     @GetMapping("/{imgPath}")
     public ResponseEntity<Resource> getImg(@PathVariable("imgPath") String imgPath) {
-        Path file = Paths.get("IMG_PATH").resolve(imgPath);
+        Path path = Paths.get(System.getProperty("user.dir") ,IMG_PATH, imgPath);
         Resource resource;
         try {
-            resource = new UrlResource(file.toUri());
+            resource = new UrlResource(path.toUri());
         } catch (MalformedURLException e){
             e.printStackTrace();
             throw new CustomException(ErrorCode.WRONG_IMG_PATH, e.getMessage());
