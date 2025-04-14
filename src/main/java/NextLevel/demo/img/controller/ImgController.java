@@ -25,7 +25,7 @@ public class ImgController {
 
     @GetMapping("/{imgPath}")
     public ResponseEntity<Resource> getImg(@PathVariable("imgPath") String imgPath) {
-        Path path = Paths.get(System.getProperty("user.dir") ,IMG_PATH, imgPath);
+        Path path = Paths.get(System.getProperty("user.dir") ,"/", imgPath);
         Resource resource;
         try {
             resource = new UrlResource(path.toUri());
