@@ -32,7 +32,6 @@ public class ImgService {
     @Value("${img.max_len}")
     private int MAX_IMG_LEN;
 
-    private final ServletContext servletContext;
     private final ImgRepository imgRepository;
 
     @Transactional
@@ -62,8 +61,7 @@ public class ImgService {
     // img uri 변경 없이 진짜 파일 값만 덮어쓰기
     public ImgEntity updateImg(MultipartFile imgFile, ImgEntity oldImg) {
         try {
-            Path path = Paths.get(System.getProperty("user.dir"), IMG_DEFAULT_PATH,
-                oldImg.getUri());
+            Path path = Paths.get(System.getProperty("user.dir"), IMG_DEFAULT_PATH, oldImg.getUri());
 
             Files.write(path, imgFile.getBytes());
 

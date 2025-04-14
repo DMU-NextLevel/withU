@@ -19,6 +19,8 @@ public enum ErrorCode {
     // img 관련 error
     ERROR_ON_SAVE_IMG(HttpStatus.CONFLICT, "03001","error on save img"),
     ERROR_ON_DELETE_IMG(HttpStatus.CONFLICT, "03002","error on delete img"),
+    NOT_FOUND_IMG(HttpStatus.BAD_REQUEST, "03003","not found img %s"),
+    WRONG_IMG_PATH(HttpStatus.INTERNAL_SERVER_ERROR, "03004","wrong image path %s"),
 
     // project
     NOT_CORRECT_TAG_SIZE(HttpStatus.BAD_REQUEST, "04001","invalidated tag input") ,
