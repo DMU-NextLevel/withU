@@ -99,6 +99,16 @@ const ResendButton = styled.button`
   cursor: pointer;
 `;
 
+const CheckButton = styled.button`
+  padding: 12px 16px;
+  background: #A66CFF;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
 const TimerText = styled.div`
   font-size: 14px;
   color: #A66CFF;
@@ -280,12 +290,17 @@ const Signup = () => {
           {nameError && <ErrorMessage>이름에는 한글만 적어주십시오.</ErrorMessage>}
 
           <Label>닉네임</Label>
-          <Input
-            type="text"
-            placeholder="사용하실 닉네임을 입력해주세요."
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-          />
+          <Row>
+            <CodeInput
+              type="text"
+              placeholder="사용하실 닉네임을 입력해주세요."
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+            <CheckButton onClick={() => alert(isNicknameValid ? '사용 가능' : '중복 닉네임')}>
+              중복확인
+            </CheckButton>
+          </Row>
           {nickname && (
             <NicknameCheckMessage isValid={isNicknameValid}>
               {isNicknameValid ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.'}
