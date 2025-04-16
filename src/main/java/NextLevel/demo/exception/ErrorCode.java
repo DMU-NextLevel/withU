@@ -6,15 +6,20 @@ public enum ErrorCode {
     // no authentication : 공통
     NEED_ADDITIONAL_DATA(HttpStatus.FORBIDDEN, "00403","Additional data required"),
     NO_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "00401","No authentication please login"),
+    INPUT_REQUIRED_PARAMETER(HttpStatus.BAD_REQUEST, "00404", "필수 파라미터를 입력해 주세요") ,
     NOT_AUTHOR(HttpStatus.BAD_REQUEST, "10001","작성자가 아닙니다"),
 
     //register
     ALREADY_EXISTS_EMAIL(HttpStatus.BAD_REQUEST, "01001","email already exists"),
-    SEND_EMAIL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "01002", "send email error"),
-    NOT_CORRECT_EMAIL_KEY(HttpStatus.BAD_REQUEST, "01003", "wrong email key"),
+    ALREADY_EXISTS_NICKNAME(HttpStatus.BAD_REQUEST, "01002","nickname already exists"),
+    SEND_EMAIL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "01003", "send email error"),
+    NOT_CORRECT_EMAIL_KEY(HttpStatus.BAD_REQUEST, "01004", "wrong email key"),
 
     // login
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "02001","Login failed"),
+
+    // user / my page
+    CAN_NOT_CHANGE_EMAIL(HttpStatus.BAD_REQUEST, "05001", "can not change email"),
 
     // img 관련 error
     ERROR_ON_SAVE_IMG(HttpStatus.CONFLICT, "03001","error on save img"),

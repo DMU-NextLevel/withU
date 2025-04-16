@@ -38,6 +38,9 @@ public class LoginService {
         Optional<UserDetailEntity> userDetailOptional = userDetailRepository.findBySocialProviderAndSocialId(socialProvider, socialId);
         UserDetailEntity userDetail = null;
         if(userDetailOptional.isEmpty()) {
+            // email, nick name 검증
+            checkEmailAndNickNameElseThrow(socialLoginDto.getEmail(), socialLoginDto.getNickName());
+
             UserEntity user = userRepository.save(socialLoginDto.toUserEntity());
 
             UserDetailEntity userDetailEntity = socialLoginDto.toUserDetailEntity(user);
@@ -56,6 +59,10 @@ public class LoginService {
         if(!checkEmailIsNotExist(dto.getEmail()))
             throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
 
+        // key 값 null 체크
+        if(dto.getKey() == null || dto.getKey().isEmpty())
+            throw new CustomException(ErrorCode.INPUT_REQUIRED_PARAMETER);
+
         emailService.checkEmailKeyAtRegister(dto.getEmail(), dto.getKey());
 
         if(dto.validateAllData())
@@ -65,13 +72,6 @@ public class LoginService {
         UserDetailEntity userDetail = userDetailRepository.save(dto.toUserDetailEntity(user));
 
         return userDetail;
-    }
-
-    public boolean checkEmailIsNotExist(String email) {
-        if(userDetailRepository.findByEmail(email).isEmpty())
-            return true;
-        else
-            return false;
     }
 
     @Transactional
@@ -84,8 +84,19 @@ public class LoginService {
         return user.get();
     }
 
-    // check nickname
-    public boolean checkNickName(String nickName) {
+    // check email nick name  else throw CustomException
+    public void checkEmailAndNickNameElseThrow(String email, String nickName) {
+        if(!checkEmailIsNotExist(email))
+            throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
+        if(!checkNickNameIsNotExist(nickName))
+            throw new CustomException(ErrorCode.ALREADY_EXISTS_NICKNAME);
+    }
+
+    public boolean checkEmailIsNotExist(String email) {
+        return userDetailRepository.findByEmail(email).isEmpty();
+    }
+
+    public boolean checkNickNameIsNotExist(String nickName) {
         return userRepository.findUserByNickName(nickName).isEmpty();
     }
 }

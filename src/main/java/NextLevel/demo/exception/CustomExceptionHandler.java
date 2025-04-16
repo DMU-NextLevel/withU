@@ -20,7 +20,10 @@ public class CustomExceptionHandler {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 파라미터를 입력해 주세요");
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", ErrorCode.INPUT_REQUIRED_PARAMETER.CustomErrorCode);
+        map.put("message", ErrorCode.INPUT_REQUIRED_PARAMETER.errorMessage);
+        return ResponseEntity.status(ErrorCode.INPUT_REQUIRED_PARAMETER.statusCode).body(map);
     }
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {

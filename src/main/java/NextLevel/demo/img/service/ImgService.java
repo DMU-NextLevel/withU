@@ -54,7 +54,7 @@ public class ImgService {
         }catch (Exception e){
             e.printStackTrace();
             log.info("save img fail ");
-            return null;
+            throw new CustomException(ErrorCode.ERROR_ON_SAVE_IMG);
         }
     }
 
@@ -73,7 +73,7 @@ public class ImgService {
         }catch (Exception e){
             e.printStackTrace();
             log.info("update img fail");
-            return null;
+            throw new CustomException(ErrorCode.ERROR_ON_SAVE_IMG);
         }
     }
 

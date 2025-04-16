@@ -85,7 +85,6 @@ public class EmailService {
 
         Pair pair = map.get(email);
         if(pair == null || !pair.key.equals(key)) {
-            log.info("check email key fail " + email + ", input key : " + key +", server key : " + pair.key);
             return false;
         }
         pair.isChecked = true;

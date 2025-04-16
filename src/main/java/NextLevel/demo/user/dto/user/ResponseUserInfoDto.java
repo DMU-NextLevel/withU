@@ -2,6 +2,7 @@ package NextLevel.demo.user.dto.user;
 
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,8 @@ public class ResponseUserInfoDto {
     private String socialProvider;
 
     private String img;
+
+    private List<String> mustChange;
 
     public static ResponseUserInfoDto of(UserEntity userFullEntity) {
         UserDetailEntity detail = userFullEntity.getUserDetail();
