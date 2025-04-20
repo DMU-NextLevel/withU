@@ -85,14 +85,14 @@ jwt:
 server:
   servlet:
     context-path: /
-  ssl:
-    enabled: true
-    key-store: ${SSL_PATH}
-    key-store-type: ${SSL_TYPE}
-    key-alias: ssl
-    key-store-password: ${SSL_PASSWORD}
-    protocol: TLS
-    protocols: TLSv1.2
+#  ssl:
+#    enabled: true
+#    key-store: ${SSL_PATH}
+#    key-store-type: ${SSL_TYPE}
+#    key-alias: ssl
+#    key-store-password: ${SSL_PASSWORD}
+#    protocol: TLS
+#    protocols: TLSv1.2
   port: 8080
 
 payment:
