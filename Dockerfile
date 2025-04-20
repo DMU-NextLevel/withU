@@ -23,7 +23,7 @@ COPY src/main/resources/springboot.conf /etc/nginx/sites-available/springboot.co
 RUN ln -s /etc/nginx/sites-available/springboot.conf /etc/nginx/sites-enabled/springboot.conf
 
 # Step 10: Copy the image files to be served by Nginx
-COPY src/main/resources/static/img /app/img
+RUN mkdir src/main/resources/static/img
 
 # Step 11: Expose ports for both Spring Boot (8080) and Nginx (80, 443)
 EXPOSE 80 443 8080
