@@ -19,8 +19,10 @@ FROM nginx:latest
 # Step 7: Copy the Nginx config file
 COPY src/main/resources/springboot.conf /etc/nginx/sites-available/springboot.conf
 
-# Step 8: Enable the site configuration by creating a symlink
-RUN ln -s /etc/nginx/sites-available/springboot.conf /etc/nginx/sites-enabled/springboot.conf
+# Step 8: Ensure sites-enabled exists and create symlink
+RUN mkdir -p /etc/nginx/sites-enabled && \
+    ln -s /etc/nginx/sites-available/springboot.conf /etc/nginx/sites-enabled/springboot.conf
+
 
 # Step 10: Copy the image files to be served by Nginx
 RUN mkdir src/main/resources/static/img
