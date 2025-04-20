@@ -1,17 +1,32 @@
-FROM openjdk:21-slim
+# Step 1: Use a base image with JDK
+FROM openjdk:17-jdk-slim as build
 
-ENV APP_HOME=/app
+# Step 2: Set the working directory for Spring Boot app
+WORKDIR /app
 
-ARG JAR_FILE_PATH=build/libs/demo-0.0.1-SNAPSHOT.jar
+# Step 3: Copy the JAR file into the container
+COPY target/my-spring-boot-app.jar /app/my-spring-boot-app.jar
 
-WORKDIR $APP_HOME
-
-RUN mkdir -p /app/img/
-
-COPY src/main/resources/keystore.p12 $APP_HOME/keystore.p12
-
-COPY $JAR_FILE_PATH app.jar
-
+# Step 4: Expose port 8080 for the Spring Boot app
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Step 5: Command to run the Spring Boot application
+CMD ["java", "-jar", "my-spring-boot-app.jar"]
+
+# Step 6: Use Nginx base image for static file serving
+FROM nginx:latest
+
+# Step 7: Copy the Nginx config file
+COPY src/main/resources/springboot.conf /etc/nginx/sites-available/springboot.conf
+
+# Step 8: Enable the site configuration by creating a symlink
+RUN ln -s /etc/nginx/sites-available/springboot.conf /etc/nginx/sites-enabled/springboot.conf
+
+# Step 10: Copy the image files to be served by Nginx
+COPY src/main/resources/img /app/img
+
+# Step 11: Expose ports for both Spring Boot (8080) and Nginx (80, 443)
+EXPOSE 80 443 8080
+
+# Step 12: Start both Nginx and Spring Boot app
+CMD service nginx start && java -jar /app/my-spring-boot-app.jar

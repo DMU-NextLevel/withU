@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  springboot:
+    build:
+      context: .  # 현재 디렉토리에서 Dockerfile을 빌드
+    container_name: springboot-container
+    ports:
+      - "8080:8080"  # Spring Boot 기본 포트
+    networks:
+      - app-network
+    restart: always
+
+  nginx:
+    build:
+      context: .  # 현재 디렉토리에서 Dockerfile을 빌드
+    container_name: nginx-container
+    ports:
+      - "443:443" # HTTPS 포트
+    volumes:
+      - /etc/letsencrypt/live/nextlevel.r-e.kr:/etc/nginx/ssl 
+      - /home/ubuntu/application-prod.yml:/app/application-prod.yml
+    depends_on:
+      - springboot  # Nginx는 Spring Boot가 먼저 실행되도록 설정
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
