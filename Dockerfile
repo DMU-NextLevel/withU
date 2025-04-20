@@ -1,32 +1,14 @@
-# Step 1: Use a base image with JDK
+# Step 1: OpenJDK 17 기반 이미지로 시작
 FROM openjdk:17-jdk-slim as build
 
-# Step 2: Set the working directory for Spring Boot app
+# Step 2: Spring Boot 애플리케이션을 위한 작업 디렉토리 설정
 WORKDIR /app
 
-# Step 3: Copy the JAR file into the container
+# Step 3: 빌드된 Spring Boot JAR 파일을 컨테이너로 복사
 COPY target/my-spring-boot-app.jar /app/my-spring-boot-app.jar
 
-# Step 4: Expose port 8080 for the Spring Boot app
+# Step 4: Spring Boot 애플리케이션 포트 8080 노출
 EXPOSE 8080
 
-# Step 5: Command to run the Spring Boot application
+# Step 5: Spring Boot 애플리케이션 실행 명령어
 CMD ["java", "-jar", "my-spring-boot-app.jar"]
-
-# Step 6: Use Nginx base image for static file serving
-FROM nginx:latest
-
-# Step 7: Copy the Nginx config file
-COPY src/main/resources/springboot.conf /etc/nginx/sites-available/springboot.conf
-
-# Step 8: Enable the site configuration by creating a symlink
-RUN ln -s /etc/nginx/sites-available/springboot.conf /etc/nginx/sites-enabled/springboot.conf
-
-# Step 10: Copy the image files to be served by Nginx
-COPY src/main/resources/img /app/img
-
-# Step 11: Expose ports for both Spring Boot (8080) and Nginx (80, 443)
-EXPOSE 80 443 8080
-
-# Step 12: Start both Nginx and Spring Boot app
-CMD service nginx start && java -jar /app/my-spring-boot-app.jar
