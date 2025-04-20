@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim as build
 WORKDIR /app
 
 # Step 3: 빌드된 Spring Boot JAR 파일을 컨테이너로 복사
-COPY target/my-spring-boot-app.jar /app/my-spring-boot-app.jar
+COPY target/app.jar /app/app.jar
 
 # Step 4: Spring Boot 애플리케이션 포트 8080 노출
 EXPOSE 8080
