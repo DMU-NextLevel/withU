@@ -4,7 +4,7 @@ services:
   springboot:
     build:
       context: .  # 현재 디렉토리에서 Dockerfile을 빌드
-    container_name: springboot-container
+    container_name: springboot
     ports:
       - "8080:8080"  # Spring Boot 기본 포트
     networks:
@@ -14,7 +14,7 @@ services:
   nginx:
     build:
       context: .  # 현재 디렉토리에서 Dockerfile을 빌드
-    container_name: nginx-container
+    container_name: nginx
     ports:
       - "443:443" # HTTPS 포트
     volumes:
