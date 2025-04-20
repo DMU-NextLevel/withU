@@ -41,10 +41,16 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
     - name: docker image build
-      run: docker build -t lkh8033/nextlevel .
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot -f Dockerfile .
 
-    - name: docker Hub push
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel
+      # Step 7: Build Nginx image
+    - name: Build Nginx Docker image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
+          # Step 8: Push both Docker images to Docker Hub
+    - name: Push Docker images
+      run: |
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx
 
   ssh:
     needs: build
@@ -67,10 +73,9 @@ jobs:
          docker rm container
         
          echo "pull docker at ssh server" >> log.text
-         docker pull lkh8033/nextlevel:latest
+         docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
+         docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
            
          echo "start new container" >> log.text
          
-         docker run -d \
-          --name container \
-          lkh8033/nextlevel:latest
+         docker-compose up -d
