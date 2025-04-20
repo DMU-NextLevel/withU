@@ -11,4 +11,4 @@ COPY build/libs/demo-0.0.1-SNAPSHOT.jar /app/app.jar
 EXPOSE 8080
 
 # Step 5: Spring Boot 애플리케이션 실행 명령어
-CMD ["java", "-jar", "my-spring-boot-app.jar"]
+CMD ["java", "-jar", "app.jar"]
