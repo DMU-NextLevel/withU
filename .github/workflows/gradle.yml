@@ -69,8 +69,10 @@ jobs:
          echo "rm log file and start first" >> log.text
         
          echo "remove old docker container" >> log.text
-         docker stop container
-         docker rm container
+         docker stop springboot
+         docker rm springboot
+         docker stop nginx
+         docker rm nginx
         
          echo "pull docker at ssh server" >> log.text
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
