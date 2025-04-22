@@ -1,5 +1,5 @@
 # Step 1: OpenJDK 17 기반 이미지로 시작
-FROM openjdk:17-jdk-slim as build
+FROM openjdk:21-jdk-slim as build
 
 # Step 2: Spring Boot 애플리케이션을 위한 작업 디렉토리 설정
 WORKDIR /app
@@ -11,4 +11,4 @@ COPY build/libs/demo-0.0.1-SNAPSHOT.jar /app/app.jar
 EXPOSE 8080
 
 # Step 5: Spring Boot 애플리케이션 실행 명령어
-CMD ["java", "-jar", "my-spring-boot-app.jar"]
+CMD ["java", "-jar", "app.jar"]
