@@ -15,7 +15,7 @@ spring:
     name: demo
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_URL}
+    url: jdbc:mysql://172.31.91.218:3306/next_level
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
