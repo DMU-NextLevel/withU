@@ -59,19 +59,20 @@ jobs:
     steps:
      - uses: actions/checkout@v4
     
-     - name: check
-       run: pwd
+     # - name: insert need files
+     #   run: |
+     #    scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
+     #    scp ${{ github.workspace }}/springboot.conf ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
 
-     - name: check
-       run: ls -al ${{ github.workspace }}
-
-     - name: check
-       run: ls -al
-    
-     - name: insert need files
-       run: |
-        scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
-        scp ${{ github.workspace }}/springboot.conf ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
+     - name: src
+       uses: appleboy/scp-action@v0.1.6
+       with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SERVER_KEY }}
+        source: docker-compose.yml, springboot.conf
+        target: "/home/${{ secrets.SERVER_USERNAME }}/"
+ 
 
      - name: ssh
        uses: appleboy/ssh-action@v0.1.6
