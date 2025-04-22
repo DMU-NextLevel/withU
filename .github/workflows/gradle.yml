@@ -59,8 +59,9 @@ jobs:
     steps:
      - name: insert need files
        run: |
-        scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
-        scp ${{ github.workspace }}/springboot.conf ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
+        pwd
+        scp docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
+        scp springboot.conf ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
 
      - name: ssh
        uses: appleboy/ssh-action@v0.1.6
