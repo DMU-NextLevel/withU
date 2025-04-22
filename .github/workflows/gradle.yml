@@ -25,46 +25,41 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-  #   - name: Setup Gradle
-  #     uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
-  #   - name: chmod
-  #     run: chmod 777 ./gradlew
+    - name: chmod
+      run: chmod 777 ./gradlew
 
-  #   - name: Build with Gradle Wrapper
-  #     run: ./gradlew build
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build
 
-  #   - name: docker login
-  #     uses: docker/login-action@v2
-  #     with:
-  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #       password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: docker login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-  #   - name: docker image build
-  #     run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot -f Dockerfile .
+    - name: docker image build
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot -f Dockerfile .
 
-  #     # Step 7: Build Nginx image
-  #   - name: Build Nginx Docker image
-  #     run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
-  #         # Step 8: Push both Docker images to Docker Hub
-  #   - name: Push Docker images
-  #     run: |
-  #       docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot
-  #       docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx
+      # Step 7: Build Nginx image
+    - name: Build Nginx Docker image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
+          # Step 8: Push both Docker images to Docker Hub
+    - name: Push Docker images
+      run: |
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx
 
   ssh:
-  #  needs: build
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
      - uses: actions/checkout@v4
-    
-     # - name: insert need files
-     #   run: |
-     #    scp ${{ github.workspace }}/docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
-     #    scp ${{ github.workspace }}/springboot.conf ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
-
-     - name: src
+   
+     - name: scp
        uses: appleboy/scp-action@v0.1.6
        with:
         host: ${{ secrets.SERVER_HOST }}
