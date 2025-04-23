@@ -81,6 +81,9 @@ jobs:
          docker rm springboot nginx
          docker rmi springboot
          docker rmi nginx
+
+         rm -rf /home/${{ secrets.SERVER_USERNAME }}/img
+         mkdir -p /home/${{ secrets.SERVER_USERNAME }}/img
         
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
