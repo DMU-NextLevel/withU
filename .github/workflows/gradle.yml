@@ -77,19 +77,12 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port: 22
         script: |
-         rm -rf log.text
-         echo "rm log file and start first" >> log.text
-        
-         echo "remove old docker container" >> log.text
          docker stop springboot nginx
          docker rm springboot nginx
          docker rmi springboot
          docker rmi nginx
         
-         echo "pull docker at ssh server" >> log.text
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
-           
-         echo "start new container" >> log.text
          
          docker-compose up -d
