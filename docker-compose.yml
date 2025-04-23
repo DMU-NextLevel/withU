@@ -7,8 +7,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "/home/${{ secrets.SERVER_USERNAME }}/application-prod.yml:/app/application-prod.yml"
-      - "/home/${{ secrets.SERVER_USERNAME }}/img:/app/img"
+      - /home/ubuntu/application-prod.yml:/app/application-prod.yml
+      - /home/ubuntu/img:/app/img
     command: ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod", "--spring.config.additional-location=file:/app/application-prod.yml"]
     networks:
       - app-network
@@ -20,8 +20,8 @@ services:
       - "443:443"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
-      - "/home/${{ secrets.SERVER_USERNAME }}/springboot.conf:/etc/nginx/nginx.conf"
-      - "/home/${{ secrets.SERVER_USERNAME }}/img:/usr/share/nginx/html/img"
+      - /home/ubuntu/springboot.conf:/etc/nginx/nginx.conf
+      - /home/ubuntu/img:/usr/share/nginx/html/img
     depends_on:
       - springboot
     networks:
