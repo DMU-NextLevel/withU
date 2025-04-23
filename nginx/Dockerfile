@@ -8,9 +8,6 @@ COPY nginx/springboot.conf /etc/nginx/sites-available/springboot.conf
 RUN mkdir -p /etc/nginx/sites-enabled && \
     ln -s /etc/nginx/sites-available/springboot.conf /etc/nginx/sites-enabled/springboot.conf
 
-# Step 4: 정적 파일을 서빙할 디렉토리 생성
-RUN mkdir -p /app/img
-
 # Step 6: 80, 443 포트 노출
 EXPOSE 80 443
 
