@@ -1,3 +1,5 @@
+baseUrl: https://nextlevel.r-e.kr
+
 logging:
   level:
     org:
