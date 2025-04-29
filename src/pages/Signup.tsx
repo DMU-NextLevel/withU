@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import signupImage from '../assets/images/Signup.png';
 import { api } from '../AxiosInstance'
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
 	const [password, setPassword] = useState('')
@@ -15,7 +16,9 @@ const Signup = () => {
 	const [email, setEmail] = useState('')
 	const [emailError, setEmailError] = useState(false)
 	const [termsError, setTermsError] = useState(false)
-  const [isNicknameValid, setIsNicknameVaild] = useState(false)
+  	const [isNicknameValid, setIsNicknameVaild] = useState(false)
+	const [checkOn, setCheckOn] = useState<boolean>(false)
+	const navigate = useNavigate()
 
 	const termsList = [
 		'[필수] 만 14세 이상입니다.',
@@ -104,6 +107,7 @@ const Signup = () => {
 		if (!nameError && !emailError && !passwordError && !termsError) {
 			api.put('/public/login', formdata)
 			alert('회원가입 완료!')
+			navigate('/login')
 		}
 	}
 
@@ -155,10 +159,12 @@ const Signup = () => {
         if(response.status === 200) {
           if(nickname.length > 0 && nickname !== takenNick) {
             setIsNicknameVaild(true)
+			setCheckOn(true)
           }
         } else if(response.status === 409) {
           if(nickname.length > 0 && nickname !== takenNick) {
             setIsNicknameVaild(false)
+			setCheckOn(true)
           }
         }
       })
@@ -192,7 +198,7 @@ const Signup = () => {
 						<CodeInput type='text' placeholder='사용하실 닉네임을 입력해주세요.' value={nickname} onChange={(e) => setNickname(e.target.value)} />
 						<CheckButton onClick={nicknameCheck}>중복확인</CheckButton>
 					</Row>
-					{nickname && <NicknameCheckMessage isValid={isNicknameValid}>{isNicknameValid ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.'}</NicknameCheckMessage>}
+					{checkOn && <NicknameCheckMessage isValid={isNicknameValid}>{isNicknameValid ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.'}</NicknameCheckMessage>}
 
 					<Label>이메일 주소</Label>
 					<Row>

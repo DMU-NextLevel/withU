@@ -7,12 +7,14 @@ import { motion } from 'framer-motion';
 import bannerImage from '../assets/images/banner.png';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../AxiosInstance';
+import { useAuth } from '../hooks/AuthContext';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const navigate = useNavigate();
+  const { login } = useAuth()
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -20,12 +22,22 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await api.post("/public/login", {
-        email,
-        password
-      })
-      
-      alert("로그인 성공")
+      const response = await api.post('/public/login', {
+				email,
+				password,
+			})
+
+			const accessToken = response.headers['access']
+			const refreshToken = response.headers['refresh']
+			console.log(refreshToken)
+      console.log(response)
+      console.log(response.headers['Refresh'])
+
+			if (refreshToken || accessToken) {
+        login(accessToken, refreshToken)
+				localStorage.setItem('access', accessToken)
+				localStorage.setItem('refresh', refreshToken)
+			}
       navigate("/")
     } catch(e:any) {
       const errorCode = e.response?.data?.code
