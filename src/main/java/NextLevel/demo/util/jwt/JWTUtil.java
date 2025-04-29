@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +53,7 @@ public class JWTUtil {
         claims.put("role", role);
         String token = makeToken(userId.toString(), claims, ACCESS_TOKEN_TIME);
 
-        response.addCookie(createCookie(ACCESS_TOKEN, token, ACCESS_TOKEN_TIME));
+        response.addHeader("Set-Cookie", createCookie(ACCESS_TOKEN, token, ACCESS_TOKEN_TIME));
     }
 
     public void addRefresh(HttpServletResponse response, @NotNull Long userId, String uuid) {
@@ -61,7 +62,7 @@ public class JWTUtil {
 
         String token = makeToken(userId.toString(), claims, REFRESH_TOKEN_TIME);
 
-        response.addCookie(createCookie(REFRESH_TOKEN, token, REFRESH_TOKEN_TIME));
+        response.addHeader("Set-Cookie", createCookie(REFRESH_TOKEN, token, REFRESH_TOKEN_TIME));
     }
 
     private String makeToken(String userId, Map<String, String> claims, int time) {
@@ -99,11 +100,16 @@ public class JWTUtil {
         return claims;
     }
 
-    private Cookie createCookie(String object, String token, int age){
-        Cookie cookie = new Cookie(object, token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(age);
-        return cookie;
+    private String createCookie(String name, String token, int age){
+        ResponseCookie cookie = ResponseCookie.from(name, token)
+            .path("/")
+            .sameSite("None")
+            .httpOnly(true)
+            .secure(true)
+            .maxAge(age)
+            .build();
+
+        return cookie.toString();
     }
+    
 }
