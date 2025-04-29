@@ -1,5 +1,7 @@
 package NextLevel.demo.user.service;
 
+import NextLevel.demo.img.entity.ImgEntity;
+import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.dto.login.RequestUserLoginDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
@@ -24,6 +26,7 @@ public class LoginService {
     private final UserDetailRepository userDetailRepository;
     private final JWTUtil jwtUtil;
     private final EmailService emailService;
+    private final ImgService imgService;
 
     // use refresh token filter
     public UserDetailEntity findUserDetailByUserId(Long userId) {
@@ -56,8 +59,14 @@ public class LoginService {
     // user UserController : post register
     @Transactional
     public UserDetailEntity register(RequestUserCreateDto dto) {
-        if(!checkEmailIsNotExist(dto.getEmail()))
-            throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
+        checkEmailAndNickNameElseThrow(dto.getEmail(), dto.getNickName());
+
+        // save img get uri
+        ImgEntity savedImg = null;
+        try {
+            savedImg = imgService.saveImg(dto.getImg());
+        }catch (CustomException e) {;}
+        dto.setImgEntity(savedImg);
 
         // key 값 null 체크
         if(dto.getKey() == null || dto.getKey().isEmpty())
