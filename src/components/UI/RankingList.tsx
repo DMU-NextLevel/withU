@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 더미 데이터
@@ -164,13 +165,19 @@ const ProjectTitle = styled.span`
 
 
 const RankingList:React.FC = () => {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate('/funding')
+  }
+
   return (
     <Wrapper>
       <Title>실시간 랭킹</Title>
       
       <List>
         {projects.map((item, index) => (
-          <ImageTextItem key={item.id}>
+          <ImageTextItem onClick={handleClick} key={item.id}>
             <RankNumber>{index + 1}</RankNumber> {/* 숫자 컴포넌트 추가 */}
             <ImageWrapper>
               {item.image ? (

@@ -22,7 +22,7 @@ const FundingPageWrapper = styled.div`
 	display: flex;
 	width: 95%;
 	min-height: 60vh;
-	padding: 0 3%;
+	padding-left: 2%;
 	gap: 2%;
 `
 
