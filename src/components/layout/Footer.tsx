@@ -25,7 +25,6 @@ const FooterLayout = styled.div`
 	height: 200px;
 	background-color: #f3f3f3;
 	margin-top: 10vh;
-	padding: 20px 40px;
 `
 
 const FooterBaro = styled.div`
@@ -39,6 +38,7 @@ const FooterBaro = styled.div`
 			cursor: pointer;
 		}
 	}
+	padding-left: 30px;
 `
 
 const FooterText = styled.p`
