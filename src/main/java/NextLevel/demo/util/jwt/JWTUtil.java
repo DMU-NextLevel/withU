@@ -65,7 +65,7 @@ public class JWTUtil {
         response.addHeader("Set-Cookie", createCookie(REFRESH_TOKEN, token, REFRESH_TOKEN_TIME));
     }
 
-    private String makeToken(String userId, Map<String, String> claims, int time) {
+    public String makeToken(String userId, Map<String, String> claims, int time) {
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(userId)
@@ -111,5 +111,6 @@ public class JWTUtil {
 
         return cookie.toString();
     }
-    
+    //response.addHeader("Set-Cookie", createCookie(ACCESS_TOKEN, token, ACCESS_TOKEN_TIME));
+
 }

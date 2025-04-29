@@ -11,6 +11,7 @@ import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,9 +41,13 @@ public class LoginController {
 
         UserDetailEntity createdUser = loginService.register(requestUserCreateDto);
 
-        jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
+        //jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("success", null));
+        HashMap<String, String> claims = new HashMap<>();
+        claims.put("uuid", createdUser.getUUID());
+        String token = jwtUtil.makeToken(createdUser.getUser().getId().toString(), claims, 999999);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("success", token));
     }
 
     @PostMapping
@@ -52,9 +57,13 @@ public class LoginController {
 
         UserDetailEntity user = loginService.login(requestUserLoginDto);
 
-        jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
+        //jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
 
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
+        HashMap<String, String> claims = new HashMap<>();
+        claims.put("uuid", user.getUUID());
+        String token = jwtUtil.makeToken(user.getUser().getId().toString(), claims, 999999);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", token));
     }
 
     @GetMapping("/nickName")
