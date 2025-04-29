@@ -101,7 +101,7 @@ public class JWTUtil {
 
     private Cookie createCookie(String object, String token, int age){
         Cookie cookie = new Cookie(object, token);
-        // cookie.setHttpOnly(false);
+        cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(age);
         return cookie;
