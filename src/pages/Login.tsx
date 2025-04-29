@@ -5,6 +5,131 @@ import { FcGoogle } from 'react-icons/fc';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import bannerImage from '../assets/images/banner.png';
+import { useNavigate } from 'react-router-dom';
+import { api } from '../AxiosInstance';
+
+const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const navigate = useNavigate();
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleLogin = async () => {
+    try {
+      await api.post("/public/login", {
+        email,
+        password
+      })
+      
+      alert("로그인 성공")
+      navigate("/")
+    } catch(e:any) {
+      const errorCode = e.response?.data?.code
+      console.log(e)
+      if(errorCode === '02001') {
+        alert('아이디와 비밀번호를 잘못 입력하였습니다.')
+      } else {
+        alert("다시 시도해주세요. (서버에러)")
+      }
+    }
+  }
+
+  return (
+    <>
+      
+      <style>
+        {`
+          input[type='password']::-ms-reveal,
+          input[type='password']::-webkit-credentials-auto-fill-button,
+          input[type='password']::-webkit-password-toggle-button {
+            display: none;
+          }
+        `}
+      </style>
+
+      <div style={styles.container}>
+        <div style={styles.left}>
+          <div style={styles.formBox}>
+            <h2 style={styles.title}>이메일로 로그인</h2>
+
+            <label style={styles.label}>이메일 주소</label>
+            <div style={styles.inputWrapper}>
+              <input
+                style={styles.input}
+                type="email"
+                placeholder="이메일 주소를 입력해주세요"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <label style={styles.label}>비밀번호</label>
+            <div style={styles.inputWrapper}>
+              <input
+                style={styles.input}
+                type={showPassword ? 'text' : 'password'}
+                placeholder="비밀번호를 입력해주세요"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {showPassword ? (
+                <AiOutlineEye style={styles.eyeIcon} onClick={togglePassword} />
+              ) : (
+                <AiOutlineEyeInvisible style={styles.eyeIcon} onClick={togglePassword} />
+              )}
+            </div>
+
+            <button style={styles.button} onClick={handleLogin}>로그인</button>
+
+            <p style={styles.socialText}>다른 방법으로 로그인</p>
+            <div style={styles.socialIcons}>
+              <RiKakaoTalkFill style={{ ...styles.iconStyle, background: '#fae100' }} />
+              <SiNaver style={{ ...styles.iconStyle, background: '#03c75a', color: 'white' }} />
+              <FcGoogle style={styles.iconStyle} />
+            </div>
+
+            <div style={styles.bottomText}>
+              아직 텀블벅 계정이 없으신가요?
+              <a href="http://localhost:3000/signup" style={styles.link}>회원가입</a>
+              <br />
+              혹시 비밀번호를 잊으셨나요?
+              <a href="http://localhost:3000/IDFindPage" style={styles.link}>비밀번호 재설정</a>
+            </div>
+          </div>
+        </div>
+
+        <div style={styles.right}>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          ></motion.div>
+
+          <motion.img
+            src={bannerImage}  
+            alt="withU 설명 이미지"
+            style={styles.image}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+          ></motion.div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Login;
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
@@ -108,99 +233,3 @@ const styles: { [key: string]: React.CSSProperties } = {
     textDecoration: 'none',
   },
 };
-
-const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const togglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  return (
-    <>
-      
-      <style>
-        {`
-          input[type='password']::-ms-reveal,
-          input[type='password']::-webkit-credentials-auto-fill-button,
-          input[type='password']::-webkit-password-toggle-button {
-            display: none;
-          }
-        `}
-      </style>
-
-      <div style={styles.container}>
-        <div style={styles.left}>
-          <div style={styles.formBox}>
-            <h2 style={styles.title}>이메일로 로그인</h2>
-
-            <label style={styles.label}>이메일 주소</label>
-            <div style={styles.inputWrapper}>
-              <input
-                style={styles.input}
-                type="email"
-                placeholder="이메일 주소를 입력해주세요"
-              />
-            </div>
-
-            <label style={styles.label}>비밀번호</label>
-            <div style={styles.inputWrapper}>
-              <input
-                style={styles.input}
-                type={showPassword ? 'text' : 'password'}
-                placeholder="비밀번호를 입력해주세요"
-              />
-              {showPassword ? (
-                <AiOutlineEye style={styles.eyeIcon} onClick={togglePassword} />
-              ) : (
-                <AiOutlineEyeInvisible style={styles.eyeIcon} onClick={togglePassword} />
-              )}
-            </div>
-
-            <button style={styles.button}>로그인</button>
-
-            <p style={styles.socialText}>다른 방법으로 로그인</p>
-            <div style={styles.socialIcons}>
-              <RiKakaoTalkFill style={{ ...styles.iconStyle, background: '#fae100' }} />
-              <SiNaver style={{ ...styles.iconStyle, background: '#03c75a', color: 'white' }} />
-              <FcGoogle style={styles.iconStyle} />
-            </div>
-
-            <div style={styles.bottomText}>
-              아직 텀블벅 계정이 없으신가요?
-              <a href="http://localhost:3000/signup" style={styles.link}>회원가입</a>
-              <br />
-              혹시 비밀번호를 잊으셨나요?
-              <a href="http://localhost:3000/IDFindPage" style={styles.link}>비밀번호 재설정</a>
-            </div>
-          </div>
-        </div>
-
-        <div style={styles.right}>
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-          ></motion.div>
-
-          <motion.img
-            src={bannerImage}  
-            alt="withU 설명 이미지"
-            style={styles.image}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-          />
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-          ></motion.div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default Login;
