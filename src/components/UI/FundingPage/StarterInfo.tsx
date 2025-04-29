@@ -1,7 +1,7 @@
 import React, { JSX, useState } from "react";
 import styled from "styled-components";
-import UserImage from '../../assets/images/default_profile.png'
-import FollowImage from '../../assets/images/Heart.svg'
+import UserImage from '../../../assets/images/default_profile.png'
+import FollowImage from '../../../assets/images/Heart.svg'
 import StarterScore from './StarterScore'
 
 const StarterInfo = (): JSX.Element => {

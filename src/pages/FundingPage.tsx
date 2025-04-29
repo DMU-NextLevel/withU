@@ -1,8 +1,8 @@
 import React from "react"
 import styled from "styled-components"
-import FundingInfo from "../components/UI/FundingInfo"
-import StarterInfo from '../components/UI/StarterInfo'
-import FundingContent from '../components/UI/FundingContent'
+import FundingInfo from "../components/UI/FundingPage/FundingInfo"
+import StarterInfo from '../components/UI/FundingPage/StarterInfo'
+import FundingContent from '../components/UI/FundingPage/FundingContent'
 
 const FundingPage: React.FC = () => {
 	return (

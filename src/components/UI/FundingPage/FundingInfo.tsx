@@ -1,7 +1,7 @@
 import React, { JSX } from "react"
 import styled from "styled-components"
-import ExamImage from "../../assets/images/NextLevel.png"
-import LikeImage from "../../assets/images/Like.svg"
+import ExamImage from "../../../assets/images/NextLevel.png"
+import LikeImage from "../../../assets/images/Like.svg"
 import StarterInfo from './StarterInfo'
 
 const FundingInfo = (): JSX.Element => {
