@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import A from './pages/a';
 import MyPage from './pages/MyPage';
 import MainPage from './pages/MainPage'
+import FundingPage from './pages/FundingPage'
 
 function App() {
 	return (
@@ -30,6 +31,7 @@ const AppWrapper = () => {
         		<Route path="/signup" element={<Signup />} />
         		<Route path="/idfind" element={<IDFindPage />} />
 				<Route path="/mypage" element={<MyPage />} />
+				<Route path='/funding' element={<FundingPage />} />
 			</Routes>
 			{!hideLayout.includes(location.pathname) && <Footer />}
 		</>
