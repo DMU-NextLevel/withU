@@ -17,7 +17,6 @@ import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.service.UserService;
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -47,7 +47,11 @@ public class ProjectService {
         validateUser(user);
         dto.setUser(user);
 
-        dto.setTitleImgEntity(imgService.saveImg(dto.getTitleImg()));
+        ImgEntity img = null;
+        try{
+            img = imgService.saveImg(dto.getTitleImg());
+        }catch (CustomException e){;}
+        dto.setTitleImgEntity(img);
 
         ProjectEntity newProject = dto.toEntity();
 

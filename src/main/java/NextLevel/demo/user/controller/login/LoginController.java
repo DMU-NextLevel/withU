@@ -38,12 +38,6 @@ public class LoginController {
         @ModelAttribute @Valid RequestUserCreateDto requestUserCreateDto,
         HttpServletResponse httpServletResponse) {
 
-        loginService.checkEmailAndNickNameElseThrow(requestUserCreateDto.getEmail(), requestUserCreateDto.getNickName());
-
-        // save img get uri
-        ImgEntity savedImg = imgService.saveImg(requestUserCreateDto.getImg());
-        requestUserCreateDto.setImgEntity(savedImg);
-
         UserDetailEntity createdUser = loginService.register(requestUserCreateDto);
 
         jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
