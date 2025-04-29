@@ -47,7 +47,7 @@ public class LoginController {
         claims.put("uuid", createdUser.getUUID());
         String token = jwtUtil.makeToken(createdUser.getUser().getId().toString(), claims, 999999);
 
-        return ResponseEntity.ok().header("access", token).body(new SuccessResponse("success", token));
+        return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", token));
     }
 
     @PostMapping
@@ -63,7 +63,7 @@ public class LoginController {
         claims.put("uuid", user.getUUID());
         String token = jwtUtil.makeToken(user.getUser().getId().toString(), claims, 999999);
 
-        return ResponseEntity.ok().header(token).body(new SuccessResponse("success", token));
+        return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", token));
     }
 
     @GetMapping("/nickName")
