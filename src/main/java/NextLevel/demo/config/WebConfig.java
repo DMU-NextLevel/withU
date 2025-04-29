@@ -17,9 +17,9 @@ public class WebConfig {
                     .allowedOrigins("http://localhost:3000") // 프론트 주소
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
-                    .allowCredentials(true);
                     .exposedHeaders("access")
                     .exposedHeaders("refresh")
+                    .allowCredentials(true);
             }
         };
     }
