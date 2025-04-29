@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
-import MainPage from './pages/MainPage'
 import { HeaderMain, HeaderSub } from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import IDFindPage from './pages/IDFindPage';
@@ -8,6 +7,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import A from './pages/a';
 import MyPage from './pages/MyPage';
+import MainPage from './pages/MainPage'
 
 function App() {
 	return (
