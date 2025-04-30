@@ -107,7 +107,7 @@ public class JWTUtil {
             .httpOnly(true)
             .secure(true)
             .maxAge(age)
-            .domain("127.0.0.1.nip.io")
+            .domain("with-you-official.netlify.app")
             .build();
 
         return cookie.toString();
