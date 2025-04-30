@@ -41,7 +41,7 @@ public class LoginController {
 
         UserDetailEntity createdUser = loginService.register(requestUserCreateDto);
 
-        //jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
+        jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
 
         HashMap<String, String> claims = new HashMap<>();
         claims.put("uuid", createdUser.getUUID());
@@ -57,7 +57,7 @@ public class LoginController {
 
         UserDetailEntity user = loginService.login(requestUserLoginDto);
 
-        //jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
+        jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
 
         HashMap<String, String> claims = new HashMap<>();
         claims.put("uuid", user.getUUID());
