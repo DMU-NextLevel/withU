@@ -15,8 +15,8 @@ const MyPage = () => {
         </NavMenu>
 
         <ProfileBox>
-          <Emoji>😕</Emoji>
-          <Name>김주련</Name>
+          <Emoji>🤚🏼</Emoji>
+          <Name>김찬영</Name>
           <SettingsBtn>내 정보 설정</SettingsBtn>
         </ProfileBox>
 
@@ -36,7 +36,7 @@ const MyPage = () => {
 
       <Main>
         <ProfileSection>
-          <h2>김주련님 안녕하세요.</h2>
+          <h2>김찬영님 안녕하세요.</h2>
           <InviteBanner>
             새로운 위터를 초대하고 최대 50,000P 리워드를 수령하세요!
           </InviteBanner>
