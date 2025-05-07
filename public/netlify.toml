@@ -1,23 +1,23 @@
 [[redirects]]
     from = "/public/*"
-    to = "https://nextlevel.r-e.kr/public/:splat"
+    to = "https://api.nextlevel.r-e.kr/public/:splat"
     status = 200
     force = true
 
 [[redirects]]
     from = "/social/*"
-    to = "https://nextlevel.r-e.kr/social/:splat"
+    to = "https://api.nextlevel.r-e.kr/social/:splat"
     status = 200
     force = true
 
 [[redirects]]
     from = "/payment/*"
-    to = "https://nextlevel.r-e.kr/payment/:splat"
+    to = "https://api.nextlevel.r-e.kr/payment/:splat"
     status = 200
     force = true
 
 [[redirects]]
     from = "/api1/*"
-    to = "https://nextlevel.r-e.kr/api1/:splat"
+    to = "https://api.nextlevel.r-e.kr/api1/:splat"
     status = 200
     force = true
