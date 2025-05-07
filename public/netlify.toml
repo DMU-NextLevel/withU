@@ -18,6 +18,6 @@
 
 [[redirects]]
     from = "/api1/*"
-    to = "https://nextlevel.r-e.kr/api1:splat"
+    to = "https://nextlevel.r-e.kr/api1/:splat"
     status = 200
     force = true
