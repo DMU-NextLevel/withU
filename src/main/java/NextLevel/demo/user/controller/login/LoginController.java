@@ -43,10 +43,6 @@ public class LoginController {
 
         jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
 
-        HashMap<String, String> claims = new HashMap<>();
-        claims.put("uuid", createdUser.getUUID());
-        String token = jwtUtil.makeToken(createdUser.getUser().getId().toString(), claims, 999999);
-
         return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", token));
     }
 
@@ -58,10 +54,6 @@ public class LoginController {
         UserDetailEntity user = loginService.login(requestUserLoginDto);
 
         jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
-
-        HashMap<String, String> claims = new HashMap<>();
-        claims.put("uuid", user.getUUID());
-        String token = jwtUtil.makeToken(user.getUser().getId().toString(), claims, 999999);
 
         return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", token));
     }
