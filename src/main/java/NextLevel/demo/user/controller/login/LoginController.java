@@ -43,7 +43,7 @@ public class LoginController {
 
         jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
 
-        return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", token));
+        return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", null));
     }
 
     @PostMapping
@@ -55,7 +55,7 @@ public class LoginController {
 
         jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
 
-        return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", token));
+        return ResponseEntity.ok().header("refresh", token).body(new SuccessResponse("success", null));
     }
 
     @GetMapping("/nickName")
