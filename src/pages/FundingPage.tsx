@@ -1,17 +1,26 @@
-import React from "react"
-import styled from "styled-components"
-import FundingInfo from "../components/UI/FundingPage/FundingInfo"
+import React, { JSX, useState } from 'react'
+import styled from 'styled-components'
+import FundingInfo from '../components/UI/FundingPage/FundingInfo'
 import StarterInfo from '../components/UI/FundingPage/StarterInfo'
 import FundingContent from '../components/UI/FundingPage/FundingContent'
+import FundingPay from '../components/UI/FundingPage/FundingPay'
+import Modal from '../components/layout/Modal'
 
-const FundingPage: React.FC = () => {
+const FundingPage = (): JSX.Element => {
+	const [payOpen, setPayOpen] = useState<boolean>(false)
+
 	return (
 		<FundingPageWrapper>
 			<ColumBox>
-				<FundingInfo />
+				<FundingInfo setPayOpen={setPayOpen} />
 				<StarterInfo />
 			</ColumBox>
-			<FundingContent></FundingContent>
+			<FundingContent />
+			{payOpen && (
+				<Modal onClose={() => setPayOpen(false)}>
+					<FundingPay />
+				</Modal>
+			)}
 		</FundingPageWrapper>
 	)
 }
