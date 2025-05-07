@@ -7,12 +7,14 @@ import { motion } from 'framer-motion';
 import bannerImage from '../assets/images/banner.png';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../AxiosInstance';
+import { useAuth } from '../hooks/AuthContext';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const navigate = useNavigate();
+  const { login } = useAuth()
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -20,12 +22,22 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await api.post("/public/login", {
-        email,
-        password
-      })
-      
-      alert("로그인 성공")
+      const response = await api.post('/public/login', {
+				email,
+				password,
+			})
+
+			const accessToken = response.headers['access']
+			const refreshToken = response.headers['refresh']
+			console.log(refreshToken)
+      console.log(response)
+      console.log(response.headers['Refresh'])
+
+			if (refreshToken || accessToken) {
+        login(accessToken, refreshToken)
+				localStorage.setItem('access', accessToken)
+				localStorage.setItem('refresh', refreshToken)
+			}
       navigate("/")
     } catch(e:any) {
       const errorCode = e.response?.data?.code
@@ -36,6 +48,14 @@ const Login = () => {
         alert("다시 시도해주세요. (서버에러)")
       }
     }
+  }
+
+  const handleSignup = () => {
+    navigate('/signup')
+  }
+
+  const handleIdfind = () => {
+    navigate('/idfind')
   }
 
   return (
@@ -94,10 +114,10 @@ const Login = () => {
 
             <div style={styles.bottomText}>
               아직 텀블벅 계정이 없으신가요?
-              <a href="http://localhost:3000/signup" style={styles.link}>회원가입</a>
+              <span onClick={handleSignup}  style={styles.link}>회원가입</span>
               <br />
               혹시 비밀번호를 잊으셨나요?
-              <a href="http://localhost:3000/IDFindPage" style={styles.link}>비밀번호 재설정</a>
+              <span onClick={handleIdfind} style={styles.link}>비밀번호 재설정</span>
             </div>
           </div>
         </div>
@@ -231,5 +251,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: '#A66CFF',
     margin: '0 8px',
     textDecoration: 'none',
+    cursor: 'pointer'
   },
 };

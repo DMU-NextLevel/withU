@@ -6,6 +6,7 @@ import SearchImage from '../../assets/images/search.svg'
 import UserImage from '../../assets/images/default_profile.png'
 import NotificationImage from '../../assets/images/bell.png'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../hooks/AuthContext'
 
 interface HeaderBaseProps {
 	isLoggedIn: boolean
@@ -21,7 +22,7 @@ interface HeaderBaseProps {
 
 export const HeaderMain: React.FC = () => {
 	const [isOpen, setIsOpen] = useState<boolean>(false)
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+	const {isLoggedIn, logout} = useAuth()
 	const [showNotification, setShowNotification] = useState<boolean>(false)
 	const notificationRef = useRef<HTMLDivElement>(null)
 	const navigate = useNavigate()
@@ -45,7 +46,7 @@ export const HeaderMain: React.FC = () => {
 	}
 
 	const handleProfileClick = () => {
-		navigate('/profile')
+		navigate('/mypage')
 	}
 
 	const toggleNotification = () => {
@@ -125,7 +126,7 @@ export const HeaderMain: React.FC = () => {
 }
 
 export const HeaderSub: React.FC = () => {
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+	const {isLoggedIn, logout} = useAuth()
 	const navigate = useNavigate()
 
 	const handleLoginClick = () => {

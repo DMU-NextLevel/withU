@@ -8,6 +8,8 @@ import Login from './pages/Login';
 import A from './pages/a';
 import MyPage from './pages/MyPage';
 import MainPage from './pages/MainPage'
+import FundingPage from './pages/FundingPage'
+import { AuthProvider } from './hooks/AuthContext'
 
 function App() {
 	return (
@@ -22,17 +24,18 @@ const AppWrapper = () => {
 	const hideLayout = ['/login', '/signup']
 	const mainPage = ['/']
 	return (
-		<>
+		<AuthProvider>
 			{!hideLayout.includes(location.pathname) ? mainPage.includes(location.pathname) ? <HeaderMain /> : <HeaderSub /> : null}
 			<Routes>
 				<Route path='/' element={<MainPage />} />
-				<Route path="/login" element={<Login />} />
-        		<Route path="/signup" element={<Signup />} />
-        		<Route path="/idfind" element={<IDFindPage />} />
-				<Route path="/mypage" element={<MyPage />} />
+				<Route path='/login' element={<Login />} />
+				<Route path='/signup' element={<Signup />} />
+				<Route path='/idfind' element={<IDFindPage />} />
+				<Route path='/mypage' element={<MyPage />} />
+				<Route path='/funding' element={<FundingPage />} />
 			</Routes>
 			{!hideLayout.includes(location.pathname) && <Footer />}
-		</>
+		</AuthProvider>
 	)
 }
 
