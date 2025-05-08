@@ -11,6 +11,7 @@ import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,17 +39,11 @@ public class LoginController {
         @ModelAttribute @Valid RequestUserCreateDto requestUserCreateDto,
         HttpServletResponse httpServletResponse) {
 
-        loginService.checkEmailAndNickNameElseThrow(requestUserCreateDto.getEmail(), requestUserCreateDto.getNickName());
-
-        // save img get uri
-        ImgEntity savedImg = imgService.saveImg(requestUserCreateDto.getImg());
-        requestUserCreateDto.setImgEntity(savedImg);
-
         UserDetailEntity createdUser = loginService.register(requestUserCreateDto);
 
         jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("success", null));
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 
     @PostMapping
