@@ -252,7 +252,7 @@
 	}
 
 	const HeaderWrapper = styled.div`
-		padding: 0 15%;
+		padding: 0 20%;
 		@media (max-width: 1500px) {
 			padding: 0 10%;
 		}
@@ -262,7 +262,7 @@
 	`;
 	
 	const SubHeaderWrapper = styled.div`
-		padding: 0 15%;
+		padding: 0 20%;
 		border-bottom: 1px solidrgb(215, 215, 215);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 아래 방향 그림자 */
 		margin-bottom: 20px;

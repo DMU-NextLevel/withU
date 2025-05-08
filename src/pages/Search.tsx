@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { api } from '../AxiosInstance';
+import noImage from '../assets/images/noImage.jpg';
 
 interface ProjectItem {
   id: number;
@@ -126,16 +127,34 @@ const Search: React.FC = () => {
         <br />
       </SelectedTagText> */}
 
-      {loading && <p>로딩 중...</p>}
+{loading && (
+  <LoadingOverlay>
+    <DotWaveWrapper>
+      <Dot />
+      <Dot />
+      <Dot />
+    </DotWaveWrapper>
+  </LoadingOverlay>
+)}
+
+
+
       {projects.length === 0 && !loading && <div>검색 결과가 없습니다.</div>}
       {error && <ErrorText>{error}</ErrorText>}
       
       <CardList>
         {projects.map((item) => (
           <Card key={item.id}>
-          <Thumbnail src={`https://api.nextlevel.r-e.kr/img/${item.titleImg}`} alt={item.title} />
+          <Thumbnail
+            src={`https://api.nextlevel.r-e.kr/img/${item.titleImg}`}
+            alt={item.title}
+            onError={(e) => {
+              e.currentTarget.onerror = null; // 무한루프 방지
+              e.currentTarget.src = noImage;
+            }}
+          />
           <CardContent>
-            <h3>{item.title}</h3>
+            <h3>{item.title}</h3> 
         
             <ProgressBarWrapper>
               <ProgressBar percent={item.completionRate} />
@@ -167,7 +186,7 @@ export default Search;
 
 const Container = styled.div`
   
-  padding: 0 15%;
+  padding: 0 20%;
 `;
 
 const Title = styled.h2`
@@ -179,9 +198,9 @@ const Title = styled.h2`
 const CategoryRow = styled.div`
   display: flex;
   overflow-x: auto;
-  height: 50px;
+  height: 80px;
   padding: 12px 20px;
-  margin-bottom: 24px;
+  
   align-items: center;
   justify-content: space-between;
 `;
@@ -315,7 +334,7 @@ const ErrorText = styled.h3`
 
 const CardList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 24px;
 `;
 
@@ -324,6 +343,7 @@ const Card = styled.div`
   flex-direction: column;
   background: #fff;
   overflow: hidden;
+  
 `;
 
 const Thumbnail = styled.img`
@@ -395,4 +415,56 @@ const Tag = styled.span`
   font-size: 12px;
   border-radius: 6px;
   color: #555;
+`;
+
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+
+
+const DotWaveWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+`;
+
+const Dot = styled.span`
+  width: 10px;
+  height: 10px;
+  background-color: #A66CFF;
+  border-radius: 50%;
+  margin: 0 5px;
+  animation: wave 0.8s ease-in-out infinite;
+
+  &:nth-child(1) {
+    animation-delay: 0s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes wave {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
 `;
