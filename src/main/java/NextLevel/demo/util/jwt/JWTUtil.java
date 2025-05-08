@@ -38,12 +38,13 @@ public class JWTUtil {
     }
 
     public static Long getUserIdFromSecurityContext() {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(userId == null)
+        Object userId = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(userId == null || ! (userId instanceof Long) )
             throw new CustomException(ErrorCode.NO_AUTHENTICATED);
 
-        return userId;
+        return (Long)userId;
     }
 
     public void addAccess(HttpServletResponse response, Long userId, String ip, String role) {
