@@ -10,9 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestTossPaymentDto {
-    //private String paymentType;
     private String orderId;
     private String paymentKey;
     private Long amount;
-
 }

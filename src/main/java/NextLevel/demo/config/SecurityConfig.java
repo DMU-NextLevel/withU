@@ -56,7 +56,6 @@ public class SecurityConfig {
                 .requestMatchers("/payment/**").permitAll()
                 .requestMatchers("/api1/**").hasRole("USER")
                 .requestMatchers("/social/**").hasRole("SOCIAL")
-                .requestMatchers("/img/**").permitAll()
                 .anyRequest().denyAll() // 그 외 요청은 모두 거절
             )
 
