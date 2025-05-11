@@ -64,7 +64,7 @@ public class ProjectEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private List<ProjectTagEntity> tags;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private Set<ProjectStoryEntity> stories;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)

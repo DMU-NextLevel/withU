@@ -36,7 +36,7 @@ public class ProjectActivityRepository {
                 FROM filtered_projects
             )
             SELECT fp.id, fp.title, fp.created_at, fp.expired ,
-                (CAST((SELECT SUM(f.price) FROM funding f WHERE f.project_id = fp.id) AS DOUBLE) * 100.0 / fp.goal) AS completion_rate,
+                (CAST((SELECT SUM(f.free_price + op.price) FROM funding f left join `option` op on op.id = f.option_id WHERE f.project_id = fp.id) AS DOUBLE) * 100.0 / fp.goal) AS completion_rate,
                 (SELECT COUNT(DISTINCT r.user_id) FROM recommend r WHERE r.project_id = fp.id) AS recommend_count,
                 (SELECT COUNT(f.user_id) FROM funding f WHERE f.project_id = fp.id) AS user_count,
                 (SELECT i.uri FROM img i WHERE i.id = fp.img_id) AS title_img,

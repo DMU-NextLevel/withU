@@ -5,6 +5,7 @@ import NextLevel.demo.img.entity.ImgEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,11 +13,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ImgRepository extends JpaRepository<ImgEntity, Long> {
 
-    @Query("select i from ImgEntity i where i.uri like CONCAT(:imgUri, '%')")
-    List<ImgEntity> findContainImgUri(@Param("imgUri") String imgUri);
-
-    @Query("select count(*) from ImgCountEntity ")
-    long checkImgCount();
+    @Modifying
+    @Query("delete from ImgEntity img where img.id =:id")
+    void deleteById(@Param("id") Long imgId);
 
     @Query(
         value = "SELECT ic.id FROM img_count ic LEFT JOIN ( " +

@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,6 @@ public class ProjectService {
     private final ImgService imgService;
     private final ProjectActivityRepository projectActivityRepository;
     private final TagService tagService;
-    private final ProjectNoticeRepository projectNoticeRepository;
 
     // 추가
     @Transactional

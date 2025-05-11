@@ -84,7 +84,7 @@ public class ImgService {
         
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") ,IMG_DEFAULT_PATH, img.getUri()));
-            imgRepository.delete(img);
+            imgRepository.deleteById(img.getId());
             log.info("deleted image id : " + img.getId());
         } catch (IOException e) {
             log.info(e.getMessage());
