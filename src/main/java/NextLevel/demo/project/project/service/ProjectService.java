@@ -189,12 +189,6 @@ public class ProjectService {
         return ResponseProjectDetailDto.of(project);
     }
 
-    // story
-
-    public ProjectEntity getProjectById(Long id) {
-        return projectRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString()));
-    }
-
     // notice and community and story
 
     public ProjectEntity getProjectCommunityAndNoticeById(Long id) {

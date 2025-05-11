@@ -21,6 +21,8 @@ public class ResponseProjectCommunityDto {
 
     private Date askAt;
 
+    private String askerNickname;
+
     private String answer;
 
     private Date answerAt;
@@ -32,6 +34,7 @@ public class ResponseProjectCommunityDto {
         dto.setAskAt(entity.getAskAt());
         dto.setAnswer(entity.getAnswer());
         dto.setAnswerAt(entity.getAnswerAt());
+        dto.setAskerNickname(entity.getAsker().getNickName());
         return dto;
     }
 

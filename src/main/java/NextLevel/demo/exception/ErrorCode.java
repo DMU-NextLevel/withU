@@ -32,7 +32,7 @@ public enum ErrorCode {
     NOT_CORRECT_TAG_SIZE(HttpStatus.BAD_REQUEST, "04001","invalidated tag input") ,
     NOT_FOUND_PROJECT(HttpStatus.BAD_REQUEST, "04002","Not found project : %s") ,
     ERROR_EXPIRED_DATE_CONVERSION(HttpStatus.BAD_REQUEST, "04003","can not convert expired : %s"),
-    INVALIDATE_TYPE(HttpStatus.BAD_REQUEST, "04004","invalidated type %s"),
+    NOT_FOUND_PROJECT_COMMUNITY(HttpStatus.BAD_REQUEST, "04004","can not find project community"),
 
     // funding
     NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "05001","not enough point left:%d, need:%d"),

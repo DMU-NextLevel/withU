@@ -37,7 +37,7 @@ public class ProjectCommunityEntity {
     private String ask;
 
     @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "asker_id")
     private UserEntity asker;
 
     @Column(name = "ask_at", nullable = false)
