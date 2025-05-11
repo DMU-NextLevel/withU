@@ -28,7 +28,7 @@ public class ProjectStoryController {
 
     private final ProjectStoryService projectStoryService;
 
-    @PutMapping("/public/project/{projectId}/story")
+    @PutMapping("/api1/project/{projectId}/story")
     public ResponseEntity<?> updateProjectStory(@PathVariable("projectId") long projectId, @RequestParam("imgs") List<MultipartFile> imgs){
         projectStoryService.saveProjectStory(projectId, JWTUtil.getUserIdFromSecurityContext() ,imgs);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success",null));
