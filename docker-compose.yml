@@ -8,6 +8,7 @@ services:
       - "8080:8080"
     volumes:
       - /home/ubuntu/application-prod.yml:/app/application-prod.yml
+      - /home/ubuntu/img:/app/img
     command: ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod", "--spring.config.additional-location=file:/app/application-prod.yml"]
     networks:
       - app-network
@@ -20,6 +21,7 @@ services:
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /home/ubuntu/springboot.conf:/etc/nginx/nginx.conf
+      - /home/ubuntu/img:/usr/share/nginx/html/img
     depends_on:
       - springboot
     networks:

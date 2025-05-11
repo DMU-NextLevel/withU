@@ -51,8 +51,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안함
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login/**").permitAll() // social login 요청 url
-                .requestMatchers("/public/**").permitAll() // 특정 경로만 허용
+                .requestMatchers("/login/**").permitAll()
+                .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/payment/**").permitAll()
                 .requestMatchers("/api1/**").hasRole("USER")
                 .requestMatchers("/social/**").hasRole("SOCIAL")

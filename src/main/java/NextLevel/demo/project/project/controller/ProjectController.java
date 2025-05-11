@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -64,7 +65,10 @@ public class ProjectController {
             @RequestParam(value = "tag", required = false) Long tagId,
             @RequestParam(value = "page", required = false) Integer page)
     {
-        Long userId = JWTUtil.getUserIdFromSecurityContext();
+        // userId 값이 없으면 null값을 전달하는 방식 (thorw 하면 안됨!)
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = principal instanceof Long ? (Long)principal : null;
+
         List<ResponseProjectListDto> dto = projectService.getAllProjects(tagId, userId, ProjectOrderType.getType(order), page);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dto));
     }

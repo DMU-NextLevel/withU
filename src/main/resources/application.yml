@@ -1,4 +1,4 @@
-baseUrl: http://localhost:8080
+baseUrl: https://nextlevel.r-e.kr
 
 logging:
   level:
@@ -22,7 +22,7 @@ spring:
       maximum-pool-size: 3
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
       show-sql: true
     properties:
       hibernate:

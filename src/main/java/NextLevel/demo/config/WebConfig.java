@@ -14,10 +14,11 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // 모든 경로에 대해
-                    .allowedOrigins("http://localhost:3000") // 프론트 주소
-                    .allowedOrigins("https://localhost:3000")
+                    .allowedOrigins("http://localhost:3000", "https://localhost:3000", "https://127.0.0.1.nip.io:3000", "https://with-you-official.netlify.app", "https://nextlevel.r-e.kr") // 프론트 주소
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
+                    .exposedHeaders("access")
+                    .exposedHeaders("refresh")
                     .allowCredentials(true);
             }
         };

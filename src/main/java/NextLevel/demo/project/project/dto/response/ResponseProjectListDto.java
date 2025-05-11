@@ -38,7 +38,7 @@ public class ResponseProjectListDto {
     private Boolean isExpired; // 만뢰 된 project인지?
 
     public ResponseProjectListDto(Long id, String title, Date created_at, Date expired
-                , Double completionRate, Long recommendCount, Long userCount, String titleImg, Integer isRecommend ,Long totalCount) {
+                , Double completionRate, Long recommendCount, Long userCount, String titleImg, Long isRecommend ,Long totalCount) {
         this.id = id;
         this.title = title;
         this.titleImg = "/src/"+titleImg;
