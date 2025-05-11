@@ -50,6 +50,16 @@ public class JWTUtil {
         return (Long)userId;
     }
 
+    public static Long getUserIdFromSecurityContextCanNULL() {
+
+        Object userId = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(userId == null || ! (userId instanceof Long) )
+            return null;
+
+        return (Long)userId;
+    }
+
     public void addAccess(HttpServletResponse response, Long userId, String ip, String role) {
         HashMap<String, String> claims = new HashMap<>();
         claims.put("ip", ip);

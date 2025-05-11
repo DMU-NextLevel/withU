@@ -181,12 +181,12 @@ public class ProjectService {
         return entities;
     }
 
-    public ResponseProjectDetailDto getProjectDetailById(Long id) {
+    public ResponseProjectDetailDto getProjectDetailById(Long id, Long userId) {
         ProjectEntity project = projectRepository.findProjectDetailById(id).orElseThrow(
             () -> new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString())
         );
 
-        return ResponseProjectDetailDto.of(project);
+        return ResponseProjectDetailDto.of(project, userId);
     }
 
     // notice and community and story

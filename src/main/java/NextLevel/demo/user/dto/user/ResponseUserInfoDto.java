@@ -38,10 +38,6 @@ public class ResponseUserInfoDto {
         return dto;
     }
 
-    public void setImg(String imgUri) {
-        img = String.valueOf("/img/"+imgUri);
-    }
-
     public ResponseUserInfoDto(String name, String nickName, int point, String address,
         String number, String email, String socialProvider) {
         this.name = name;

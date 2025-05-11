@@ -40,7 +40,7 @@ public class ResponseProjectDetailDto {
     private int recommendCount;
     private int fundingCount;
 
-    public static ResponseProjectDetailDto of(ProjectEntity entity) {
+    public static ResponseProjectDetailDto of(ProjectEntity entity, Long userId) {
         ResponseProjectDetailDto dto = new ResponseProjectDetailDto();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
@@ -54,6 +54,8 @@ public class ResponseProjectDetailDto {
         dto.setCompletionRate(FundingUtil.getCompletionRate(dto.sum, entity.getGoal()));
         dto.setRecommendCount(entity.getRecommends().size());
         dto.setFundingCount(entity.getFundings().size());
+        dto.setIsAuthor(entity.getUser().getId() == userId);
+        dto.setIsExpired( new Date().before(entity.getExpired()) );
         return dto;
     }
 

@@ -4,6 +4,7 @@ import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class SaveProjectNoticeRequestDto {
             .content(content)
             .img(imgEntity)
             .project(projectEntity)
+            .createdAt(new Date())
             .build();
     }
 }

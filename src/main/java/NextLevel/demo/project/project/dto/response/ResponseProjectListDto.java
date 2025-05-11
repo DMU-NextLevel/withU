@@ -41,7 +41,7 @@ public class ResponseProjectListDto {
                 , Double completionRate, Long recommendCount, Long userCount, String titleImg, Long isRecommend ,Long totalCount) {
         this.id = id;
         this.title = title;
-        this.titleImg = "/src/"+titleImg;
+        this.titleImg = titleImg;
         this.completionRate = completionRate == null ? 0.0 : completionRate;
         this.recommendCount = recommendCount;
         this.pageCount = (totalCount / PAGE_COUNT) +1 ;

@@ -65,9 +65,7 @@ public class ProjectController {
             @RequestParam(value = "tag", required = false) Long tagId,
             @RequestParam(value = "page", required = false) Integer page)
     {
-        // userId 값이 없으면 null값을 전달하는 방식 (thorw 하면 안됨!)
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = principal instanceof Long ? (Long)principal : null;
+        Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
 
         List<ResponseProjectListDto> dto = projectService.getAllProjects(tagId, userId, ProjectOrderType.getType(order), page);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dto));
@@ -76,7 +74,9 @@ public class ProjectController {
     // 상세 조회
     @GetMapping("/public/project/{projectId}")
     public ResponseEntity<?> getProjectDetailById(@PathVariable("projectId") Long projectId) {
-        ResponseProjectDetailDto dto = projectService.getProjectDetailById(projectId);
+        Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
+
+        ResponseProjectDetailDto dto = projectService.getProjectDetailById(projectId, userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dto));
     }

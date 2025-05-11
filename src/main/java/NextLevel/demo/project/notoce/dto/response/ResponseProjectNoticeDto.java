@@ -1,6 +1,7 @@
 package NextLevel.demo.project.notoce.dto.response;
 
 import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,11 +21,17 @@ public class ResponseProjectNoticeDto {
 
     private String content;
 
+    private String img;
+
+    private Date createTime;
+
     public static ResponseProjectNoticeDto of(ProjectNoticeEntity entity) {
         ResponseProjectNoticeDto dto = new ResponseProjectNoticeDto();
         dto.Id = entity.getId();
         dto.content = entity.getContent();
         dto.title = entity.getTitle();
+        dto.img = entity.getImg().getUri();
+        dto.createTime = entity.getCreatedAt();
         return dto;
     }
 }

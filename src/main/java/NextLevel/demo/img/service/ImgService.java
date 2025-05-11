@@ -60,6 +60,10 @@ public class ImgService {
 
     // img uri 변경 없이 진짜 파일 값만 덮어쓰기
     public ImgEntity updateImg(MultipartFile imgFile, ImgEntity oldImg) {
+        if(oldImg == null){
+            return saveImg(imgFile);
+        }
+
         try {
             Path path = Paths.get(System.getProperty("user.dir"), IMG_DEFAULT_PATH, oldImg.getUri());
 
