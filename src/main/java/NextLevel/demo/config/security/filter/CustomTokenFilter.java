@@ -45,4 +45,8 @@ public abstract class CustomTokenFilter extends OncePerRequestFilter {
         }
         return ipAddress;
     }
+
+    public String getAgent(HttpServletRequest request) {
+        return request.getHeader("User-Agent");
+    }
 }
