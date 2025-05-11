@@ -1,4 +1,7 @@
-baseUrl: https://nextlevel.r-e.kr
+baseUrl:
+  ${baseUrl}
+DOMAIN:
+  ${DOMAIN}
 
 logging:
   level:
@@ -15,7 +18,7 @@ spring:
     name: demo
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.31.91.218:3306/next_level
+    url: jdbc:mysql://${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
@@ -78,7 +81,7 @@ spring:
 
 
 jwt:
-  secret: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  secret: ${JWT_SECRET}
   access-token-time: 9999999  #3600 # 60 * 60 1시간
   refresh-token-time: 9999999  #604800 # 60 * 60 * 24 * 7 1주일
 

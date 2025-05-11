@@ -77,6 +77,7 @@ public class ImgService {
         }
     }
 
+    @Transactional
     public void deleteImg(ImgEntity img) {
         if(img == null)
             return;

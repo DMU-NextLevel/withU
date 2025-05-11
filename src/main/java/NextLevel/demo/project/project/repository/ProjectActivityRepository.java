@@ -1,7 +1,7 @@
 package NextLevel.demo.project.project.repository;
 
 import NextLevel.demo.project.ProjectOrderType;
-import NextLevel.demo.project.project.dto.ResponseProjectListDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;

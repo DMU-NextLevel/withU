@@ -30,6 +30,8 @@ public class JWTUtil {
     public int ACCESS_TOKEN_TIME;
     @Value("${jwt.refresh-token-time}")
     public int REFRESH_TOKEN_TIME;
+    @Value("${DOMAIN}")
+    public String DOMAIN;
 
     public static final String ACCESS_TOKEN = "access";
     public static final String REFRESH_TOKEN = "refresh";
@@ -108,7 +110,7 @@ public class JWTUtil {
             .httpOnly(true)
             .secure(true)
             .maxAge(age)
-            .domain("nextlevel.r-e.kr")
+            .domain(DOMAIN)
             .build();
 
         return cookie.toString();

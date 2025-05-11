@@ -12,9 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -22,19 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ProjectStoryController {
 
-    private final ProjectService projectService;
-    private ProjectStoryService projectStoryService;
+    private final ProjectStoryService projectStoryService;
 
-    @GetMapping("/public/project/{projectId}/story")
-    public ResponseEntity<?> getProjectStory(@PathVariable("projectId") Long projectId) {
-        ProjectEntity project = projectService.getProjectById(projectId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success",
-            project.getImgs().stream().map(pe->pe.getImg().getUri()).toList())
-        );
-    }
-    @PostMapping("/public/project/{projectId}/story")
-    public ResponseEntity<?> updateProjectStory(@PathVariable("projectId") long projectId, @RequestAttribute List<MultipartFile> imgs){
+    @PutMapping("/public/project/{projectId}/story")
+    public ResponseEntity<?> updateProjectStory(@PathVariable("projectId") long projectId, @RequestParam("imgs") List<MultipartFile> imgs){
         projectStoryService.saveProjectStory(projectId, JWTUtil.getUserIdFromSecurityContext() ,imgs);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success",null));
     }

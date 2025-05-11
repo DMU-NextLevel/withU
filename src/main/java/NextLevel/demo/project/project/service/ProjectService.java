@@ -5,14 +5,14 @@ import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.project.ProjectOrderType;
-import NextLevel.demo.project.project.dto.CreateProjectDto;
-import NextLevel.demo.project.notoce.dto.SaveProjectNoticeRequestDto;
-import NextLevel.demo.project.project.dto.ResponseProjectListDto;
+import NextLevel.demo.project.notoce.repository.ProjectNoticeRepository;
+import NextLevel.demo.project.project.dto.request.CreateProjectDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.project.entity.ProjectTagEntity;
 import NextLevel.demo.project.project.repository.ProjectActivityRepository;
-import NextLevel.demo.project.notoce.repository.ProjectNoticeRepository;
 import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class ProjectService {
     private final ImgService imgService;
     private final ProjectActivityRepository projectActivityRepository;
     private final TagService tagService;
+    private final ProjectNoticeRepository projectNoticeRepository;
 
     // 추가
     @Transactional
@@ -70,14 +72,14 @@ public class ProjectService {
         List<ImgEntity> imgEntitys = new ArrayList<>();
         dto.getImgs().forEach(imgEntity -> {imgEntitys.add(imgService.saveImg(imgEntity));});
 
-        newProject.setImgs(
+        newProject.setStories(
             imgEntitys.stream().map((e)->{
                 return ProjectStoryEntity
                     .builder()
                     .project(newProject)
                     .img(e)
                     .build();
-            }).toList()
+            }).collect(Collectors.toSet())
         );
 
         projectRepository.save(newProject);
@@ -129,20 +131,20 @@ public class ProjectService {
                 imgEntitys.add(imgService.saveImg(imgEntity));
             });
 
-            newProject.setImgs(
+            newProject.setStories(
                 imgEntitys.stream().map((e) -> {
                     return ProjectStoryEntity
                         .builder()
                         .project(newProject)
                         .img(e)
                         .build();
-                }).toList()
+                }).collect(Collectors.toSet())
             );
         }else{
-            newProject.setImgs(oldProject.getImgs());
+            newProject.setStories(oldProject.getStories());
         }
 
-        List<ImgEntity> oldImgs = oldProject.getImgs().stream().map(pe -> pe.getImg()).toList();
+        List<ImgEntity> oldImgs = oldProject.getStories().stream().map(pe -> pe.getImg()).toList();
         oldImgs.forEach(i->{ imgService.deleteImg(i);});
 
         projectRepository.save(newProject);
@@ -181,10 +183,12 @@ public class ProjectService {
         return entities;
     }
 
-    public ProjectEntity getProjectDetailById(Long id) {
-        return projectRepository.findProjectDetailById(id).orElseThrow(
+    public ResponseProjectDetailDto getProjectDetailById(Long id) {
+        ProjectEntity project = projectRepository.findProjectDetailById(id).orElseThrow(
             () -> new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString())
         );
+
+        return ResponseProjectDetailDto.of(project);
     }
 
     // story
@@ -193,10 +197,10 @@ public class ProjectService {
         return projectRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString()));
     }
 
-    // notice and community
+    // notice and community and story
 
     public ProjectEntity getProjectCommunityAndNoticeById(Long id) {
-        return projectRepository.findProjectWithNoticesAndCommunity(id).orElseThrow(
+        return projectRepository.findProjectWithNoticesAndCommunityAndStory(id).orElseThrow(
                 ()-> new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString())
         );
     }

@@ -2,14 +2,15 @@ package NextLevel.demo.project.project.controller;
 
 import NextLevel.demo.common.SuccessResponse;
 import NextLevel.demo.project.ProjectOrderType;
-import NextLevel.demo.project.project.dto.CreateProjectDto;
-import NextLevel.demo.project.notoce.dto.SaveProjectNoticeRequestDto;
-import NextLevel.demo.project.community.dto.ResponseProjectCommunityDto;
-import NextLevel.demo.project.project.dto.ResponseProjectDetailDto;
-import NextLevel.demo.project.project.dto.ResponseProjectListDto;
-import NextLevel.demo.project.notoce.dto.ResponseProjectNoticeDto;
+import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
+import NextLevel.demo.project.notoce.dto.response.ResponseNoticeListDto;
+import NextLevel.demo.project.project.dto.request.CreateProjectDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectAllDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.service.ProjectService;
+import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -24,9 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -77,11 +76,22 @@ public class ProjectController {
     // 상세 조회
     @GetMapping("/public/project/{projectId}")
     public ResponseEntity<?> getProjectDetailById(@PathVariable("projectId") Long projectId) {
-        ProjectEntity project = projectService.getProjectDetailById(projectId);
-
-        ResponseProjectDetailDto dto = ResponseProjectDetailDto.of(project);
+        ResponseProjectDetailDto dto = projectService.getProjectDetailById(projectId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dto));
+    }
+
+    @GetMapping("/public/project/{projectId}/all")
+    public ResponseEntity<?> getProjectNotice(@PathVariable("projectId") Long projectId) {
+        ProjectEntity project = projectService.getProjectCommunityAndNoticeById(projectId);
+
+        ResponseProjectAllDto dto = ResponseProjectAllDto.builder()
+            .story(new ResponseProjectStoryListDto(project.getStories()))
+            .notice(new ResponseNoticeListDto(project.getNotices()))
+            .community(new ResponseCommunityListDto(project.getCommunities()))
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
     }
 
 }

@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,7 +51,7 @@ public class ProjectEntity {
     @Column(nullable = false,name="created_at", columnDefinition = " datetime default NOW() ")
     private Date createdAt = new Date();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "img_id")
     private ImgEntity titleImg;
 
@@ -60,26 +61,26 @@ public class ProjectEntity {
     @Column(nullable = false)
     private Date expired;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private List<ProjectTagEntity> tags;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
-    private List<ProjectStoryEntity> imgs;
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Set<ProjectStoryEntity> stories;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<FundingEntity> fundings;
+    private Set<FundingEntity> fundings;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<RecommendEntity> recommends;
+    private Set<RecommendEntity> recommends;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectCommunityEntity> communities;
+    private Set<ProjectCommunityEntity> communities;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectNoticeEntity> notices;
+    private Set<ProjectNoticeEntity> notices;
 
-    public void setImgs(List<ProjectStoryEntity> imgs) {
-        this.imgs = imgs;
+    public void setStories(Set<ProjectStoryEntity> imgs) {
+        this.stories = imgs;
     }
     public void setTags(List<ProjectTagEntity> tags) {
         this.tags = tags;
@@ -88,7 +89,7 @@ public class ProjectEntity {
     @Builder
     public ProjectEntity(Long id, UserEntity user, String title, String content,
         Long goal, ImgEntity titleImg, String expired, List<ProjectTagEntity> tags,
-        List<ProjectStoryEntity> imgs) throws ParseException {
+        Set<ProjectStoryEntity> stories) throws ParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         this.id = id;
         this.user = user;
@@ -99,7 +100,7 @@ public class ProjectEntity {
         this.titleImg = titleImg;
         this.expired = new SimpleDateFormat("yyyy-MM-dd").parse(expired);
         this.tags = tags;
-        this.imgs = imgs;
+        this.stories = stories;
     }
 
     @Override
@@ -111,7 +112,7 @@ public class ProjectEntity {
             ", content='" + content + '\'' +
             ", titleImg=" + titleImg +
             ", tags=" + tags +
-            ", imgs=" + imgs +
+            ", imgs=" + stories +
             '}';
     }
 }

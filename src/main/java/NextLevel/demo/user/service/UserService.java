@@ -6,13 +6,10 @@ import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.role.UserRole;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
-import NextLevel.demo.user.dto.user.ResponseUserInfoDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,4 +49,5 @@ public class UserService {
         userDetailRepository.save(oldUserDetail);
         return userRepository.save(dto.toUserEntity());
     }
+
 }

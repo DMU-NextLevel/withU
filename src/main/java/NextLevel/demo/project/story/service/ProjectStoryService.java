@@ -8,10 +8,14 @@ import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.story.repository.ProjectStoryRepository;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -20,27 +24,36 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProjectStoryService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectStoryRepository projectStoryRepository;
     private final ImgService imgService;
 
-    public void saveProjectStory(Long projectId, Long userId, List<MultipartFile> imgs){
-        ProjectEntity oldProject = projectRepository.findById(projectId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PROJECT, projectId.toString()));
+    @Transactional
+    public void saveProjectStory(Long projectId, Long userId, List<MultipartFile> imgFiles){
+        ProjectEntity oldProject = projectRepository.findByIdWithAll(projectId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PROJECT, projectId.toString()));
         if(oldProject.getUser().getId() != userId)
             throw new CustomException(ErrorCode.NOT_AUTHOR);
 
-        List<ProjectStoryEntity> ps = imgs
+        Set<ProjectStoryEntity> oldStories = oldProject.getStories();
+        List<ImgEntity> oldImgs = oldProject.getStories().stream().map(pe->pe.getImg()).toList();
+
+        List<ImgEntity> newImgs = new ArrayList<>();
+        imgFiles
+            .stream()
+            .forEach(i->{newImgs.add(imgService.saveImg(i));});
+
+        Set<ProjectStoryEntity> newStories = newImgs
             .stream()
             .map(
-                i->imgService.saveImg(i)
+                i->
+                ProjectStoryEntity.builder()
+                    .project(oldProject)
+                    .img(i)
+                    .build()
             )
-            .map(
-                i->ProjectStoryEntity.builder().build()
-            )
-            .toList();
+            .collect(Collectors.toSet());
 
-        List<ImgEntity> oldImgs = oldProject.getImgs().stream().map(pe->pe.getImg()).toList();
-        oldProject.setImgs(ps);
-
-        projectRepository.save(oldProject);
+        projectStoryRepository.saveAll(newStories);
+        projectStoryRepository.deleteAll(oldStories.stream().map(ProjectStoryEntity::getId).toList());
         oldImgs.forEach(i->imgService.deleteImg(i));
     }
 }

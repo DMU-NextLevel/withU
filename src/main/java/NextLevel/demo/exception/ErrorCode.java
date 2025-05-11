@@ -7,7 +7,8 @@ public enum ErrorCode {
     NEED_ADDITIONAL_DATA(HttpStatus.FORBIDDEN, "00403","Additional data required"),
     NO_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "00401","No authentication please login"),
     INPUT_REQUIRED_PARAMETER(HttpStatus.BAD_REQUEST, "00404", "필수 파라미터를 입력해 주세요") ,
-    NOT_AUTHOR(HttpStatus.BAD_REQUEST, "10001","작성자가 아닙니다"),
+    NOT_AUTHOR(HttpStatus.BAD_REQUEST, "00001","작성자가 아닙니다"),
+    ACCESS_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "00002", "access, refresh token을 다시 발급해 주세요"),
 
     //register
     ALREADY_EXISTS_EMAIL(HttpStatus.BAD_REQUEST, "01001","email already exists"),
@@ -32,6 +33,12 @@ public enum ErrorCode {
     NOT_FOUND_PROJECT(HttpStatus.BAD_REQUEST, "04002","Not found project : %s") ,
     ERROR_EXPIRED_DATE_CONVERSION(HttpStatus.BAD_REQUEST, "04003","can not convert expired : %s"),
     INVALIDATE_TYPE(HttpStatus.BAD_REQUEST, "04004","invalidated type %s"),
+
+    // funding
+    NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "05001","not enough point left:%d, need:%d"),
+
+    // option
+    NOT_FOUND_OPTION(HttpStatus.BAD_REQUEST, "06001","not found option"),
 
     // 시발 이게 뭐지? error
     SIBAL_WHAT_IS_IT(HttpStatus.INTERNAL_SERVER_ERROR, "05001","알지 모르는 error 발생 : %s");

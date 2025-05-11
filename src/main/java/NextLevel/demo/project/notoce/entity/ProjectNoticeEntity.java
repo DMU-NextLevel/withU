@@ -2,6 +2,7 @@ package NextLevel.demo.project.notoce.entity;
 
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,6 +42,6 @@ public class ProjectNoticeEntity {
     @Column
     private String content;
 
-    @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private ImgEntity img;
 }

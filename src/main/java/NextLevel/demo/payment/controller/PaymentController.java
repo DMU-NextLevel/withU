@@ -3,6 +3,7 @@ package NextLevel.demo.payment.controller;
 import NextLevel.demo.common.SuccessResponse;
 import NextLevel.demo.payment.dto.RequestTossPaymentDto;
 import NextLevel.demo.payment.service.TossPaymentService;
+import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.websocket.server.PathParam;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,7 @@ public class PaymentController {
 
     @GetMapping("/payment/toss/approve")
     public ResponseEntity<?> tossPaymentSuccess(@ModelAttribute RequestTossPaymentDto dto) {
-        log.info("tossPaymentSuccess");
-
-        tossPaymentService.approvePayment(dto);
+        tossPaymentService.approvePayment(dto, JWTUtil.getUserIdFromSecurityContext());
 
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }

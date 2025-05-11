@@ -1,6 +1,6 @@
-package NextLevel.demo.project.project.dto;
+package NextLevel.demo.project.project.dto.response;
 
-import NextLevel.demo.funding.service.FundingService;
+import NextLevel.demo.funding.FundingUtil;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -40,9 +40,6 @@ public class ResponseProjectDetailDto {
     private int recommendCount;
     private int fundingCount;
 
-    private int projectNoticeCount;
-    private int communityCount;
-
     public static ResponseProjectDetailDto of(ProjectEntity entity) {
         ResponseProjectDetailDto dto = new ResponseProjectDetailDto();
         dto.setId(entity.getId());
@@ -53,12 +50,10 @@ public class ResponseProjectDetailDto {
         dto.setExpiredAt(entity.getExpired());
         dto.setAuthorNickName(entity.getUser().getNickName());
         dto.setGoal(entity.getGoal());
-        dto.setSum(entity.getFundings().stream().mapToLong(e->e.getPrice()).sum());
-        dto.setCompletionRate(FundingService.getCompletionRate(dto.sum, entity.getGoal()));
+        dto.setSum(entity.getFundings().stream().mapToLong(e->e.getFreePrice()).sum());
+        dto.setCompletionRate(FundingUtil.getCompletionRate(dto.sum, entity.getGoal()));
         dto.setRecommendCount(entity.getRecommends().size());
         dto.setFundingCount(entity.getFundings().size());
-        dto.setProjectNoticeCount(entity.getNotices().size());
-        dto.setCommunityCount(entity.getCommunities().size());
         return dto;
     }
 

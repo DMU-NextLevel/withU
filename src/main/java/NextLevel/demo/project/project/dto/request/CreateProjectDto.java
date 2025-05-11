@@ -1,4 +1,4 @@
-package NextLevel.demo.project.project.dto;
+package NextLevel.demo.project.project.dto.request;
 
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
@@ -8,6 +8,7 @@ import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.project.entity.ProjectTagEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,7 +40,7 @@ public class CreateProjectDto {
 
     private List<ProjectTagEntity> tagEntitys;
     private ImgEntity titleImgEntity;
-    private List<ProjectStoryEntity> imgEntitys;
+    private Set<ProjectStoryEntity> imgEntitys;
 
     public ProjectEntity toEntity() {
         try {
@@ -50,7 +51,7 @@ public class CreateProjectDto {
                 .content(content)
                 .tags(tagEntitys)
                 .titleImg(titleImgEntity)
-                .imgs(imgEntitys)
+                .stories(imgEntitys)
                 .expired(expired)
                 .goal(goal)
                 .build();
