@@ -1,4 +1,4 @@
-package NextLevel.demo.project.project.dto;
+package NextLevel.demo.project.project.dto.response;
 
 import java.util.Date;
 import java.util.List;

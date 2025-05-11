@@ -4,6 +4,7 @@ import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +36,7 @@ public class ProjectCommunityEntity {
     @Column(nullable = false)
     private String ask;
 
-    @ManyToOne(targetEntity = UserEntity.class)
+    @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity asker;
 

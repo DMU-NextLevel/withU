@@ -1,4 +1,4 @@
-package NextLevel.demo.project.project.dto;
+package NextLevel.demo.project.project.dto.response;
 
 import NextLevel.demo.funding.FundingUtil;
 import NextLevel.demo.project.project.entity.ProjectEntity;
@@ -40,9 +40,6 @@ public class ResponseProjectDetailDto {
     private int recommendCount;
     private int fundingCount;
 
-    private int projectNoticeCount;
-    private int communityCount;
-
     public static ResponseProjectDetailDto of(ProjectEntity entity) {
         ResponseProjectDetailDto dto = new ResponseProjectDetailDto();
         dto.setId(entity.getId());
@@ -57,8 +54,6 @@ public class ResponseProjectDetailDto {
         dto.setCompletionRate(FundingUtil.getCompletionRate(dto.sum, entity.getGoal()));
         dto.setRecommendCount(entity.getRecommends().size());
         dto.setFundingCount(entity.getFundings().size());
-        dto.setProjectNoticeCount(entity.getNotices().size());
-        dto.setCommunityCount(entity.getCommunities().size());
         return dto;
     }
 

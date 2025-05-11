@@ -1,7 +1,7 @@
 package NextLevel.demo.project.community.controller;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.project.community.dto.ResponseProjectCommunityDto;
+import NextLevel.demo.project.community.dto.response.ResponseProjectCommunityDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.service.ProjectService;
 import java.util.List;

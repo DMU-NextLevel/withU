@@ -1,4 +1,4 @@
-package NextLevel.demo.project.community.dto;
+package NextLevel.demo.project.community.dto.response;
 
 import NextLevel.demo.project.community.entity.ProjectCommunityEntity;
 import java.util.Date;

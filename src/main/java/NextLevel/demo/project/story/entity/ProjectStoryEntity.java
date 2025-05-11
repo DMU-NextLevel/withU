@@ -29,7 +29,7 @@ public class ProjectStoryEntity {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "img_id")
     private ImgEntity img;
 

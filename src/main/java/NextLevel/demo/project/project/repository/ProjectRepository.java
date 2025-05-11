@@ -14,7 +14,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     @Query("select p from ProjectEntity p "
         + "left join fetch p.user u "
         + "left join fetch u.userDetail "
-        + "left join fetch p.imgs "
+        + "left join fetch p.stories s "
         + "where p.id = :id")
     // only user create or update function
     Optional<ProjectEntity> findByIdWithAll(@Param("id") Long id);
@@ -26,13 +26,10 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
         + "left join fetch p.user u "
         + "left join fetch p.fundings f "
         + "left join fetch p.recommends r "
-        + "left join fetch p.communities c "
-        + "left join fetch c.asker "
-        + "left join fetch p.notices n "
         + "where p.id = :id")
     Optional<ProjectEntity> findProjectDetailById(@Param("id") Long id);
 
-    @Query("select p from ProjectEntity p left join fetch p.notices left join fetch p.communities where p.id = :id")
-    Optional<ProjectEntity> findProjectWithNoticesAndCommunity(@Param("id") Long id);
+    @Query("select p from ProjectEntity p left join fetch p.notices as n left join fetch p.communities as c left join fetch p.stories as story where p.id = :id")
+    Optional<ProjectEntity> findProjectWithNoticesAndCommunityAndStory(@Param("id") Long id);
 
 }
