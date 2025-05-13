@@ -38,7 +38,7 @@ const MainWrapper = styled.div`
 `;
 
 const MainContentWrapper = styled.div`
-  margin: 0 20%;
+  margin: 0 15%;
   padding: 20px 0;
 
   @media (max-width: 1500px) {

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { api } from '../AxiosInstance';
 import noImage from '../assets/images/noImage.jpg';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/AuthContext';
 
 interface ProjectItem {
   id: number;
@@ -45,7 +47,6 @@ const orderOptions = [
   { value: 'CREATED', label: '생성일순' }
 ];
 
-
 const Search: React.FC = () => {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,27 +55,221 @@ const Search: React.FC = () => {
   const [order, setOrder] = useState('RECOMMEND');
   const [page, setPage] = useState('1');
   const [tag, setTag] = useState('');
-
   const orderIndex = orderOptions.findIndex(opt => opt.value === order);
 
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
-  const fetchProjects = async () => {
-    setLoading(true);
-    setError(null);
+  // const fetchProjects = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const query = `/public/project/all?order=${order}&page=${page}&tag=${tag}`;
+  //     const response = await api.get<ProjectResponse>(query);
+  //     setProjects(response.data.data);
+  //   } catch {
+  //     setError('프로젝트 불러오기 실패');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+///////////////////////////////////////////////////////////////////////////////////////
+const fetchProjects = () => {
+  setLoading(true);
+  setError(null);
+
+  // 더미 데이터 삽입
+  const dummyData: ProjectItem[] = [
+    {
+      "id": 1,
+      "title": "판타지역사소설 <바라다라의 시간>",
+      "titleImg": "/src/여운1.png",
+      "completionRate": 30,
+      "recommendCount": 0,
+      "tags": [
+        "라이프 스타일",
+        "패션 잡화"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 30,
+      "createdAt": "2025-05-11T07:43:09.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 2,
+      "title": "[이불6장압축] 압파의 금의환향",
+      "titleImg": "/src/-01 오후 7.59.421.png",
+      "completionRate": 80,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전",
+        "라이프 스타일"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T02:31:11.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 3,
+      "title": "project title",
+      "titleImg": "/src/-01 오후 7.59.422.png",
+      "completionRate": 60,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전",
+        "라이프 스타일"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T02:31:15.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 4,
+      "title": "project title",
+      "titleImg": "/src/-01 오후 7.59.423.png",
+      "completionRate": 20,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전",
+        "라이프 스타일"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T02:31:17.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 5,
+      "title": "project title",
+      "titleImg": "/src/-01 오후 7.59.424.png",
+      "completionRate": 1980,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전",
+        "라이프 스타일"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T02:31:18.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 6,
+      "title": "project title",
+      "titleImg": "/src/-01 오후 7.59.425.png",
+      "completionRate": 128,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전",
+        "뷰티 헬스"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T02:31:23.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 7,
+      "title": "project title2",
+      "titleImg": "/src/-01 오후 7.59.426.png",
+      "completionRate": 75,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전",
+        "뷰티 헬스"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T02:31:26.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 8,
+      "title": "자유자재 데포르메 3D \u003C머슬&커비바디\u003E",
+      "titleImg": "/src/-01 오후 7.59.427.png",
+      "completionRate": 5,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전",
+        "게임"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T07:13:06.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    },
+    {
+      "id": 9,
+      "title": "어디서든 누를 수 있는 \u003C키보드 키링\u003E",
+      "titleImg": "/src/-01 오후 7.59.428.png",
+      "completionRate": 45,
+      "recommendCount": 0,
+      "tags": [
+        "테크 가전"
+      ],
+      "pageCount": 1,
+      "totalCount": 9,
+      "userCount": 0,
+      "createdAt": "2025-05-13T07:17:54.000+00:00",
+      "isRecommend": false,
+      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isExpired": true
+    }
+  
+  ];
+
+  setProjects(dummyData);
+  setLoading(false);
+};
+
+//////////////////////////////////////////////////////////////////////////////////
+  
+  const handleLikeToggle = async (projectId: number, current: boolean) => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
     try {
-      const query = `/public/project/all?order=${order}&page=${page}&tag=${tag}`;
-      const response = await api.get<ProjectResponse>(query);
-      setProjects(response.data.data);
-    } catch {
-      setError('프로젝트 불러오기 실패');
-    } finally {
-      setLoading(false);
+      if (current) {
+        await api.delete(`/project/like/${projectId}`);
+      } else {
+        await api.post(`/project/like/${projectId}`);
+      }
+      fetchProjects();
+    } catch (e) {
+      console.error('좋아요 실패', e);
     }
   };
 
   useEffect(() => {
     fetchProjects();
-  }, [tag]); // 태그 변경 시 자동 검색
+  }, [tag]);
 
   return (
     <Container>
@@ -92,7 +287,7 @@ const Search: React.FC = () => {
       </CategoryRow>
       <OrderTabWrapper>
         <OrderSlider style={{ transform: `translateX(${orderIndex * 100}%)` }} />
-        {orderOptions.map((opt, idx) => (
+        {orderOptions.map((opt) => (
           <OrderButton
             key={opt.value}
             onClick={() => setOrder(opt.value)}
@@ -102,78 +297,60 @@ const Search: React.FC = () => {
           </OrderButton>
         ))}
       </OrderTabWrapper>
-
-
-      {/* <SearchForm>
-        <label>
-          정렬순서 (order):
-          <Select value={order} onChange={(e) => setOrder(e.target.value)}>
-            {orderOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </Select>
-        </label>
-        <label>
-          페이지 (page):
-          <Input value={page} onChange={(e) => setPage(e.target.value)} />
-        </label>
-        <SearchButton onClick={fetchProjects}>검색</SearchButton>
-      </SearchForm>
-
-      <SelectedTagText>
-        {categories.find(c => c.tag === tag)?.label || '전체'} 
-        <br />
-      </SelectedTagText> */}
-
-{loading && (
-  <LoadingOverlay>
-    <DotWaveWrapper>
-      <Dot />
-      <Dot />
-      <Dot />
-    </DotWaveWrapper>
-  </LoadingOverlay>
-)}
-
-
-
+      {loading && (
+        <LoadingOverlay>
+          <DotWaveWrapper>
+            <Dot /> <Dot /> <Dot />
+          </DotWaveWrapper>
+        </LoadingOverlay>
+      )}
       {projects.length === 0 && !loading && <div>검색 결과가 없습니다.</div>}
       {error && <ErrorText>{error}</ErrorText>}
-      
+
       <CardList>
         {projects.map((item) => (
-          <Card key={item.id}>
-          <Thumbnail
-            src={`https://api.nextlevel.r-e.kr/img/${item.titleImg}`}
-            alt={item.title}
-            onError={(e) => {
-              e.currentTarget.onerror = null; // 무한루프 방지
-              e.currentTarget.src = noImage;
-            }}
-          />
-          <CardContent>
-            <h3>{item.title}</h3> 
-        
-            <ProgressBarWrapper>
-              <ProgressBar percent={item.completionRate} />
-            </ProgressBarWrapper>
-        
-            <InfoRow>{item.completionRate}% 달성</InfoRow>
-            <InfoRow>추천 수: {item.recommendCount}</InfoRow>
-            
-            {/* <InfoRow>등록일: {new Date(item.createdAt).toLocaleDateString()}</InfoRow>
-            <InfoRow>마감일: {new Date(item.expired).toLocaleDateString()}</InfoRow>
-            <Tags>
-              {item.tags.map((tag, idx) => (
-                <Tag key={idx}>{tag}</Tag>
-              ))}
-            </Tags> */}
-            
-          </CardContent>
-        </Card>
-        
+            <Card key={item.id}>
+
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div>
+                  <CardTopWrapper>
+                    <Thumbnail
+                      src={`https://api.nextlevel.r-e.kr/img/${item.titleImg}`}
+                      alt={item.title}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = noImage;
+                      }}
+                    />
+                    
+                    <HeartIcon
+                      className={item.isRecommend ? 'bi bi-heart-fill' : 'bi bi-heart'}
+                      onClick={() => handleLikeToggle(item.id, item.isRecommend)}
+                    />
+                  </CardTopWrapper>
+                  
+                  <CardContent>
+                    <InfoRow>{item.completionRate}% 달성</InfoRow>
+                    <TitleRow>{item.title}</TitleRow>
+                    <CreaterRow>회사이름</CreaterRow>
+                    {/* <InfoRow>추천 수: {item.recommendCount}</InfoRow> */}
+                    <TagLow>
+                    {item.tags.map((tag, index) => (
+                      <Tag key={index}>{tag}</Tag>
+                    ))}
+                    </TagLow>
+                  </CardContent>
+                  </div> 
+                  <ProgressSection>
+                    <ProgressBarWrapper>
+                      <ProgressBar percent={item.completionRate}><Tooltip percent={item.completionRate} className="tooltip" >{item.userCount}명이 참여!</Tooltip></ProgressBar>
+                      
+                    </ProgressBarWrapper>
+                    
+                  </ProgressSection>
+              </div>
+            </Card>
+          
         ))}
       </CardList>
     </Container>
@@ -182,11 +359,28 @@ const Search: React.FC = () => {
 
 export default Search;
 
-// Styled Components
+
+
+const HeartIcon = styled.i`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  color: #a66cff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const CardTopWrapper = styled.div`
+  position: relative;
+`;
+
 
 const Container = styled.div`
-  
-  padding: 0 20%;
+  padding: 0 15%;
 `;
 
 const Title = styled.h2`
@@ -210,7 +404,7 @@ const CategoryItem = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 13px;
-  
+  min-width: 80px;
   color: #999;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -233,6 +427,7 @@ const CategoryItem = styled.div`
     color: #A66CFF;
     font-weight: bold;
     transition: all 0.2s ease;
+    margin: 0 10px;
     i {
       transition: all 0.2s ease;
       background: #A66CFF;
@@ -335,39 +530,59 @@ const ErrorText = styled.h3`
 const CardList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 24px;
+  gap: 50px;
+  justify-content: space-between;
+  overflow: visible;
+  position: relative;
+  z-index: 0;
 `;
+
 
 const Card = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
-  overflow: hidden;
-  
-`;
+  width: 280px;
+  margin: 20px 0;
+  overflow: visible;
+  position: relative;
+  z-index: 3;
 
+  &:hover {
+    z-index: 5;
+  }
+`;
 const Thumbnail = styled.img`
-  height: 180px;
+  height: 160px;
   cursor: pointer;
   border-radius: 12px;
   border : 1px solid #ddd;
   object-fit: cover;
-  &:hover {
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
-  }
+  width: 260px;
+  z-index: 1;
+  &:hover{
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+      transform: scale(1.005);
+      transition: all 0.2s ease;  
+    } 
 
   img {
     height: 180px;
     width: 100%;
     object-fit: cover;
+    z-index: 1;
     transition: transform 0.3s ease;
-      ${Card}:hover & {
-      transform: scale(1.05);
-    }}
+      hover{
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+      transform: scale(1.005);
+      transition: all 0.2s ease;  
+    }
+ 
+    }
 `;
 
 const CardContent = styled.div`
-  padding: 16px;
+  
   display: flex;
   flex-direction: column;
 
@@ -378,43 +593,140 @@ const CardContent = styled.div`
   }
 `;
 
+const TitleRow = styled.div`
+  font-size: 16px;
+  color: #333;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+  cursor: pointer;
+`;
 const InfoRow = styled.div`
+  font-size: 12px;
+  color: #A66CFF;
+  margin: 4px 0 0 0;
+`;
+
+const CreaterRow = styled.div`
+  font-size: 12px;
+  color: #999;
+  margin: 4px 0 0 0;
+  cursor: pointer;
+  hover {
+    color: #A66CFF;
+    font-weight: bold;
+    transition: all 0.2s ease;
+  }
+`;  
+const ProgressSection = styled.div`
+  width: 10px;
+  height: 100%;
+  margin-left: 5px;
+  position: relative;
+  overflow: visible;
+  border-radius: 10px;
+  padding: 0;
+  z-index: 2;
+  transition: all 0.5s ease;
+  &:hover {
+      box-shadow: 0 0 6px rgba(166, 108, 255, 0.5); /* 보라색 계열 그림자 */
+      transform: scale(1.01); /* 살짝 확대 */
+    }
+`;
+const Tooltip = styled.div<{ percent: number }>`
+  position: absolute;
+  z-index: 9999;
+  right: -100px;
+  transform: translateY(-50%);
+  padding: 10px;
+  background: ${({ percent }) => {
+    if (percent >= 80) return '#A66CFF'; // MainColor
+    if (percent >= 60) return '#9C9EFE'; // SubColor 1
+    if (percent >= 40) return '#AFB4FF'; // SubColor 2
+    if (percent >= 20) return '#B1E1FF'; // SubColor 3
+    return '#9A9A9A';                    // SubColor 4
+  }};
+  border-radius: 10px;
+  min-width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 14px;
-  color: #555;
-  margin: 4px 0;
+  color: white;
+  opacity: 0;
+  transition: opacity 0s ease;
+  transition-delay: 0s;
+  pointer-events: none;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -9px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid ${({ percent }) => {
+    if (percent >= 80) return '#A66CFF'; // MainColor
+    if (percent >= 60) return '#9C9EFE'; // SubColor 1
+    if (percent >= 40) return '#AFB4FF'; // SubColor 2
+    if (percent >= 20) return '#B1E1FF'; // SubColor 3
+    return '#9A9A9A';                    // SubColor 4
+  }}; 
+  }
+
+  ${ProgressSection}:hover & {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    transition-delay: 0.5s;
+    
+  }
 `;
 
 const ProgressBarWrapper = styled.div`
   background: #eee;
+  position: relative;
   border-radius: 10px;
-  height: 10px;
-  margin: 8px 0;
-  overflow: hidden;
+  width: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  transition: all 0.3s ease;  
 `;
+
+
 
 const ProgressBar = styled.div<{ percent: number }>`
-  height: 100%;
-  width: ${({ percent }) => percent}%;
-  background: ${({ percent }) =>
-    percent === 100 ? '#00C853' :
-    percent >= 50 ? '#A66CFF' :
-    '#FFAB00'};
-  transition: width 0.3s ease;
+  width: 100%;
+  height: ${({ percent }) => percent}%;
+  background: ${({ percent }) => {
+    if (percent >= 80) return '#A66CFF'; // MainColor
+    if (percent >= 60) return '#9C9EFE'; // SubColor 1
+    if (percent >= 40) return '#AFB4FF'; // SubColor 2
+    if (percent >= 20) return '#B1E1FF'; // SubColor 3
+    return '#9A9A9A';                    // SubColor 4
+  }};
+  transition: height 0.3s ease;
+  border-radius: 10px;
 `;
 
-const Tags = styled.div`
-  margin-top: 12px;
+
+
+const TagLow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin-top: 8px;
 `;
 
 const Tag = styled.span`
   background: #f2f2f2;
-  padding: 4px 10px;
-  font-size: 12px;
+  padding: 4px 6px;
+  font-size: 10px;
   border-radius: 6px;
   color: #555;
+  
 `;
 
 
