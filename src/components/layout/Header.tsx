@@ -105,6 +105,7 @@
 						
 						<NavItem><Category src={CategoryImage} alt='' /> 카테고리</NavItem>
 					</CategoryMenu>
+					{isLoggedIn ? '로그인됨' : '로그인안됨'}
 					<NavItem>인기</NavItem>
 					<NavItem>신규</NavItem>
 					<NavItem>마감임박</NavItem>
@@ -196,7 +197,7 @@
 		return (
 			<div>
 				<SubHeaderWrapper>
-					<HeaderNavbar style={{ padding: '0 10px' }}>
+					<HeaderNavbar >
 					<Logo src={LogoImage} onClick={handleLogoClick} />
 						<CategoryMenu onClick={handleCategoryClick}>
 							
