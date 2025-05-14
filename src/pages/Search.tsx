@@ -4,7 +4,8 @@ import { api } from '../AxiosInstance';
 import noImage from '../assets/images/noImage.jpg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/AuthContext';
-
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 interface ProjectItem {
   id: number;
   title: string;
@@ -60,6 +61,27 @@ const Search: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800,  // 애니메이션 지속 시간 (ms)
+      once: true,     // 한 번만 실행 (true), 스크롤 시 계속 실행 (false)
+    });
+  }, []);
+
+  const getRemainingDays = (expiredDateStr: string): string => {
+    const today = new Date();
+    const expiredDate = new Date(expiredDateStr);
+
+    // 오늘 자정 기준으로 계산
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const expiredMidnight = new Date(expiredDate.getFullYear(), expiredDate.getMonth(), expiredDate.getDate());
+
+    const diffTime = expiredMidnight.getTime() - todayMidnight.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays < 0 ? '마감' : `${diffDays}일 남음`;
+  };
+
   // const fetchProjects = async () => {
   //   setLoading(true);
   //   setError(null);
@@ -95,7 +117,7 @@ const fetchProjects = () => {
       "userCount": 30,
       "createdAt": "2025-05-11T07:43:09.000+00:00",
       "isRecommend": false,
-      "expired": "2025-03-03T00:00:00.000+00:00",
+      "expired": "2025-08-03T00:00:00.000+00:00",
       "isExpired": true
     },
     {
@@ -103,7 +125,7 @@ const fetchProjects = () => {
       "title": "[이불6장압축] 압파의 금의환향",
       "titleImg": "/src/-01 오후 7.59.421.png",
       "completionRate": 80,
-      "recommendCount": 0,
+      "recommendCount": 20,
       "tags": [
         "테크 가전",
         "라이프 스타일"
@@ -112,8 +134,8 @@ const fetchProjects = () => {
       "totalCount": 9,
       "userCount": 0,
       "createdAt": "2025-05-13T02:31:11.000+00:00",
-      "isRecommend": false,
-      "expired": "2025-03-03T00:00:00.000+00:00",
+      "isRecommend": true,
+      "expired": "2025-06-03T00:00:00.000+00:00",
       "isExpired": true
     },
     {
@@ -131,7 +153,7 @@ const fetchProjects = () => {
       "userCount": 0,
       "createdAt": "2025-05-13T02:31:15.000+00:00",
       "isRecommend": false,
-      "expired": "2025-03-03T00:00:00.000+00:00",
+      "expired": "2025-07-03T00:00:00.000+00:00",
       "isExpired": true
     },
     {
@@ -149,7 +171,7 @@ const fetchProjects = () => {
       "userCount": 0,
       "createdAt": "2025-05-13T02:31:17.000+00:00",
       "isRecommend": false,
-      "expired": "2025-03-03T00:00:00.000+00:00",
+      "expired": "2025-08-03T00:00:00.000+00:00",
       "isExpired": true
     },
     {
@@ -305,8 +327,11 @@ const fetchProjects = () => {
         </LoadingOverlay>
       )}
       {projects.length === 0 && !loading && <div>검색 결과가 없습니다.</div>}
+      <div>총 <strong >{projects.length}</strong>개의 프로젝트가 있습니다.</div>
       {error && <ErrorText>{error}</ErrorText>}
-
+      
+      
+      
       <CardList>
         {projects.map((item) => (
             <Card key={item.id}>
@@ -338,12 +363,15 @@ const fetchProjects = () => {
                     {item.tags.map((tag, index) => (
                       <Tag key={index}>{tag}</Tag>
                     ))}
+                     <Tag>{getRemainingDays(item.expired)}</Tag>
                     </TagLow>
                   </CardContent>
                   </div> 
-                  <ProgressSection>
+                  <ProgressSection percent={item.completionRate}>
                     <ProgressBarWrapper>
-                      <ProgressBar percent={item.completionRate}><Tooltip percent={item.completionRate} className="tooltip" >{item.userCount}명이 참여!</Tooltip></ProgressBar>
+                      <ProgressBar percent={item.completionRate}>
+                        <Tooltip percent={item.completionRate} className="tooltip" >{item.userCount}명 참여</Tooltip>
+                        </ProgressBar>
                       
                     </ProgressBarWrapper>
                     
@@ -353,6 +381,14 @@ const fetchProjects = () => {
           
         ))}
       </CardList>
+
+      <div data-aos="fade-up" 
+        	 data-aos-offset="200" 
+             data-aos-easing="ease-out-cubic"
+             data-aos-duration="2000" 
+             >
+        </div>
+        
     </Container>
   );
 };
@@ -378,9 +414,14 @@ const CardTopWrapper = styled.div`
   position: relative;
 `;
 
-
 const Container = styled.div`
-  padding: 0 15%;
+  margin: 0 15%;
+
+  @media (max-width: 1500px) {
+    margin: 0 10%;
+  }
+  @media (max-width: 1200px) {
+    margin: 0 5%;
 `;
 
 const Title = styled.h2`
@@ -560,10 +601,11 @@ const Thumbnail = styled.img`
   object-fit: cover;
   width: 260px;
   z-index: 1;
+  transition: all 0.5s ease;  
   &:hover{
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
       transform: scale(1.005);
-      transition: all 0.2s ease;  
+      transition: all 0.5s ease;  
     } 
 
   img {
@@ -599,6 +641,7 @@ const TitleRow = styled.div`
   margin: 4px 0 0 0;
   font-weight: 500;
   cursor: pointer;
+  min-height: 40px;
 `;
 const InfoRow = styled.div`
   font-size: 12px;
@@ -617,10 +660,10 @@ const CreaterRow = styled.div`
     transition: all 0.2s ease;
   }
 `;  
-const ProgressSection = styled.div`
+const ProgressSection = styled.div<{ percent: number }>`
   width: 10px;
   height: 100%;
-  margin-left: 5px;
+  margin-left: 10px;
   position: relative;
   overflow: visible;
   border-radius: 10px;
@@ -628,7 +671,13 @@ const ProgressSection = styled.div`
   z-index: 2;
   transition: all 0.5s ease;
   &:hover {
-      box-shadow: 0 0 6px rgba(166, 108, 255, 0.5); /* 보라색 계열 그림자 */
+      box-shadow: 0 0 6px ${({ percent }) => {
+    if (percent >= 80) return '#A66CFF'; // MainColor
+    if (percent >= 60) return '#9C9EFE'; // SubColor 1
+    if (percent >= 40) return '#AFB4FF'; // SubColor 2
+    if (percent >= 20) return '#B1E1FF'; // SubColor 3
+    return '#9A9A9A';                    // SubColor 4
+  }};; /* 보라색 계열 그림자 */
       transform: scale(1.01); /* 살짝 확대 */
     }
 `;
@@ -726,7 +775,12 @@ const Tag = styled.span`
   font-size: 10px;
   border-radius: 6px;
   color: #555;
-  
+  &:hover {
+    background: #A66CFF;
+    color: white;
+    font-weight: bold;
+    transition: all 0.2s ease;
+  }
 `;
 
 
