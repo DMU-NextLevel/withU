@@ -5,6 +5,7 @@ import NextLevel.demo.project.ProjectOrderType;
 import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
 import NextLevel.demo.project.notoce.dto.response.ResponseNoticeListDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
+import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectAllDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -47,7 +49,7 @@ public class ProjectController {
 
     // 수정
     @PutMapping("/api1/project/{projectId}")
-    public ResponseEntity<?> updateProject(@ModelAttribute @Valid CreateProjectDto dto, @PathVariable("projectId") Long projectId) {
+    public ResponseEntity<?> updateProject(@ModelAttribute CreateProjectDto dto, @PathVariable("projectId") Long projectId) {
         dto.setUserId(JWTUtil.getUserIdFromSecurityContext());
         dto.setId(projectId);
 
@@ -59,16 +61,15 @@ public class ProjectController {
     // 삭제
 
     // 모두 조회
-    @GetMapping("/public/project/all")
+    @PostMapping("/public/project/all")
     public ResponseEntity<?> getAllProjects(
-            @RequestParam(value = "order", required = false) String order,
-            @RequestParam(value = "tag", required = false) Long tagId,
-            @RequestParam(value = "page", required = false) Integer page)
+            @RequestBody @Valid SelectProjectListRequestDto dto)
     {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
+        dto.setUserId(userId);
 
-        List<ResponseProjectListDto> dto = projectService.getAllProjects(tagId, userId, ProjectOrderType.getType(order), page);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dto));
+        List<ResponseProjectListDto> dtos = projectService.getAllProjects(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dtos));
     }
 
     // 상세 조회

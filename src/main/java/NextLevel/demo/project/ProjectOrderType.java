@@ -6,7 +6,7 @@ public enum ProjectOrderType {
     RECOMMEND(" recommend_count "),
     COMPLETION(" completion_rate "),
     USER(" user_count "),
-    CREATED(" p.created_at ");
+    CREATED(" fp.created_at ");
 
     public String type;
 

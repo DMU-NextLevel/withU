@@ -1,6 +1,7 @@
 package NextLevel.demo.project.project.repository;
 
 import NextLevel.demo.project.ProjectOrderType;
+import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -24,12 +25,13 @@ public class ProjectActivityRepository {
     // tag 값이 있느면 where 추가
     // order by type에 맞게 order
     @Transactional
-    public List<ResponseProjectListDto> getAll(Long userId, Long tagId, ProjectOrderType orderType, Integer page) {
+    public List<ResponseProjectListDto> getAll(SelectProjectListRequestDto dto) {
         String select = """ 
             WITH filtered_projects AS (
-                SELECT p.*
-                FROM project p
-                %s
+                SELECT distinct p.*
+                FROM project p 
+                join project_tag pt on p.id = pt.project_id
+                where %s 
             ),
             project_count AS (
                 SELECT COUNT(*) AS total_count
@@ -47,22 +49,30 @@ public class ProjectActivityRepository {
             %s 
             %s
             """;
-        String where = "";
+        String where = " true ";
         String isRecommend = "";
         String order = "";
         String limit = "";
 
-        if(tagId != null) {
-            where = " JOIN project_tag pt ON p.id = pt.project_id where pt.tag_id = "+ tagId + " ";
+        if(dto.getTag() != null) {
+            where = " pt.tag_id in ("+ dto.getTag() + ") ";
         }
 
-        if(userId != null)
-            isRecommend = "if (exists (select r.id from recommend r where r.project_id = fp.id and r.user_id = "+userId+"), 1, 0)";
+        if(dto.getSearch() != null && !dto.getSearch().isEmpty()) {
+            where += " and p.title like '%"+dto.getSearch()+"%' ";
+        }
+
+        if(dto.getUserId() != null)
+            isRecommend = "if (exists (select r.id from recommend r where r.project_id = fp.id and r.user_id = "+dto.getUserId()+"), 1, 0)";
         else
             isRecommend = "0 ";
 
-        order = " order by "+orderType.type+" ";
+        order = " order by "+ProjectOrderType.getType(dto.getOrder()).type+" ";
+        if(dto.getDesc() != null && dto.getDesc()) {
+            order += " desc ";
+        }
 
+        Integer page = dto.getPage();
         if(page == null)
             page = 1;
 

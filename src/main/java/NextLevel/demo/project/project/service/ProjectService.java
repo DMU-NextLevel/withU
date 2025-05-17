@@ -7,6 +7,7 @@ import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.project.ProjectOrderType;
 import NextLevel.demo.project.notoce.repository.ProjectNoticeRepository;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
+import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
@@ -165,8 +166,8 @@ public class ProjectService {
     }
 
     // get list
-    public List<ResponseProjectListDto> getAllProjects(Long tagId, Long userId, ProjectOrderType orderType, Integer page) {
-        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(userId,tagId, orderType, page);
+    public List<ResponseProjectListDto> getAllProjects(SelectProjectListRequestDto dto) {
+        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(dto);
 
         Map<Long, ResponseProjectListDto> dtoMap = new HashMap<>();
         entities.forEach(e -> {dtoMap.put(e.getId(), e);});
