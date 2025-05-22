@@ -1,7 +1,6 @@
 package NextLevel.demo.project.project.controller;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.project.ProjectOrderType;
 import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
 import NextLevel.demo.project.notoce.dto.response.ResponseNoticeListDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
@@ -14,13 +13,11 @@ import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;

@@ -4,8 +4,6 @@ import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
-import NextLevel.demo.project.ProjectOrderType;
-import NextLevel.demo.project.notoce.repository.ProjectNoticeRepository;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;

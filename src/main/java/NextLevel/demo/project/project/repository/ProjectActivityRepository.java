@@ -1,6 +1,5 @@
 package NextLevel.demo.project.project.repository;
 
-import NextLevel.demo.project.ProjectOrderType;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import jakarta.persistence.EntityManager;
@@ -39,10 +38,10 @@ public class ProjectActivityRepository {
             )
             SELECT fp.id, fp.title, fp.created_at, fp.expired ,
                 (CAST((SELECT SUM(f.free_price + op.price) FROM funding f left join `option` op on op.id = f.option_id WHERE f.project_id = fp.id) AS DOUBLE) * 100.0 / fp.goal) AS completion_rate,
-                (SELECT COUNT(DISTINCT r.user_id) FROM recommend r WHERE r.project_id = fp.id) AS recommend_count,
-                (SELECT COUNT(f.user_id) FROM funding f WHERE f.project_id = fp.id) AS user_count,
-                (SELECT i.uri FROM img i WHERE i.id = fp.img_id) AS title_img,
-                (cast(%sas signed) )as is_recommend,
+                (SELECT COUNT(DISTINCT r.user_id) FROM `like` r WHERE r.project_id = fp.id) AS like_count, 
+                (SELECT COUNT(f.user_id) FROM funding f WHERE f.project_id = fp.id) AS user_count, 
+                (SELECT i.uri FROM img i WHERE i.id = fp.img_id) AS title_img, 
+                (cast(%sas signed) )as is_like, 
                 pc.total_count
             FROM filtered_projects fp
             CROSS JOIN project_count pc
@@ -63,7 +62,7 @@ public class ProjectActivityRepository {
         }
 
         if(dto.getUserId() != null)
-            isRecommend = "if (exists (select r.id from recommend r where r.project_id = fp.id and r.user_id = "+dto.getUserId()+"), 1, 0)";
+            isRecommend = "if (exists (select r.id from `like` r where r.project_id = fp.id and r.user_id = "+dto.getUserId()+"), 1, 0)";
         else
             isRecommend = "0 ";
 

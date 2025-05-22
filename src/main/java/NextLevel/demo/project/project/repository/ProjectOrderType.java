@@ -1,12 +1,14 @@
-package NextLevel.demo.project;
+package NextLevel.demo.project.project.repository;
 
 import java.util.Arrays;
 
 public enum ProjectOrderType {
-    RECOMMEND(" recommend_count "),
+    RECOMMEND(" like_count "),
     COMPLETION(" completion_rate "),
     USER(" user_count "),
-    CREATED(" fp.created_at ");
+    CREATED(" fp.created_at ") ,
+    EXPIRED(" fp.expired ");
+    ;
 
     public String type;
 
