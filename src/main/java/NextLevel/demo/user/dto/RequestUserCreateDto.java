@@ -25,6 +25,7 @@ public class RequestUserCreateDto {
     private String key;
     private String address;
     private String number;
+    private String areaNumber;
 
     private String password;
     private String socialProvider;
@@ -35,8 +36,9 @@ public class RequestUserCreateDto {
 
     private String role = UserRole.SOCIAL.name();
 
+    //used by social register
     @Builder
-    public RequestUserCreateDto(Long id, String name, String nickName, String email, String address, String number,
+    public RequestUserCreateDto(Long id, String name, String nickName, String email, String address, String number, String areaNumber,
         String password, String socialProvider, String socialId, ImgEntity imgEntity) {
         this.id = id;
         this.name = name;
@@ -44,6 +46,7 @@ public class RequestUserCreateDto {
         this.email = email;
         this.address = address;
         this.number = number;
+        this.areaNumber = areaNumber;
         this.password = password;
         this.socialProvider = socialProvider;
         this.socialId = socialId;
@@ -51,18 +54,11 @@ public class RequestUserCreateDto {
     }
 
     public UserEntity toUserEntity() {
-        return new UserEntity(id, name, nickName, 0, address, number, imgEntity);
+        return new UserEntity(id, name, nickName, 0, address, number, areaNumber, imgEntity);
     }
 
     public UserDetailEntity toUserDetailEntity(UserEntity user){
         return new UserDetailEntity(user, UUID.randomUUID().toString(), role, email, password, socialProvider, socialId);
-    }
-
-    public boolean validateAllData() {
-        if(name != null && !name.isEmpty() && nickName != null && !nickName.isEmpty()
-            && address != null && !address.isEmpty() && number != null && !number.isEmpty())
-            return true;
-        return false;
     }
 
     @Override

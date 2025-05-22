@@ -16,11 +16,11 @@ public enum ErrorCode {
     SEND_EMAIL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "01003", "send email error"),
     NOT_CORRECT_EMAIL_KEY(HttpStatus.BAD_REQUEST, "01004", "wrong email key"),
 
-    // login
-    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "02001","Login failed"),
-
     // user / my page
     CAN_NOT_CHANGE_EMAIL(HttpStatus.BAD_REQUEST, "05001", "can not change email"),
+    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "05002","Login failed"),
+    CAN_NOT_INVOKE(HttpStatus.BAD_REQUEST, "05003", "not found column name %s"),
+    INVALID_NUMBER_FORMAT(HttpStatus.BAD_REQUEST, "05004", "invalid number format %s"),
 
     // img 관련 error
     ERROR_ON_SAVE_IMG(HttpStatus.CONFLICT, "03001","error on save img"),

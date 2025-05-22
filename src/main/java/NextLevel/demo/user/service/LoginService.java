@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,11 +29,8 @@ public class LoginService {
     private final JWTUtil jwtUtil;
     private final EmailService emailService;
     private final ImgService imgService;
-
-    // use refresh token filter
-    public UserDetailEntity findUserDetailByUserId(Long userId) {
-        return userDetailRepository.findUserDetailByUserId(userId);
-    }
+    @Qualifier("passwordEncoder")
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void socialLogin(RequestUserCreateDto socialLoginDto, HttpServletResponse response) {
@@ -47,7 +46,6 @@ public class LoginService {
             UserEntity user = userRepository.save(socialLoginDto.toUserEntity());
 
             UserDetailEntity userDetailEntity = socialLoginDto.toUserDetailEntity(user);
-            userDetailEntity.setRole(UserRole.SOCIAL.name());
             userDetail = userDetailRepository.save(userDetailEntity);
         }else{
             userDetail = userDetailOptional.get();
@@ -74,8 +72,7 @@ public class LoginService {
 
         emailService.checkEmailKeyAtRegister(dto.getEmail(), dto.getKey());
 
-        if(dto.validateAllData())
-            dto.setRole(UserRole.USER.name());
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         UserEntity user = userRepository.save(dto.toUserEntity());
         UserDetailEntity userDetail = userDetailRepository.save(dto.toUserDetailEntity(user));
@@ -85,9 +82,9 @@ public class LoginService {
 
     @Transactional
     public UserDetailEntity login(RequestUserLoginDto loginDto) {
-        Optional<UserDetailEntity> user = userDetailRepository.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword());
+        Optional<UserDetailEntity> user = userDetailRepository.findByEmail(loginDto.getEmail());
 
-        if(user.isEmpty()) {
+        if(user.isEmpty() || !passwordEncoder.matches(loginDto.getPassword(), user.get().getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
         return user.get();

@@ -31,16 +31,15 @@ public class UserDetailEntity {
     @Column(length = 36, columnDefinition = "CHAR(36)", unique = true, nullable = false) // default 값 없음 무조건 코드로 넣기 필수 !!
     private String UUID;
 
-    @Column(length=5, columnDefinition = "char(6)")
-    @ColumnDefault("'USER'")
-    private String role;
-
     @Column(nullable = true) // 추후 변경
     private String email;
+
     @Column(nullable = true)
     private String password;
+
     @Column(nullable = true)
     private String socialProvider;
+
     @Column(nullable = true)
     private String socialId;
 
@@ -48,7 +47,6 @@ public class UserDetailEntity {
         String socialProvider, String socialId) {
         this.user = user;
         this.UUID = UUID;
-        this.role = role;
         this.email = email;
         this.password = password;
         this.socialProvider = socialProvider;
@@ -60,11 +58,7 @@ public class UserDetailEntity {
         this.user = user;
         this.UUID = UUID;
         this.email = email;
-        this.role = role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
     public void setEmail(String email) {this.email = email;}
 }

@@ -9,6 +9,7 @@ import NextLevel.demo.oauth.OAuthFailureHandler;
 import NextLevel.demo.oauth.OAuthSuccessHandler;
 import NextLevel.demo.oauth.SocialLoginService;
 import NextLevel.demo.user.repository.UserHistoryRepository;
+import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.persistence.EntityManager;
@@ -20,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -32,6 +35,7 @@ public class SecurityConfig {
     private final LoginService loginService;
     private final SocialLoginService socialLoginService;
     private final UserHistoryRepository userHistoryRepository;
+    private final UserRepository userRepository;
     private final EntityManager entityManager;
 
     private final HandlerExceptionResolver handlerExceptionResolver;
@@ -42,13 +46,16 @@ public class SecurityConfig {
         LoginService loginService,
         SocialLoginService socialLoginService,
         UserHistoryRepository userHistoryRepository,
+        UserRepository userRepository,
         EntityManager entityManager,
+
         @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
         this.jwtUtil = jwtUtil;
         this.loginService = loginService;
         this.socialLoginService = socialLoginService;
         this.handlerExceptionResolver = handlerExceptionResolver;
         this.userHistoryRepository = userHistoryRepository;
+        this.userRepository = userRepository;
         this.entityManager = entityManager;
     }
 
@@ -102,7 +109,7 @@ public class SecurityConfig {
     }
     @Bean
     public RefreshTokenFilter refreshTokenFilter() {
-        return new RefreshTokenFilter(jwtUtil, loginService);
+        return new RefreshTokenFilter(jwtUtil, userRepository);
     }
     @Bean
     public UserHistoryFilter userHistoryFilter() { return new UserHistoryFilter(userHistoryRepository, entityManager); }
