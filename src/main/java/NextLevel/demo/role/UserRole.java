@@ -30,6 +30,6 @@ public enum UserRole {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(this.roles)
             .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toCollection(ArrayList::new));
+            .toList();
     }
 }

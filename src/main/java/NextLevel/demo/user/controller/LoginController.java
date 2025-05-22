@@ -2,6 +2,7 @@ package NextLevel.demo.user.controller;
 
 import NextLevel.demo.common.SuccessResponse;
 import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.role.UserRole;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.dto.login.RequestUserLoginDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
@@ -10,10 +11,15 @@ import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,6 +61,26 @@ public class LoginController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
+
+    @GetMapping("/token")
+    public ResponseEntity<?> auth() {
+        Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        String role;
+
+        System.out.println(authorities);
+
+        if(authorities.contains(new SimpleGrantedAuthority("ROLE_"+UserRole.ADMIN.name())))
+            role = UserRole.ADMIN.name();
+        else if(authorities.contains(new SimpleGrantedAuthority("ROLE_"+UserRole.USER.name())))
+            role = UserRole.USER.name();
+        else if(authorities.contains(new SimpleGrantedAuthority("ROLE_"+UserRole.SOCIAL.name())))
+            role = UserRole.SOCIAL.name();
+        else
+            role = "no login";
+
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", role));
+    }
+
 
     @GetMapping("/nickName")
     public ResponseEntity<?> checkNickName(@RequestParam("nickName") String nickName) {
