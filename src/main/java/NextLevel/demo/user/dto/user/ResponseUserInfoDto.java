@@ -16,6 +16,7 @@ public class ResponseUserInfoDto {
     private int point;
     private String address;
     private String number;
+    private String areaNumber;
 
     private String email;
     private String socialProvider;
@@ -28,7 +29,7 @@ public class ResponseUserInfoDto {
         UserDetailEntity detail = userFullEntity.getUserDetail();
 
         ResponseUserInfoDto dto = new ResponseUserInfoDto(userFullEntity.getName(), userFullEntity.getNickName(), userFullEntity.getPoint(),
-            userFullEntity.getAddress(), userFullEntity.getNumber(), detail.getEmail(),
+            userFullEntity.getAddress(), userFullEntity.getNumber(), userFullEntity.getAreaNumber(), detail.getEmail(),
             detail.getSocialProvider());
 
         if(userFullEntity.getImg() != null) {
@@ -38,13 +39,14 @@ public class ResponseUserInfoDto {
         return dto;
     }
 
-    public ResponseUserInfoDto(String name, String nickName, int point, String address,
-        String number, String email, String socialProvider) {
+    private ResponseUserInfoDto(String name, String nickName, int point, String address,
+        String number, String areaNumber, String email, String socialProvider) {
         this.name = name;
         this.nickName = nickName;
         this.point = point;
         this.address = address;
         this.number = number;
+        this.areaNumber = areaNumber;
         this.email = email;
         this.socialProvider = socialProvider;
         this.img = img;

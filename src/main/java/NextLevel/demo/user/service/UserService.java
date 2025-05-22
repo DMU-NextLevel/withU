@@ -6,48 +6,93 @@ import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.role.UserRole;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
+import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
+import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
+import NextLevel.demo.util.StringUtil;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
     private final ImgService imgService;
     private final LoginService loginService;
+    @Qualifier("passwordEncoder")
+    private final PasswordEncoder passwordEncoder;
 
     public UserEntity getUserInfo(Long userId) {
-        return userRepository.findUserFullInfoByUserId(userId);
+        return userRepository.findUserFullInfoByUserId(userId).orElseThrow(
+            ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
+        );
     }
 
     @Transactional
-    public UserEntity updateUserInfo(RequestUserCreateDto dto) {
+    public void updateUserInfo(RequestUpdateUserInfoDto dto) {
         UserEntity oldUser = getUserInfo(dto.getId());
-        UserDetailEntity oldUserDetail = oldUser.getUserDetail();
 
         // email 변경 불가
-        if(dto.getEmail() != null && !dto.getEmail().equals(oldUserDetail.getEmail())) {
+        if(dto.getName().equals("email") || dto.getName().equals("id")) {
             throw new CustomException(ErrorCode.CAN_NOT_CHANGE_EMAIL);
         }
 
-        // nick name 값 확인
-        loginService.checkNickNameIsNotExist(dto.getNickName());
+        switch(dto.getName()){
+            case "email":
+                throw new CustomException(ErrorCode.CAN_NOT_CHANGE_EMAIL);
+            case "nickname":
+                loginService.checkNickNameIsNotExist(dto.getValue());
+                break;
+        }
 
-        // user Entity 정보가 모두 들어왔는지도 학인
-        if(dto.validateAllData())
-            oldUserDetail.setRole(UserRole.USER.name());
+        try {
+            Method setterMethod = oldUser.getClass().getDeclaredMethod(StringUtil.setGetterName(dto.getName()), String.class), String;
+            setterMethod.invoke(oldUser, dto.getValue());
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.SIBAL_WHAT_IS_IT, e.getMessage());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.CAN_NOT_INVOKE, dto.getName());
+        }
 
-        ImgEntity updatedImg = imgService.updateImg(dto.getImg(), oldUser.getImg());
-        dto.setImgEntity(updatedImg);
+        oldUser.checkRole();
+        userRepository.save(oldUser);
+    }
 
-        userDetailRepository.save(oldUserDetail);
-        return userRepository.save(dto.toUserEntity());
+    @Transactional
+    public void updateUserPassword(RequestUpdatePasswordDto dto) {
+        UserEntity user = userRepository.findUserFullInfoByUserId(dto.getUserId()).orElseThrow(
+            ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
+        );
+        if(!passwordEncoder.matches(dto.getOldPassword(), user.getUserDetail().getPassword()))
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
+
+
+        String newPassword = passwordEncoder.encode(dto.getNewPassword());
+
+        log.info("passwd encode " + newPassword);
+
+        userDetailRepository.updatePasswordByUserId(newPassword, user.getId());
+    }
+
+    public void updateUserImg(Long userId, MultipartFile img) {
+        UserEntity oldUser = userRepository.findById(userId).orElseThrow(
+            ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
+        );
+        imgService.updateImg(img, oldUser.getImg());
     }
 
 }

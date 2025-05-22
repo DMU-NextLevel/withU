@@ -1,7 +1,6 @@
-package NextLevel.demo.user.controller.login;
+package NextLevel.demo.user.controller;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.dto.login.RequestUserLoginDto;
@@ -11,7 +10,6 @@ import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +32,7 @@ public class LoginController {
     private final ImgService imgService;
     private final EmailService emailService;
 
-    @PutMapping
+    @PostMapping
     public ResponseEntity<?> register(
         @ModelAttribute @Valid RequestUserCreateDto requestUserCreateDto,
         HttpServletResponse httpServletResponse) {
@@ -46,7 +44,7 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 
-    @PostMapping
+    @PutMapping
     public ResponseEntity<?> login(
         @RequestBody @Valid RequestUserLoginDto requestUserLoginDto,
         HttpServletResponse httpServletResponse) {

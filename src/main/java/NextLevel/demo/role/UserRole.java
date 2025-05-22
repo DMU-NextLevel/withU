@@ -1,5 +1,7 @@
 package NextLevel.demo.role;
 
+import NextLevel.demo.exception.CustomException;
+import NextLevel.demo.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,7 +24,7 @@ public enum UserRole {
         return Arrays.stream(UserRole.values())
             .filter(R -> R.name().equals(dbRoleName))
             .findFirst()
-            .orElseThrow(() -> new RuntimeException("Invalid role: " + dbRoleName));
+            .orElseThrow(() -> new CustomException(ErrorCode.SIBAL_WHAT_IS_IT,"Invalid role: " + dbRoleName));
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
