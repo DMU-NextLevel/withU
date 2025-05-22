@@ -23,8 +23,6 @@ public class ResponseUserInfoDto {
 
     private String img;
 
-    private List<String> mustChange;
-
     public static ResponseUserInfoDto of(UserEntity userFullEntity) {
         UserDetailEntity detail = userFullEntity.getUserDetail();
 
@@ -49,6 +47,5 @@ public class ResponseUserInfoDto {
         this.areaNumber = areaNumber;
         this.email = email;
         this.socialProvider = socialProvider;
-        this.img = img;
     }
 }
