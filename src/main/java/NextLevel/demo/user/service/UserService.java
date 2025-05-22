@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -88,11 +89,18 @@ public class UserService {
         userDetailRepository.updatePasswordByUserId(newPassword, user.getId());
     }
 
+    @Transactional
     public void updateUserImg(Long userId, MultipartFile img) {
         UserEntity oldUser = userRepository.findById(userId).orElseThrow(
             ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
         );
-        imgService.updateImg(img, oldUser.getImg());
+        if(img == null)
+            throw new CustomException(ErrorCode.INPUT_REQUIRED_PARAMETER);
+
+        ImgEntity imgEntity = imgService.updateImg(img, oldUser.getImg());
+
+        if(oldUser.getImg() == null)
+            oldUser.setImg(imgEntity);
     }
 
 }
