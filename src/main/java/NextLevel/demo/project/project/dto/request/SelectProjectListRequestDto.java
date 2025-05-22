@@ -21,7 +21,10 @@ public class SelectProjectListRequestDto {
     private Integer page;
 
     public String getTag() {
-        StringBuilder builder = new StringBuilder();
+        if(tag == null || tag.isEmpty())
+            return null;
+
+        StringBuilder builder = new StringBuilder("");
         tag.forEach(t->builder.append(t).append(","));
         builder.deleteCharAt(builder.length()-1);
         return builder.toString();

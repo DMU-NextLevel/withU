@@ -52,7 +52,7 @@ public class ResponseProjectDetailDto {
         dto.setGoal(entity.getGoal());
         dto.setSum(entity.getFundings().stream().mapToLong(e->e.getFreePrice()).sum());
         dto.setCompletionRate(FundingUtil.getCompletionRate(dto.sum, entity.getGoal()));
-        dto.setRecommendCount(entity.getRecommends().size());
+        dto.setRecommendCount(entity.getLikes().size());
         dto.setFundingCount(entity.getFundings().size());
         dto.setIsAuthor(entity.getUser().getId() == userId);
         dto.setIsExpired( new Date().before(entity.getExpired()) );

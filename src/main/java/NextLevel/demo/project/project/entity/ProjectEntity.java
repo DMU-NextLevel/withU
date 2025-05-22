@@ -5,7 +5,7 @@ import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.community.entity.ProjectCommunityEntity;
 import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
-import NextLevel.demo.recommend.entity.RecommendEntity;
+import NextLevel.demo.user.entity.LikeEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -71,7 +71,7 @@ public class ProjectEntity {
     private Set<FundingEntity> fundings;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private Set<RecommendEntity> recommends;
+    private Set<LikeEntity> likes;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<ProjectCommunityEntity> communities;
