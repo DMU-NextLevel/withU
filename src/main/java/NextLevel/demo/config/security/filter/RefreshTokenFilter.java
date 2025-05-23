@@ -54,10 +54,9 @@ public class RefreshTokenFilter extends CustomTokenFilter {
                     .setAuthentication(new CustomAuthentication(userId, dbUser.getRole()));
 
                 jwtUtil.addAccess(response, userId, getIpFromRequest(request), dbUser.getRole());
+
+                log.info("refresh token success :: " +  userId + ", " + dbUser.getRole());
             }
-
-            log.info("refresh token success");
-
         } catch (NoTokenException | StrangeTokenException e) {
             log.info("refresh token fail");
         } catch (Exception e) {

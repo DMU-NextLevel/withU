@@ -2,6 +2,11 @@ package NextLevel.demo.project.project.service;
 
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
+import NextLevel.demo.funding.dto.response.FundingResponseDto;
+import NextLevel.demo.funding.entity.FundingEntity;
+import NextLevel.demo.funding.entity.OptionEntity;
+import NextLevel.demo.funding.repository.FundingRepository;
+import NextLevel.demo.funding.repository.OptionRepository;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
@@ -37,6 +42,8 @@ public class ProjectService {
     private final ImgService imgService;
     private final ProjectActivityRepository projectActivityRepository;
     private final TagService tagService;
+    private final OptionRepository optionRepository;
+    private final FundingRepository fundingRepository;
 
     // 추가
     @Transactional
@@ -92,7 +99,7 @@ public class ProjectService {
         Optional<ProjectEntity> oldProjectOptional = projectRepository.findByIdWithAll(dto.getId());
 
         if(oldProjectOptional.isEmpty())
-            throw new CustomException(ErrorCode.NOT_FOUND_PROJECT, dto.getId().toString());
+            throw new CustomException(ErrorCode.NOT_FOUND, "project");
 
         ProjectEntity oldProject = oldProjectOptional.get();
 
@@ -151,7 +158,7 @@ public class ProjectService {
     public void deleteProject(Long id) {
         Optional<ProjectEntity> oldProjectOptional = projectRepository.findById(id);
         if(oldProjectOptional.isEmpty())
-            throw new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString());
+            throw new CustomException(ErrorCode.NOT_FOUND, "project");
         ProjectEntity oldProject = oldProjectOptional.get();
 
         // 펀딩 금액이 남아있다면 모두 환불 처리하기
@@ -182,17 +189,33 @@ public class ProjectService {
 
     public ResponseProjectDetailDto getProjectDetailById(Long id, Long userId) {
         ProjectEntity project = projectRepository.findProjectDetailById(id).orElseThrow(
-            () -> new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString())
+            () -> new CustomException(ErrorCode.NOT_FOUND, "project")
         );
 
         return ResponseProjectDetailDto.of(project, userId);
     }
 
     // notice and community and story
-
-    public ProjectEntity getProjectCommunityAndNoticeById(Long id) {
+    public ProjectEntity getProjectCommunityAndNoticeAndStoryById(Long id) {
         return projectRepository.findProjectWithNoticesAndCommunityAndStory(id).orElseThrow(
-                ()-> new CustomException(ErrorCode.NOT_FOUND_PROJECT, id.toString())
+                ()-> new CustomException(ErrorCode.NOT_FOUND,"project")
         );
+    }
+
+    @Transactional
+    public List<FundingResponseDto> getAllOptionWithFunding(Long projectId, Long userId) {
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(
+            () -> new CustomException(ErrorCode.NOT_FOUND, "project")
+        );
+        if(project.getUser().getId() != userId)
+            throw new CustomException(ErrorCode.NOT_AUTHOR);
+
+        List<OptionEntity> options = optionRepository.findByProjectIdWithAll(projectId);
+        List<FundingEntity> freeFundings = fundingRepository.findByProjectIdAndOptionIdIsNull(project.getId());
+
+        List<FundingResponseDto> dto = new ArrayList<>(options.stream().map(FundingResponseDto::new).toList());
+        dto.add(new FundingResponseDto(freeFundings.stream().map(FundingEntity::getUser).toList()));
+
+        return  dto;
     }
 }

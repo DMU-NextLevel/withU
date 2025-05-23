@@ -86,14 +86,18 @@ public class SecurityConfig {
                 .failureHandler(oAuthFailureHandler)
             )
 
-            .addFilterBefore(refreshTokenFilter(), LogoutFilter.class) // 2 번쨰
+            // userHistory -> access -> refresh
+            .addFilterBefore(userHistoryFilter(), LogoutFilter.class) // 3 번째
+            .addFilterBefore(refreshTokenFilter(), UserHistoryFilter.class) // 2 번쨰
             .addFilterBefore(accessTokenFilter(), RefreshTokenFilter.class) // 1 번째
 
             .exceptionHandling((exceptions) -> exceptions
                 .authenticationEntryPoint((request, response, authenticationException)->{
+                    authenticationException.printStackTrace();
                     handlerExceptionResolver.resolveException(request, response, null, new CustomException(ErrorCode.NO_AUTHENTICATED));
                 })
                 .accessDeniedHandler((request, response, accessDeniedException)-> {
+                    accessDeniedException.printStackTrace();
                     handlerExceptionResolver.resolveException(request, response, null, new CustomException(ErrorCode.NEED_ADDITIONAL_DATA));
                 })
             )

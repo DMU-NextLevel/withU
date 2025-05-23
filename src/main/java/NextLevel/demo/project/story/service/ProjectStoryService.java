@@ -29,7 +29,7 @@ public class ProjectStoryService {
 
     @Transactional
     public void saveProjectStory(Long projectId, Long userId, List<MultipartFile> imgFiles){
-        ProjectEntity oldProject = projectRepository.findByIdWithAll(projectId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PROJECT, projectId.toString()));
+        ProjectEntity oldProject = projectRepository.findByIdWithAll(projectId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND, "project"));
         if(oldProject.getUser().getId() != userId)
             throw new CustomException(ErrorCode.NOT_AUTHOR);
 

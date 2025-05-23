@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,24 +23,29 @@ public class OptionService {
 
     public void add(SaveOptionRequestDto dto){
         ProjectEntity project = projectRepository.findByIdWithAll(dto.getProjectId()).orElseThrow(
-            ()->{throw new CustomException(ErrorCode.NOT_FOUND_PROJECT, dto.getProjectId().toString());}
+            ()->{throw new CustomException(ErrorCode.NOT_FOUND, "project");}
         );
 
         if(project.getUser().getId() != dto.getUserId()){
             throw new CustomException(ErrorCode.NOT_AUTHOR);
         }
 
+        dto.setProject(project);
+
         optionRepository.save(dto.toEntity());
     }
 
+    @Transactional
     public void update(SaveOptionRequestDto dto){
         OptionEntity option = optionRepository.findByIdWithAll(dto.getOptionId()).orElseThrow(
-            ()->{throw new CustomException(ErrorCode.NOT_FOUND_OPTION, dto.getOptionId().toString());}
+            ()->{throw new CustomException(ErrorCode.NOT_FOUND, "option");}
         );
 
         if(option.getProject().getUser().getId() != dto.getUserId()){
             throw new CustomException(ErrorCode.NOT_AUTHOR);
         }
+
+        dto.setProject(option.getProject());
 
         optionRepository.save(dto.toEntity());
     }
