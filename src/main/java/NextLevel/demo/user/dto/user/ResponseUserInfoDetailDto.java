@@ -2,14 +2,12 @@ package NextLevel.demo.user.dto.user;
 
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @Setter
-public class ResponseUserInfoDto {
+public class ResponseUserInfoDetailDto {
 
     private String name;
     private String nickName;
@@ -23,10 +21,10 @@ public class ResponseUserInfoDto {
 
     private String img;
 
-    public static ResponseUserInfoDto of(UserEntity userFullEntity) {
+    public static ResponseUserInfoDetailDto of(UserEntity userFullEntity) {
         UserDetailEntity detail = userFullEntity.getUserDetail();
 
-        ResponseUserInfoDto dto = new ResponseUserInfoDto(userFullEntity.getName(), userFullEntity.getNickName(), userFullEntity.getPoint(),
+        ResponseUserInfoDetailDto dto = new ResponseUserInfoDetailDto(userFullEntity.getName(), userFullEntity.getNickName(), userFullEntity.getPoint(),
             userFullEntity.getAddress(), userFullEntity.getNumber(), userFullEntity.getAreaNumber(), detail.getEmail(),
             detail.getSocialProvider());
 
@@ -37,7 +35,7 @@ public class ResponseUserInfoDto {
         return dto;
     }
 
-    private ResponseUserInfoDto(String name, String nickName, int point, String address,
+    private ResponseUserInfoDetailDto(String name, String nickName, int point, String address,
         String number, String areaNumber, String email, String socialProvider) {
         this.name = name;
         this.nickName = nickName;

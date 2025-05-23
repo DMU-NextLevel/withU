@@ -1,6 +1,10 @@
 package NextLevel.demo.project.project.controller;
 
 import NextLevel.demo.common.SuccessResponse;
+import NextLevel.demo.funding.dto.response.FundingResponseDto;
+import NextLevel.demo.funding.entity.FundingEntity;
+import NextLevel.demo.funding.entity.OptionEntity;
+import NextLevel.demo.funding.service.FundingService;
 import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
 import NextLevel.demo.project.notoce.dto.response.ResponseNoticeListDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
@@ -13,7 +17,9 @@ import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -103,13 +109,20 @@ public class ProjectController {
 
     @GetMapping("/public/project/{projectId}/all")
     public ResponseEntity<?> getProjectNotice(@PathVariable("projectId") Long projectId) {
-        ProjectEntity project = projectService.getProjectCommunityAndNoticeById(projectId);
+        ProjectEntity project = projectService.getProjectCommunityAndNoticeAndStoryById(projectId);
 
         ResponseProjectAllDto dto = ResponseProjectAllDto.builder()
             .story(new ResponseProjectStoryListDto(project.getStories()))
             .notice(new ResponseNoticeListDto(project.getNotices()))
             .community(new ResponseCommunityListDto(project.getCommunities()))
             .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
+    }
+
+    @GetMapping("/api1/project/{projectId}/funding")
+    public ResponseEntity<?> getAllFundings(@PathVariable("projectId") Long projectId) {
+        List<FundingResponseDto> dto = projectService.getAllOptionWithFunding(projectId, JWTUtil.getUserIdFromSecurityContext());
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
     }

@@ -26,14 +26,14 @@ public class OptionController {
 
     private final OptionService optionService;
 
-    @GetMapping("/api/option/{projectId}")
+    @GetMapping("/api1/option/{projectId}")
     public ResponseEntity<?> getAllOptions(@PathVariable("projectId") Long projectId) {
         List<OptionEntity> entities = optionService.getAllOptions(projectId);
         List<OptionResponseDto> dtos = entities.stream().map(OptionResponseDto::of).toList();
         return ResponseEntity.ok().body(new SuccessResponse("success", dtos));
     }
 
-    @PutMapping("/public/option/{projectId}")
+    @PostMapping("/api1/option/{projectId}")
     public ResponseEntity<?> addOption(@PathVariable("projectId") Long projectId, @RequestBody @Valid SaveOptionRequestDto dto) {
         dto.setUserId(JWTUtil.getUserIdFromSecurityContext());
         dto.setProjectId(projectId);
@@ -41,11 +41,13 @@ public class OptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("success", null));
     }
 
-    @PostMapping("/api/option/{optionId}")
+    @PutMapping("/api1/option/{optionId}")
     public ResponseEntity<?> updateOption(@PathVariable("optionId") Long optionId, @RequestBody @Valid SaveOptionRequestDto dto) {
         dto.setUserId(JWTUtil.getUserIdFromSecurityContext());
         dto.setOptionId(optionId);
         optionService.update(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("success", null));
     }
+    
+    // 옵션 삭제 미정
 }

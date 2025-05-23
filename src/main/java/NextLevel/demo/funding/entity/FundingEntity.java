@@ -43,10 +43,30 @@ public class FundingEntity {
     private UserEntity user;
 
     @Column
+    private int count;
+
+    @Column
     private int freePrice;
 
     @Column(name = "created_at", updatable = false, nullable = false)
     @CreationTimestamp
     private Timestamp createdAt;
 
+    public void upCount(int count) {
+        this.count += count;
+    }
+
+    public void upFreePrice(int freePrice) {
+        this.freePrice += freePrice;
+    }
+
+    @Override
+    public String toString() {
+        return "FundingEntity{" +
+            "id=" + id +
+            ", count=" + count +
+            ", freePrice=" + freePrice +
+            ", createdAt=" + createdAt +
+            '}';
+    }
 }

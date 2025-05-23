@@ -28,7 +28,7 @@ public class UserHistoryFilter extends CustomTokenFilter {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.info("AllCheckFilter :: authorities = [" + authentication.getAuthorities()+"] ip = ["+getIpFromRequest(request)+"] userId = ["+authentication.getPrincipal()+"]");
+        log.info("user history Filter :: authorities = [" + authentication.getAuthorities()+"] ip = ["+getIpFromRequest(request)+"] userId = ["+authentication.getPrincipal()+"]");
 
         if(authentication.getPrincipal() instanceof Long){
             userHistoryRepository.save(UserHistoryEntity

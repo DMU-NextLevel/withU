@@ -1,6 +1,7 @@
 package NextLevel.demo.project.project.entity;
 
 import NextLevel.demo.funding.entity.FundingEntity;
+import NextLevel.demo.funding.entity.OptionEntity;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.community.entity.ProjectCommunityEntity;
 import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
@@ -66,6 +67,9 @@ public class ProjectEntity {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private Set<ProjectStoryEntity> stories;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private Set<OptionEntity> options;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<FundingEntity> fundings;

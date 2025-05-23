@@ -13,5 +13,12 @@ public interface OptionRepository extends JpaRepository<OptionEntity, Long> {
     @Query("select op from OptionEntity op left join fetch op.project p left join fetch p.user where op.id = :optionId")
     Optional<OptionEntity> findByIdWithAll(@Param("optionId") Long optionId);
 
+    @Query("select op from OptionEntity op")
     List<OptionEntity> findByProjectId(Long projectId);
+
+    @Query("select op from OptionEntity op "
+        + "left join fetch op.fundings f "
+        + "left join fetch f.user "
+        + "where op.project.id = :id")
+    List<OptionEntity> findByProjectIdWithAll(@Param("id") Long projectId);
 }

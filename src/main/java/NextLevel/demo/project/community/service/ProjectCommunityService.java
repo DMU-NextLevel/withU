@@ -29,7 +29,7 @@ public class ProjectCommunityService {
     public void save(SaveCommunityDto dto) {
         if (dto.getId() == null) {
             saveAsker(dto, projectRepository.findByIdWithAll(dto.getProjectId()).orElseThrow(() -> {
-                throw new CustomException(ErrorCode.NOT_FOUND_PROJECT);
+                throw new CustomException(ErrorCode.NOT_FOUND, "project");
             }));
             return;
         }
@@ -37,7 +37,7 @@ public class ProjectCommunityService {
         ProjectCommunityEntity community = projectCommunityRepository.findByIdWithAll(dto.getId())
             .orElseThrow(
                 () -> {
-                    throw new CustomException(ErrorCode.NOT_FOUND_PROJECT_COMMUNITY);
+                    throw new CustomException(ErrorCode.NOT_FOUND, "project community");
                 }
             );
 
