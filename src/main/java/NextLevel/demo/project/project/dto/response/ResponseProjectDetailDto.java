@@ -37,7 +37,7 @@ public class ResponseProjectDetailDto {
     private Long sum; // 현재 모인 금액의 총액
     private Double completionRate;
 
-    private int recommendCount;
+    private int likeCount;
     private int fundingCount;
     private Long userCount;
 
@@ -53,7 +53,7 @@ public class ResponseProjectDetailDto {
         dto.setGoal(entity.getGoal());
         dto.setSum(entity.getFundings().stream().mapToLong(e->e.getFreePrice()).sum());
         dto.setCompletionRate(FundingUtil.getCompletionRate(dto.sum, entity.getGoal()));
-        dto.setRecommendCount(entity.getLikes().size());
+        dto.setLikeCount(entity.getLikes().size());
         dto.setFundingCount(entity.getFundings().size());
         dto.setIsAuthor(entity.getUser().getId() == userId);
         dto.setIsExpired( new Date().before(entity.getExpired()) );
