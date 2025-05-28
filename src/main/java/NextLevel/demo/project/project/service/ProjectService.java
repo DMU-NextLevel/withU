@@ -192,7 +192,9 @@ public class ProjectService {
             () -> new CustomException(ErrorCode.NOT_FOUND, "project")
         );
 
-        return ResponseProjectDetailDto.of(project, userId);
+        Long fundingUserCount = fundingRepository.getProjectFundingUserCount(id);
+
+        return ResponseProjectDetailDto.of(project ,fundingUserCount, userId);
     }
 
     // notice and community and story
