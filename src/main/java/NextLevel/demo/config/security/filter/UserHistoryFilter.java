@@ -1,5 +1,6 @@
 package NextLevel.demo.config.security.filter;
 
+import NextLevel.demo.config.security.CustomAuthentication;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.entity.UserHistoryEntity;
 import NextLevel.demo.user.repository.UserHistoryRepository;
@@ -28,9 +29,9 @@ public class UserHistoryFilter extends CustomTokenFilter {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // log.info("user history Filter :: authorities = [" + authentication.getAuthorities()+"] ip = ["+getIpFromRequest(request)+"] userId = ["+authentication.getPrincipal()+"]");
+        if(authentication != null && authentication instanceof CustomAuthentication){
+            log.info("user history Filter :: authorities = [" + authentication.getAuthorities()+"] ip = ["+getIpFromRequest(request)+"] userId = ["+authentication.getPrincipal()+"]");
 
-        if(authentication.getPrincipal() instanceof Long){
             userHistoryRepository.save(UserHistoryEntity
                 .builder()
                 .user(entityManager.getReference(UserEntity.class, (Long)authentication.getPrincipal()))
