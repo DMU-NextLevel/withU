@@ -75,6 +75,8 @@ public class LoginService {
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         UserEntity user = userRepository.save(dto.toUserEntity());
+        user.checkRole();
+        dto.setRole(user.getRole());
         UserDetailEntity userDetail = userDetailRepository.save(dto.toUserDetailEntity(user));
 
         return userDetail;
