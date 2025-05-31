@@ -20,6 +20,8 @@ public class ProjectActivityRepository {
 
     @Value("${page_count}")
     private int pageCount;
+    @Value("${rank_day}")
+    private Long rankDay;
 
     // tag 값이 있느면 where 추가
     // order by type에 맞게 order
@@ -42,6 +44,7 @@ public class ProjectActivityRepository {
                 (SELECT COUNT(f.user_id) FROM funding f WHERE f.project_id = fp.id) AS user_count, 
                 (SELECT i.uri FROM img i WHERE i.id = fp.img_id) AS title_img, 
                 (cast(%sas signed) )as is_like, 
+                (select count(pv.id) from project_view as pv where pv.project_id = fp.id) as view_count ,
                 pc.total_count
             FROM filtered_projects fp
             CROSS JOIN project_count pc
@@ -59,6 +62,10 @@ public class ProjectActivityRepository {
 
         if(dto.getSearch() != null && !dto.getSearch().isEmpty()) {
             where += " and p.title like '%"+dto.getSearch()+"%' ";
+        }
+
+        if(dto.getRank() != null && dto.getRank()){
+            where += " and p.created_at > now() - INTERVAL "+ rankDay +" DAY ";
         }
 
         if(dto.getUserId() != null)

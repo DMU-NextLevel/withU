@@ -69,7 +69,8 @@ public class ProjectController {
             @RequestParam(value = "tag", required = false) List<Long> tagId,
             @RequestParam(value = "page", required = false) Integer page ,
             @RequestParam(value = "search", required = false) String search ,
-            @RequestParam(value = "desc", required = false) Boolean desc)
+            @RequestParam(value = "desc", required = false) Boolean desc,
+            @RequestParam(value = "rank", required = false) Boolean rank)
     {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
 
@@ -80,6 +81,7 @@ public class ProjectController {
             .userId(userId)
             .search(search)
             .desc(desc)
+            .rank(rank)
             .build();
 
         List<ResponseProjectListDto> dtos = projectService.getAllProjects(dto);

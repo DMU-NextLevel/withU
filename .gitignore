@@ -1,5 +1,6 @@
 src/main/resources/application-prod.yml
 src/main/resources/static/img/
+src/main/generated/
 
 HELP.md
 .gradle

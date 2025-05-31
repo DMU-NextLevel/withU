@@ -113,6 +113,7 @@ img:
   default_dir: ${IMG_PATH}
 
 page_count: 8
+rank_day: 7 # 일주일
 
 email:
   EMAIL_TIME: 300000 # 5 * 60 * 1000 # 5분

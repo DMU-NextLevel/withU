@@ -7,7 +7,8 @@ public enum ProjectOrderType {
     COMPLETION(" completion_rate "),
     USER(" user_count "),
     CREATED(" fp.created_at ") ,
-    EXPIRED(" fp.expired ");
+    EXPIRED(" fp.expired "),
+    VIEW(" view_count ")
     ;
 
     public String type;
