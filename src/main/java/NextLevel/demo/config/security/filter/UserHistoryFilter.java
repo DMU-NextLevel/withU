@@ -30,6 +30,7 @@ public class UserHistoryFilter extends CustomTokenFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication != null && authentication instanceof CustomAuthentication){
+
             log.info("user history Filter :: authorities = [" + authentication.getAuthorities()+"] ip = ["+getIpFromRequest(request)+"] userId = ["+authentication.getPrincipal()+"]");
 
             userHistoryRepository.save(UserHistoryEntity
@@ -38,6 +39,7 @@ public class UserHistoryFilter extends CustomTokenFilter {
                 .date(new Date())
                 .ip(getIpFromRequest(request))
                 .agent(getAgent(request))
+                .uri(request.getRequestURI())
                 .build()
             );
         }

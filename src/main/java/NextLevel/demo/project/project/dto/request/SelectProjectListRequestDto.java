@@ -19,6 +19,7 @@ public class SelectProjectListRequestDto {
     private String search;
     private Boolean desc;
     private Integer page;
+    private Boolean rank;
 
     public String getTag() {
         if(tag == null || tag.isEmpty())

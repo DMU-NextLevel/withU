@@ -1,0 +1,40 @@
+package NextLevel.demo.project.project.entity;
+
+import NextLevel.demo.user.entity.UserEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name="project_view")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ProjectViewEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    private ProjectEntity project;
+
+    @ManyToOne
+    private UserEntity user;
+
+    @Column(nullable = false)
+    private LocalDateTime createAt = LocalDateTime.now();
+
+    @Builder
+    public ProjectViewEntity(Long id, ProjectEntity project, UserEntity user) {
+        this.id = id;
+        this.project = project;
+        this.user = user;
+        this.createAt = LocalDateTime.now();
+    }
+}

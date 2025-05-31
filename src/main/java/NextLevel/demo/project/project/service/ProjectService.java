@@ -44,6 +44,7 @@ public class ProjectService {
     private final TagService tagService;
     private final OptionRepository optionRepository;
     private final FundingRepository fundingRepository;
+    private final ProjectViewService projectViewService;
 
     // 추가
     @Transactional
@@ -187,10 +188,13 @@ public class ProjectService {
         return entities;
     }
 
+    @Transactional
     public ResponseProjectDetailDto getProjectDetailById(Long id, Long userId) {
         ProjectEntity project = projectRepository.findProjectDetailById(id).orElseThrow(
             () -> new CustomException(ErrorCode.NOT_FOUND, "project")
         );
+
+        projectViewService.save(project, userId);
 
         Long fundingUserCount = fundingRepository.getProjectFundingUserCount(id);
 
@@ -220,4 +224,6 @@ public class ProjectService {
 
         return  dto;
     }
+
+
 }

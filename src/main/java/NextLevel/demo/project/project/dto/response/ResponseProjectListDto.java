@@ -30,6 +30,7 @@ public class ResponseProjectListDto {
     private Long pageCount;
     private Long totalCount;
     private Long userCount;
+    private Long viewCount;
 
     private Date createdAt;
 
@@ -38,7 +39,8 @@ public class ResponseProjectListDto {
     private Boolean isExpired; // 만뢰 된 project인지?
 
     public ResponseProjectListDto(Long id, String title, Date created_at, Date expired
-                , Double completionRate, Long likeCount, Long userCount, String titleImg, Long isLiked,Long totalCount) {
+                , Double completionRate, Long likeCount, Long userCount, String titleImg, Long isLiked,
+                Long viewCount, Long totalCount) {
         this.id = id;
         this.title = title;
         this.titleImg = titleImg;
@@ -48,9 +50,10 @@ public class ResponseProjectListDto {
         this.createdAt = created_at;
         this.totalCount = totalCount;
         this.userCount = userCount;
-        this.isLiked = isLiked == 1;
+        this.isLiked = isLiked != 0;
         this.isExpired = expired.before(new Date());
         this.expired = expired;
+        this.viewCount = viewCount;
     }
 
 }
