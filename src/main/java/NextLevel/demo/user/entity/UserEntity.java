@@ -59,7 +59,7 @@ public class UserEntity {
     private ImgEntity img;
 
     @OneToOne(mappedBy = "user")
-    UserDetailEntity userDetail;
+    private UserDetailEntity userDetail;
 
     public UserEntity(Long id, String name,String nickName, int point, String address, String number, String areaNumber, ImgEntity img) {
         this.id = id;

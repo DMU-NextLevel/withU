@@ -29,7 +29,7 @@ public class UserHistoryFilter extends CustomTokenFilter {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication instanceof CustomAuthentication){
+        if(authentication != null && authentication instanceof CustomAuthentication){
 
             log.info("user history Filter :: authorities = [" + authentication.getAuthorities()+"] ip = ["+getIpFromRequest(request)+"] userId = ["+authentication.getPrincipal()+"]");
 

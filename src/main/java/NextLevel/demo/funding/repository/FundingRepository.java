@@ -20,4 +20,7 @@ public interface FundingRepository extends JpaRepository<FundingEntity, Long> {
         + "left join fetch f.user "
         + "where f.project.id=:id and f.option is null")
     List<FundingEntity> findByProjectIdAndOptionIdIsNull(@Param("id") Long projectId);
+
+    @Query("select count(f) from FundingEntity f where f.id =:id group by f.user")
+    Long getProjectFundingUserCount(@Param("id") Long projectId);
 }
