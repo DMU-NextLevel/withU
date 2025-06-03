@@ -1,6 +1,8 @@
 package NextLevel.demo.user.controller;
 
 import NextLevel.demo.common.SuccessResponse;
+import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
+import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.user.dto.LikeDto;
 import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
 import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
     private final LikeService likeService;
+    private final ProjectService projectService;
 
     @GetMapping
     public ResponseEntity<?> getUserInfo() {
@@ -72,4 +75,10 @@ public class UserController {
         likeService.like(dto);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
+
+    @GetMapping("/my-project")
+    public ResponseEntity<?> getMyQuestion(@RequestBody SelectProjectListRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", projectService.getAllProjects(dto)));
+    }
+
 }

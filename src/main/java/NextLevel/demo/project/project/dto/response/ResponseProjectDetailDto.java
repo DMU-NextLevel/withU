@@ -41,7 +41,7 @@ public class ResponseProjectDetailDto {
     private int fundingCount;
     private Long userCount;
 
-    public static ResponseProjectDetailDto of(ProjectEntity entity, Long userCount, Long userId) {
+    public static ResponseProjectDetailDto of(ProjectEntity entity, Long userId) {
         ResponseProjectDetailDto dto = new ResponseProjectDetailDto();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
@@ -57,7 +57,7 @@ public class ResponseProjectDetailDto {
         dto.setFundingCount(entity.getFundings().size());
         dto.setIsAuthor(entity.getUser().getId() == userId);
         dto.setIsExpired( new Date().before(entity.getExpired()) );
-        dto.userCount = userCount==null?0:userCount;
+        dto.userCount = (long) entity.getFundings().size();
         return dto;
     }
 

@@ -1,5 +1,9 @@
 package NextLevel.demo.project.project.dto.response;
 
+import NextLevel.demo.funding.FundingUtil;
+import NextLevel.demo.project.project.entity.ProjectEntity;
+import NextLevel.demo.project.project.entity.ProjectTagEntity;
+import NextLevel.demo.project.tag.entity.TagEntity;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
@@ -56,4 +60,49 @@ public class ResponseProjectListDto {
         this.viewCount = viewCount;
     }
 
+    public ResponseProjectListDto(
+        Long id,
+        String title,
+        String titleImg,
+        Date createdAt,
+        Date expired,
+        Double completionRate,
+        long likeCount,
+        long userCount,
+        long isLiked,
+        long viewCount,
+        long totalCount
+    ) {
+        this.id = id;
+        this.title = title;
+        this.titleImg = titleImg;
+        this.completionRate = completionRate!=null ? completionRate : 0;
+        this.likeCount = likeCount;
+        this.createdAt = createdAt;
+        this.userCount = userCount;
+        this.isLiked = isLiked != 0L;
+        this.isExpired = expired.before(new Date());
+        this.expired = expired;
+        this.viewCount = viewCount;
+        this.totalCount = totalCount;
+        //        this.pageCount = (totalCount / PAGE_COUNT) +1 ;
+    }
+
+//    public ResponseProjectListDto of(ProjectEntity entity,  isLiked) {
+//        ResponseProjectListDto dto = new ResponseProjectListDto();
+//        dto.setId(entity.getId());
+//        dto.setTitle(entity.getTitle());
+//        dto.setTitleImg(entity.getTitleImg().getUri());
+//        dto.setCreatedAt(entity.getCreatedAt());
+//        dto.setCompletionRate(FundingUtil.getCompletionRate(entity.getFundings().stream().mapToLong(e->e.getFreePrice()).sum(), entity.getGoal()));
+//        dto.setLikeCount((long) entity.getLikes().size());
+//        dto.setTags(entity.getTags().stream().map(ProjectTagEntity::getTag).map(TagEntity::getName).toList());
+//        // page count , total count
+//        dto.setUserCount((long)entity.getFundings().size());
+//        dto.setViewCount((long)entity.getViews().size());
+//        dto.setIsLiked(entity.getLikes());
+//        dto.setExpired(entity.getExpired());
+//        dto.setIsExpired( new Date().before(entity.getExpired()) );
+//        return dto;
+//    }
 }

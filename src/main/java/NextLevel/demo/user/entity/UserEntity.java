@@ -70,6 +70,7 @@ public class UserEntity {
         this.number = StringUtil.getFormattedNumber(number, StringUtil.PHONE_NUMBER_FORMAT);
         this.areaNumber = StringUtil.getFormattedNumber(areaNumber, StringUtil.AREA_NUMBER_FORMAT);
         this.img = img;
+        checkRole();
     }
 
     public void checkRole() {

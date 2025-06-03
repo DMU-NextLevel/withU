@@ -83,6 +83,9 @@ public class ProjectEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<ProjectNoticeEntity> notices;
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private Set<ProjectViewEntity> views;
+
     public void setStories(Set<ProjectStoryEntity> imgs) {
         this.stories = imgs;
     }

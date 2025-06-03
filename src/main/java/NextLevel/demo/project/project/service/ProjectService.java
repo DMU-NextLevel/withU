@@ -14,13 +14,14 @@ import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
+import NextLevel.demo.project.project.repository.ProjectDslRepository;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.project.entity.ProjectTagEntity;
-import NextLevel.demo.project.project.repository.ProjectActivityRepository;
 import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.service.UserService;
+import NextLevel.demo.util.jwt.JWTUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,11 +41,11 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserService userService;
     private final ImgService imgService;
-    private final ProjectActivityRepository projectActivityRepository;
     private final TagService tagService;
     private final OptionRepository optionRepository;
     private final FundingRepository fundingRepository;
     private final ProjectViewService projectViewService;
+    private final ProjectDslRepository projectDslRepository;
 
     // 추가
     @Transactional
@@ -173,7 +174,9 @@ public class ProjectService {
 
     // get list
     public List<ResponseProjectListDto> getAllProjects(SelectProjectListRequestDto dto) {
-        List<ResponseProjectListDto> entities = projectActivityRepository.getAll(dto);
+        log.info(dto.toString());
+
+        List<ResponseProjectListDto> entities = projectDslRepository.selectProjectDsl(dto);
 
         Map<Long, ResponseProjectListDto> dtoMap = new HashMap<>();
         entities.forEach(e -> {dtoMap.put(e.getId(), e);});
@@ -196,9 +199,7 @@ public class ProjectService {
 
         projectViewService.save(project, userId);
 
-        Long fundingUserCount = fundingRepository.getProjectFundingUserCount(id);
-
-        return ResponseProjectDetailDto.of(project ,fundingUserCount, userId);
+        return ResponseProjectDetailDto.of(project, userId);
     }
 
     // notice and community and story
@@ -224,6 +225,5 @@ public class ProjectService {
 
         return  dto;
     }
-
 
 }
