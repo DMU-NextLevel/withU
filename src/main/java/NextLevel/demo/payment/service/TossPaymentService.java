@@ -39,11 +39,13 @@ public class TossPaymentService {
 
         Map<String, Object> output = new RestTemplate().postForObject(approveUrl, http, Map.class);
 
-        output.forEach((key, value) -> {log.info("Key: " + key + " value: " + value);});
+        // output.forEach((key, value) -> {log.info("Key: " + key + " value: " + value);});
 
         // new RestTemplate().postForObject(approveUrl, http, RequestTossPaymentDto.class);
 
+        log.info("Approved toss payment userId: " + userId + " price : " + output.get("totalAmount"));
+
         // 결제 내영 만큼 user에게 point를 추가함
-        userRepository.addPointByUserId((Integer) ((Map<String, Object>)output.get("receipt")).get("totalAmount"), userId);
+        userRepository.addPointByUserId((Integer) output.get("totalAmount"), userId);
     }
 }
