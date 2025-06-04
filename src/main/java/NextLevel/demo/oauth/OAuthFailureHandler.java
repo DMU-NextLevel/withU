@@ -16,10 +16,13 @@ public class OAuthFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException exception) throws IOException, ServletException {
-        exception.printStackTrace();
+        // exception.printStackTrace();
 
-        log.info("social login fail");
+        log.info("social login fail" + exception.getMessage());
 
-        throw new CustomException(ErrorCode.LOGIN_FAILED);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+
+        response.getWriter().write("social login failed :: " + exception.getMessage());
     }
 }

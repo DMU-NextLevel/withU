@@ -23,6 +23,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -86,15 +87,16 @@ public class SecurityConfig {
                 .failureHandler(oAuthFailureHandler)
             )
 
-            // userHistory -> access -> refresh
+            // userHistory -> access -> refresh -> logout
             .addFilterBefore(userHistoryFilter(), LogoutFilter.class) // 3 번째
             .addFilterBefore(refreshTokenFilter(), UserHistoryFilter.class) // 2 번쨰
             .addFilterBefore(accessTokenFilter(), RefreshTokenFilter.class) // 1 번째
 
             .exceptionHandling((exceptions) -> exceptions
-                .authenticationEntryPoint((request, response, authenticationException)->{
+                .authenticationEntryPoint((request, response, authenticationException)-> {
                     authenticationException.printStackTrace();
-                    handlerExceptionResolver.resolveException(request, response, null, new CustomException(ErrorCode.NO_AUTHENTICATED));
+                    handlerExceptionResolver.resolveException(request, response, null,
+                        new CustomException(ErrorCode.NO_AUTHENTICATED));
                 })
                 .accessDeniedHandler((request, response, accessDeniedException)-> {
                     accessDeniedException.printStackTrace();
