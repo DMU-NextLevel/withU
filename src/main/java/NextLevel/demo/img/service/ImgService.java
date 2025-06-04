@@ -52,7 +52,7 @@ public class ImgService {
 
             return saved;
         }catch (Exception e){
-            e.printStackTrace();
+            // e.printStackTrace();
             log.info("save img fail ");
             throw new CustomException(ErrorCode.ERROR_ON_SAVE_IMG);
         }

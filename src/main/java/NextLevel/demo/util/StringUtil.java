@@ -15,6 +15,8 @@ public class StringUtil {
     }
 
     public static String getFormattedNumber(String number, String format) {
+        if(number == null || number.length() == 0)
+            return null;
         if(number.matches(NO_FORMAT)) {
             return String.format("%s-%s-%s",
                 number.substring(0, 3),
