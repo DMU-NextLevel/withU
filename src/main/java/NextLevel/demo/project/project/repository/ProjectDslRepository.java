@@ -39,6 +39,7 @@ public class ProjectDslRepository {
                 projectEntity.titleImg.uri,
                 projectEntity.createdAt,
                 projectEntity.expired,
+                projectEntity.goal,
 
                 // completeRate
                 completeRate(projectEntity),
@@ -118,6 +119,9 @@ public class ProjectDslRepository {
             case ProjectOrderType.VIEW:
                 order = Expressions.asNumber(viewCount(projectEntity));
                 break;
+            case ProjectOrderType.COMPLETION:
+                order = Expressions.asNumber(completeRate(projectEntity));
+                break;
         }
         if(desc)
             return order.desc();
@@ -135,7 +139,7 @@ public class ProjectDslRepository {
             .where(where(projectEntity, projectTagEntity, dto.getUserId(), dto.getTagIds(), dto.getSearch(), dto.getMyPageWhere()));
     }
 
-    private Expression<?> completeRate(QProjectEntity projectEntity) {
+    private Expression<Integer> completeRate(QProjectEntity projectEntity) {
         return JPAExpressions
             .select(fundingEntity.freePrice.add(fundingEntity.option.price).sum().divide(projectEntity.goal).multiply(100))
             .from(fundingEntity)

@@ -66,6 +66,7 @@ public class ResponseProjectListDto {
         String titleImg,
         Date createdAt,
         Date expired,
+        long goal,
         Double completionRate,
         long likeCount,
         long userCount,
