@@ -44,6 +44,6 @@ public class TossPaymentService {
         // new RestTemplate().postForObject(approveUrl, http, RequestTossPaymentDto.class);
 
         // 결제 내영 만큼 user에게 point를 추가함
-        userRepository.addPointByUserId((Integer)output.get("totalAmount"), userId);
+        userRepository.addPointByUserId((Integer) ((Map<String, Object>)output.get("receipt")).get("totalAmount"), userId);
     }
 }

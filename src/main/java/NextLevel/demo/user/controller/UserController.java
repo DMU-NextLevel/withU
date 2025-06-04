@@ -12,6 +12,7 @@ import NextLevel.demo.user.service.LikeService;
 import NextLevel.demo.user.service.UserService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,12 @@ public class UserController {
         ResponseUserInfoDetailDto dto = ResponseUserInfoDetailDto.of(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
+    }
+
+    @GetMapping("/my-point")
+    public ResponseEntity<?> getUser() {
+        UserEntity user = userService.getUserInfo(JWTUtil.getUserIdFromSecurityContext());
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", Map.of("point",user.getPoint())));
     }
 
     @PutMapping
