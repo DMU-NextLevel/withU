@@ -31,6 +31,9 @@ jobs:
        cache-disabled: true
       # uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
+    - name: Clean and Build
+      run: ./gradlew clean build
+
     - name: chmod
       run: chmod 777 ./gradlew
 
