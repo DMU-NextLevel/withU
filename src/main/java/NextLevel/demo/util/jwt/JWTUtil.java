@@ -1,5 +1,7 @@
 package NextLevel.demo.util.jwt;
 
+import NextLevel.demo.config.security.CustomAuthentication;
+import NextLevel.demo.config.security.filter.CustomTokenFilter;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
@@ -8,6 +10,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import java.security.Key;
@@ -38,6 +41,16 @@ public class JWTUtil {
 
     private Key getKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
+    }
+
+    public void logout(HttpServletResponse response) {
+        response.addHeader("Set-Cookie", createCookie(ACCESS_TOKEN, "", 0));
+        response.addHeader("Set-Cookie", createCookie(REFRESH_TOKEN, "", 0));
+    }
+
+    public void refreshAccessToken(HttpServletRequest request, HttpServletResponse response, String newRole) {
+        String ip = CustomTokenFilter.getIpFromRequest(request);
+        addAccess(response, getUserIdFromSecurityContext(), ip, newRole);
     }
 
     public static Long getUserIdFromSecurityContext() {

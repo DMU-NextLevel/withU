@@ -26,7 +26,6 @@ public class AccessTokenFilter extends CustomTokenFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         try {
-
             Map<String, String> claims = jwtUtil.decodeToken(
                 getTokenFromCookies(JWTUtil.ACCESS_TOKEN, request), "ip", "role");
             String ip = claims.get("ip");

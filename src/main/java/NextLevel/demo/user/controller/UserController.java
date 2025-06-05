@@ -11,6 +11,8 @@ import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.service.LikeService;
 import NextLevel.demo.user.service.UserService;
 import NextLevel.demo.util.jwt.JWTUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +53,11 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUserInfo(@RequestBody @Valid RequestUpdateUserInfoDto dto) {
+    public ResponseEntity<?> updateUserInfo(@RequestBody @Valid RequestUpdateUserInfoDto dto, HttpServletRequest request, HttpServletResponse response) {
         Long userId = JWTUtil.getUserIdFromSecurityContext();
         dto.setId(userId);
 
-        userService.updateUserInfo(dto);
+        userService.updateUserInfo(dto, request, response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }

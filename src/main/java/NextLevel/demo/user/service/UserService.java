@@ -13,6 +13,9 @@ import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.util.StringUtil;
+import NextLevel.demo.util.jwt.JWTUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +37,7 @@ public class UserService {
     private final LoginService loginService;
     @Qualifier("passwordEncoder")
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtil jwtUtil;
 
     public UserEntity getUserInfo(Long userId) {
         return userRepository.findUserFullInfoByUserId(userId).orElseThrow(
@@ -42,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserInfo(RequestUpdateUserInfoDto dto) {
+    public void updateUserInfo(RequestUpdateUserInfoDto dto, HttpServletRequest request, HttpServletResponse response) {
         UserEntity oldUser = getUserInfo(dto.getId());
 
         // email 변경 불가
@@ -71,6 +75,8 @@ public class UserService {
 
         oldUser.checkRole();
         userRepository.save(oldUser);
+
+        jwtUtil.refreshAccessToken(request, response, oldUser.getRole());
     }
 
     @Transactional

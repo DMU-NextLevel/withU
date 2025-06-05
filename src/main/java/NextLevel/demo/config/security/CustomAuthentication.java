@@ -6,17 +6,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 public class CustomAuthentication implements Authentication {
-    private Collection<? extends GrantedAuthority> authorities;
+    private UserRole role;
     private Long userId;
 
     public CustomAuthentication(Long userId, String role) {
         this.userId = userId;
-        authorities = UserRole.getRole(role).getAuthorities();
+        this.role = UserRole.getRole(role);
     }
 
+    public UserRole getRole() {return role; }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return role.getAuthorities();
     }
     @Override
     public Object getPrincipal() {

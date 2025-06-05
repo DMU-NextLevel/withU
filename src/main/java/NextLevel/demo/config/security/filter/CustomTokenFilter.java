@@ -19,7 +19,7 @@ public abstract class CustomTokenFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
     }
 
-    public String getTokenFromCookies(String tokenType, HttpServletRequest request) {
+    public static String getTokenFromCookies(String tokenType, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             Optional<Cookie> tokenCookie = Arrays.stream(cookies)
@@ -32,7 +32,7 @@ public abstract class CustomTokenFilter extends OncePerRequestFilter {
         return null;
     }
 
-    public String getIpFromRequest(HttpServletRequest request) {
+    public static String getIpFromRequest(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
         if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("Proxy-Client-IP");
@@ -46,7 +46,7 @@ public abstract class CustomTokenFilter extends OncePerRequestFilter {
         return ipAddress;
     }
 
-    public String getAgent(HttpServletRequest request) {
+    public static String getAgent(HttpServletRequest request) {
         return request.getHeader("User-Agent");
     }
 }
