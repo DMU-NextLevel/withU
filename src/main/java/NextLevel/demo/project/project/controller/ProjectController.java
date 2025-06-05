@@ -2,24 +2,20 @@ package NextLevel.demo.project.project.controller;
 
 import NextLevel.demo.common.SuccessResponse;
 import NextLevel.demo.funding.dto.response.FundingResponseDto;
-import NextLevel.demo.funding.entity.FundingEntity;
-import NextLevel.demo.funding.entity.OptionEntity;
-import NextLevel.demo.funding.service.FundingService;
 import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
 import NextLevel.demo.project.notoce.dto.response.ResponseNoticeListDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectAllDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -82,8 +78,8 @@ public class ProjectController {
             .desc(desc)
             .build();
 
-        List<ResponseProjectListDto> dtos = projectService.getAllProjects(dto);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dtos));
+        ResponseProjectListDto resultDto = projectService.getAllProjects(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,resultDto));
     }
 
     @PostMapping("/public/project/all")
@@ -93,8 +89,8 @@ public class ProjectController {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
         dto.setUserId(userId);
 
-        List<ResponseProjectListDto> dtos = projectService.getAllProjects(dto);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,dtos));
+        ResponseProjectListDto resultDto = projectService.getAllProjects(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,resultDto));
     }
 
     // 상세 조회

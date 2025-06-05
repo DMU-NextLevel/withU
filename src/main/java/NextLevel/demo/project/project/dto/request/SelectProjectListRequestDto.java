@@ -24,6 +24,7 @@ public class SelectProjectListRequestDto {
     private Boolean desc;
     private Integer page;
     private MyPageWhere myPageWhere;
+    private Long pageCount = 10000L;
 
 //    public String getTag() {
 //        if(tag == null || tag.isEmpty())

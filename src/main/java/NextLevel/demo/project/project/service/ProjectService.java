@@ -12,6 +12,7 @@ import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.repository.ProjectDslRepository;
@@ -21,7 +22,6 @@ import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.service.UserService;
-import NextLevel.demo.util.jwt.JWTUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -173,13 +173,13 @@ public class ProjectService {
     }
 
     // get list
-    public List<ResponseProjectListDto> getAllProjects(SelectProjectListRequestDto dto) {
+    public ResponseProjectListDto getAllProjects(SelectProjectListRequestDto dto) {
         log.info(dto.toString());
 
-        List<ResponseProjectListDto> entities = projectDslRepository.selectProjectDsl(dto);
+        List<ResponseProjectListDetailDto> detailDtos = projectDslRepository.selectProjectDsl(dto);
 
-        Map<Long, ResponseProjectListDto> dtoMap = new HashMap<>();
-        entities.forEach(e -> {dtoMap.put(e.getId(), e);});
+        Map<Long, ResponseProjectListDetailDto> dtoMap = new HashMap<>();
+        detailDtos.forEach(e -> {dtoMap.put(e.getId(), e);});
 
         List<ProjectEntity> tags = projectRepository.findTagsByIds(dtoMap.keySet().stream().toList());
         tags.forEach((e)->
@@ -188,7 +188,10 @@ public class ProjectService {
             )
         );
 
-        return entities;
+        ResponseProjectListDto resultDto = new ResponseProjectListDto(detailDtos);
+        resultDto.setPageCount(dto.getPageCount(), dto.getPage());
+
+        return resultDto;
     }
 
     @Transactional

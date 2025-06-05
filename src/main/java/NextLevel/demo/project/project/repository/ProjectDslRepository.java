@@ -7,7 +7,7 @@ import static NextLevel.demo.project.project.entity.QProjectViewEntity.projectVi
 import static NextLevel.demo.user.entity.QLikeEntity.likeEntity;
 
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
-import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.entity.QProjectEntity;
 import NextLevel.demo.project.project.entity.QProjectTagEntity;
 import com.querydsl.core.types.Expression;
@@ -30,10 +30,10 @@ public class ProjectDslRepository {
     private int pageCount;
     private final JPAQueryFactory queryFactory;
 
-    public List<ResponseProjectListDto> selectProjectDsl(SelectProjectListRequestDto dto) {
+    public List<ResponseProjectListDetailDto> selectProjectDsl(SelectProjectListRequestDto dto) {
 
         return queryFactory
-            .selectDistinct(Projections.constructor(ResponseProjectListDto.class,
+            .selectDistinct(Projections.constructor(ResponseProjectListDetailDto.class,
                 projectEntity.id,
                 projectEntity.title,
                 projectEntity.titleImg.uri,
@@ -70,8 +70,8 @@ public class ProjectDslRepository {
                 orderByType(projectEntity, dto.getUserId(), ProjectOrderType.getType(dto.getOrder()), dto.getDesc()),
                 projectEntity.createdAt.desc()
             )
-            .limit(pageCount)
-            .offset((dto.getPage() - 1) * pageCount)
+            .limit(dto.getPageCount())
+            .offset(dto.getPageCount() * dto.getPage())
             .fetch();
     }
 
