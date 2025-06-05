@@ -95,3 +95,5 @@ jobs:
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
          
          docker-compose up -d
+
+         docker image prune -f
