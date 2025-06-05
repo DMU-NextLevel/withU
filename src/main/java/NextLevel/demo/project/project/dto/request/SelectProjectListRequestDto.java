@@ -22,7 +22,7 @@ public class SelectProjectListRequestDto {
     private String order;
     private String search;
     private Boolean desc;
-    private Integer page;
+    private Integer page = 0;
     private MyPageWhere myPageWhere;
     private Long pageCount = 10000L;
 
