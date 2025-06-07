@@ -190,6 +190,7 @@ const MyPage = () => {
   ? products
   : products.filter(p => p.tags.includes(selectedFilter));
 
+
   const openPaymentWindow = (amount:number) => {
 		const width = 700
 		const height = 900

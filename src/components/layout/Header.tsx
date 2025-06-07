@@ -519,8 +519,7 @@
 		box-shadow: inset 0 0 0 2px #a66cff;
 	}
 	`
-
-
+  
 	const SearchInput = styled.input`
 		background-color: transparent;
 		border: none;
@@ -541,7 +540,6 @@
 			transition: opacity 0.2s ease;
 		}
 	`
-
 	const Search = styled.img`
 		width: 20px;
 		cursor: pointer;
@@ -680,7 +678,7 @@
 		transition: all 0.3s ease;
 		box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 		color: #333;
-
+    
 		&:hover {
 			cursor: pointer;
 			color: #6a1b9a;
