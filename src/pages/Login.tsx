@@ -22,7 +22,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await testApi
+      await api
 				.put('/public/login', {
 					email,
 					password,
