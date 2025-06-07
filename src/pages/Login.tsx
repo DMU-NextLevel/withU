@@ -6,7 +6,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import bannerImage from '../assets/images/banner.png';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../AxiosInstance';
+import { api, testApi } from '../AxiosInstance';
 import { useAuth } from '../hooks/AuthContext';
 
 const Login = () => {
@@ -22,22 +22,15 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await api.post('/public/login', {
-				email,
-				password,
-			})
+      await testApi
+				.put('/public/login', {
+					email,
+					password,
+				})
+				.then(() => {
+					login('true')
+				})
 
-			const accessToken = response.headers['access']
-			const refreshToken = response.headers['refresh']
-			console.log(refreshToken)
-      console.log(response)
-      console.log(response.headers['Refresh'])
-
-			if (refreshToken || accessToken) {
-        login(accessToken, refreshToken)
-				localStorage.setItem('access', accessToken)
-				localStorage.setItem('refresh', refreshToken)
-			}
       navigate("/")
     } catch(e:any) {
       const errorCode = e.response?.data?.code
@@ -60,7 +53,7 @@ const Login = () => {
 
   return (
     <>
-      
+
       <style>
         {`
           input[type='password']::-ms-reveal,
@@ -130,7 +123,7 @@ const Login = () => {
           ></motion.div>
 
           <motion.img
-            src={bannerImage}  
+            src={bannerImage}
             alt="withU 설명 이미지"
             style={styles.image}
             initial={{ opacity: 0, scale: 0.9 }}
