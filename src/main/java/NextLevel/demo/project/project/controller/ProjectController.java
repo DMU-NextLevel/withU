@@ -11,6 +11,7 @@ import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
+import NextLevel.demo.project.project.repository.ProjectOrderType;
 import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.util.jwt.JWTUtil;
@@ -88,6 +89,9 @@ public class ProjectController {
     {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
         dto.setUserId(userId);
+
+        if(dto.getOrder().equals(ProjectOrderType.CREATED.name()))
+            dto.setDesc(false);
 
         ResponseProjectListDto resultDto = projectService.getAllProjects(dto);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,resultDto));
