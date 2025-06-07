@@ -174,8 +174,6 @@ public class ProjectService {
 
     // get list
     public ResponseProjectListDto getAllProjects(SelectProjectListRequestDto dto) {
-        log.info(dto.toString());
-
         List<ResponseProjectListDetailDto> detailDtos = projectDslRepository.selectProjectDsl(dto);
 
         Map<Long, ResponseProjectListDetailDto> dtoMap = new HashMap<>();

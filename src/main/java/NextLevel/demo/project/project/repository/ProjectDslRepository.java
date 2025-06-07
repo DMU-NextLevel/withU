@@ -139,9 +139,16 @@ public class ProjectDslRepository {
             .where(where(projectEntity, projectTagEntity, dto.getUserId(), dto.getTagIds(), dto.getSearch(), dto.getMyPageWhere()));
     }
 
-    private Expression<Integer> completeRate(QProjectEntity projectEntity) {
+    private Expression<Double> completeRate(QProjectEntity projectEntity) {
         return JPAExpressions
-            .select(fundingEntity.freePrice.add(fundingEntity.option.price).sum().divide(projectEntity.goal).multiply(100))
+            .select(
+                fundingEntity.freePrice
+                    .add(fundingEntity.option.price)
+                    .sum()
+                    .doubleValue()
+                    .divide(projectEntity.goal)
+                    .multiply(100)
+            )
             .from(fundingEntity)
             .where(fundingEntity.project.id.eq(projectEntity.id));
     }
