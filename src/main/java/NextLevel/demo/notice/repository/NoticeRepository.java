@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
 
-    @Query("select n from NoticeEntity n")
+    @Query("select n from NoticeEntity n order by n.createdAt desc")
     List<NoticeEntity> findAll();
 
     @Modifying
