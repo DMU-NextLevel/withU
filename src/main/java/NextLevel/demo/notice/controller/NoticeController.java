@@ -54,7 +54,7 @@ public class NoticeController {
         return ResponseEntity.ok(new SuccessResponse("success", null));
     }
 
-    @DeleteMapping("/admin/notice/{id}")
+    @PostMapping("/admin/notice/{id}")
     public ResponseEntity<?> removeNotice(@PathVariable("id") Long id) {
         noticeService.removeNotice(id);
         return ResponseEntity.ok(new SuccessResponse("success", null));

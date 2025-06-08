@@ -67,7 +67,7 @@ public class NoticeService {
             dto.setContent(oldNotice.getContent());
         if (dto.getTitle() == null || dto.getTitle().isEmpty())
             dto.setTitle(oldNotice.getTitle());
-
+        dto.setImgEntities(oldNotice.getImgs());
         noticeRepository.save(dto.toEntity());
     }
 
