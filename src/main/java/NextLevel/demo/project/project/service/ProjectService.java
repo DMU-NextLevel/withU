@@ -150,6 +150,8 @@ public class ProjectService {
             newProject.setStories(oldProject.getStories());
         }
 
+        // 여기 부분 다시 수정해라 ㅅㅂ 이미지 값이 없어도 무조건 삭제 잖아
+        
         List<ImgEntity> oldImgs = oldProject.getStories().stream().map(pe -> pe.getImg()).toList();
         oldImgs.forEach(i->{ imgService.deleteImg(i);});
 

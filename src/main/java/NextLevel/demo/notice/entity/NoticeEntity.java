@@ -1,6 +1,5 @@
 package NextLevel.demo.notice.entity;
 
-import NextLevel.demo.img.entity.ImgEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,17 +8,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "notice")
 @NoArgsConstructor
-@Builder
-@AllArgsConstructor
+@Getter
 public class NoticeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,31 @@ public class NoticeEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = ImgEntity.class, optional = true, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "img_id")
-    private ImgEntity img;
+    @Column
+    private LocalDateTime createdAt;
+
+    @OneToMany(targetEntity = NoticeImgEntity.class, mappedBy = "notice", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<NoticeImgEntity> imgs;
+
+    @Builder
+    public NoticeEntity(Long id, String title, String content) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "NoticeEntity{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", content='" + content + '\'' +
+            ", createdAt=" + createdAt +
+            '}';
+    }
+
+    public void setImgs(List<NoticeImgEntity> imgs) {
+        this.imgs = imgs;
+    }
 }
