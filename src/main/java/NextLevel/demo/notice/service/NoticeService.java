@@ -34,19 +34,24 @@ public class NoticeService {
     public void addNotice(SaveNoticeDto dto) {
         NoticeEntity newNotice = dto.toEntity();
         List<ImgEntity> newImgs = new ArrayList<ImgEntity>();
-        dto.getImgs().stream().forEach(file->newImgs.add(imgService.saveImg(file)));
-        newNotice.setImgs(
-            newImgs
-                .stream()
-                .map(imgEntity->
-                    NoticeImgEntity
-                        .builder()
-                        .img(imgEntity)
-                        .notice(newNotice)
-                        .build()
-                )
-                .toList()
-        );
+        if(dto.getImgs()!=null && !dto.getImgs().isEmpty()) {
+            dto.getImgs().stream().forEach(file -> {
+                if(file != null && !file.isEmpty())
+                    newImgs.add(imgService.saveImg(file));
+            });
+            newNotice.setImgs(
+                newImgs
+                    .stream()
+                    .map(imgEntity ->
+                        NoticeImgEntity
+                            .builder()
+                            .img(imgEntity)
+                            .notice(newNotice)
+                            .build()
+                    )
+                    .toList()
+            );
+        }
         noticeRepository.save(newNotice);
     }
 
