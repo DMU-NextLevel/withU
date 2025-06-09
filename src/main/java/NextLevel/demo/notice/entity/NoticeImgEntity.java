@@ -31,6 +31,7 @@ public class NoticeImgEntity {
     private NoticeEntity notice;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "img_id", nullable = false)
     private ImgEntity img;
 
     @Override

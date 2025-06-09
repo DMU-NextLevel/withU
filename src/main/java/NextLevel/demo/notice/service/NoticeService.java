@@ -63,12 +63,12 @@ public class NoticeService {
             }
         );
 
-        if (dto.getContent() == null || dto.getContent().isEmpty())
-            dto.setContent(oldNotice.getContent());
-        if (dto.getTitle() == null || dto.getTitle().isEmpty())
-            dto.setTitle(oldNotice.getTitle());
-        dto.setImgEntities(oldNotice.getImgs());
-        noticeRepository.save(dto.toEntity());
+        if (dto.getContent() != null && !dto.getContent().isEmpty())
+            oldNotice.setContent(dto.getContent());
+        if (dto.getTitle() != null && !dto.getTitle().isEmpty())
+            oldNotice.setTitle(dto.getTitle());
+
+        noticeRepository.save(oldNotice);
     }
 
     @Transactional

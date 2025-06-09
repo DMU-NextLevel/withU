@@ -42,17 +42,12 @@ public class NoticeController {
     }
 
     @PutMapping("/admin/notice/{id}")
-    public ResponseEntity<?> updateNotice(@RequestBody SaveNoticeDto dto, @PathVariable("id") Long id) {
+    public ResponseEntity<?> updateNotice(@ModelAttribute SaveNoticeDto dto, @PathVariable("id") Long id) {
         dto.setId(id);
         noticeService.updateNotice(dto);
-
-        return ResponseEntity.ok(new SuccessResponse("success", null));
-    }
-
-    @PutMapping("/admin/notice/{id}/img")
-    public ResponseEntity<?> updateNoticeImg(@RequestParam("imgs") List<MultipartFile> imgFiles, @PathVariable("id") Long id) {
-        noticeService.updateImg(id, imgFiles);
-
+        if(dto.getImgs() != null && dto.getImgs().size() > 0 && dto.getImgs().get(0) != null) {
+            noticeService.updateImg(dto.getId(), dto.getImgs());
+        }
         return ResponseEntity.ok(new SuccessResponse("success", null));
     }
 
