@@ -9,9 +9,12 @@ interface props {
 	percent: string
 	image: string
 	description: string
+	amount: number
+	peopleNum: number
+	likeNum: number
 }
 
-const FundingInfo = ({ setPayOpen, title, percent, image, description }: props): JSX.Element => {
+const FundingInfo = ({ setPayOpen, title, percent, image, description, amount, peopleNum, likeNum }: props): JSX.Element => {
 	const baseUrl = process.env.REACT_APP_API_BASE_URL
 
 	const PayClick = () => {
@@ -31,16 +34,16 @@ const FundingInfo = ({ setPayOpen, title, percent, image, description }: props):
 			</Description>
 			<Rate>
 				<PeopleNum>
-					<span>194</span>명 참여
+					<span>{peopleNum}</span>명 참여
 				</PeopleNum>
 				<Amount>
-					<span>47,756,000</span>원 달성
+					<span>{amount}</span>원 달성
 				</Amount>
 			</Rate>
 			<RowBox>
 				<ColumBox>
 					<Like src={LikeImage} />
-					<Liker>2,551</Liker>
+					<Liker>{likeNum}</Liker>
 				</ColumBox>
 				<PayButton onClick={PayClick}>스타터와 함께하기</PayButton>
 			</RowBox>

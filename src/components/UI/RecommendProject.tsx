@@ -40,7 +40,7 @@ const RecommendedProject = () => {
       </TextLine>
       <CardList>
         {projects.map((project) => (
-          <ImageTextItem key={project.id} onClick={() => navigate(`/project/${project.id}`)}>
+          <ImageTextItem key={project.id} onClick={() => navigate(`/funding/${project.id}`)}>
             <ImageWrapper>
               {project.titleImg ? (
                 <StyledImage src={project.titleImg ? `${baseUrl}/img/${project.titleImg}` : noImage}
