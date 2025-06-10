@@ -1,6 +1,8 @@
 package NextLevel.demo.oauth;
 
+import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.service.LoginService;
+import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,9 +18,11 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
     @Value("${baseUrl}")
     private String baseUrl;
     private final LoginService loginService;
+    private final JWTUtil jwtUtil;
 
-    public OAuthSuccessHandler(LoginService loginService) {
+    public OAuthSuccessHandler(LoginService loginService, JWTUtil jwtUtil) {
         this.loginService = loginService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -26,7 +30,10 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         Authentication authentication) throws IOException, ServletException {
         OAuth2User OAuthUser = (OAuth2User) authentication.getPrincipal();
 
-        loginService.socialLogin(OAuthUser.getDto(), response);
+        UserDetailEntity userDetail = loginService.socialLogin(OAuthUser.getDto(), response);
+
+        jwtUtil.addRefresh(response, userDetail.getUserId(), userDetail.getUUID());
+        jwtUtil.addAccess(response, userDetail.getUserId(), request, userDetail.getUser().getRole());
 
         log.info("social login success");
 

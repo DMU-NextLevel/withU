@@ -16,6 +16,9 @@ public class ProjectViewService {
     private final EntityManager entityManager;
 
     public void save(ProjectEntity project, Long userId) {
+        if(userId == null) {
+            return;
+        }
         projectViewRepository.save(
             ProjectViewEntity
                 .builder()

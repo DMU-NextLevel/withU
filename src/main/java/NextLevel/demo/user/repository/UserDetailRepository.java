@@ -9,7 +9,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserDetailRepository extends JpaRepository<UserDetailEntity, Long> {
 
-    Optional<UserDetailEntity> findBySocialProviderAndSocialId(String socialProvider, String socialId);
+    @Query("select ud "
+        + "from UserDetailEntity ud "
+            + "left join fetch ud.user u "
+        + "where ud.socialProvider=:socialProvider and ud.socialId = :socialId")
+    Optional<UserDetailEntity> findBySocialProviderAndSocialId(@Param("socialProvider") String socialProvider, @Param("socialId") String socialId);
 
     Optional<UserDetailEntity> findByEmail(String email);
 

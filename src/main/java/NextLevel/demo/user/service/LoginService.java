@@ -36,7 +36,7 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void socialLogin(RequestUserCreateDto socialLoginDto, HttpServletResponse response) {
+    public UserDetailEntity socialLogin(RequestUserCreateDto socialLoginDto, HttpServletResponse response) {
         String socialProvider = socialLoginDto.getSocialProvider();
         String socialId = socialLoginDto.getSocialId();
 
@@ -50,11 +50,13 @@ public class LoginService {
 
             UserDetailEntity userDetailEntity = socialLoginDto.toUserDetailEntity(user);
             userDetail = userDetailRepository.save(userDetailEntity);
+
+            userDetail.setUser(user);
         }else{
             userDetail = userDetailOptional.get();
         }
 
-        jwtUtil.addRefresh(response, userDetail.getUser().getId(), userDetail.getUUID());
+        return userDetail;
     }
 
     // user UserController : post register

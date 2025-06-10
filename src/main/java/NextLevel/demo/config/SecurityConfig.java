@@ -63,7 +63,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        OAuthSuccessHandler oAuthSuccessHandler = new OAuthSuccessHandler(loginService);
+        OAuthSuccessHandler oAuthSuccessHandler = new OAuthSuccessHandler(loginService, jwtUtil);
         OAuthFailureHandler oAuthFailureHandler = new OAuthFailureHandler();
 
         http
