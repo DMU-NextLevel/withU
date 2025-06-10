@@ -76,7 +76,7 @@ const NoticeTitle = styled.p`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 4px;
-`;  
+`;
 
 const NoticeDate = styled.p`
   font-size: 13px;
@@ -124,6 +124,7 @@ const EmptyMessage = styled.div`
 const PAGE_SIZE = 5;
 
 const NoticeBoard: React.FC = () => {
+  const baseUrl = process.env.REACT_APP_API_BASE_URL
   const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -199,7 +200,7 @@ const NoticeBoard: React.FC = () => {
                 </NoticeText>
                 {notice.imgs?.length > 0 && (
                   <Thumbnail
-                    src={`https://api.nextlevel.r-e.kr/img/${notice.imgs[0]}`}
+                    src={`${baseUrl}/img/${notice.imgs[0]}`}
                     alt={`공지 썸네일 - ${notice.title}`}
                     onError={(e) => {
                       e.currentTarget.onerror = null;
@@ -226,7 +227,7 @@ const NoticeBoard: React.FC = () => {
           )}
         </>
       )}
-      
+
       {!loading && role === 'ADMIN' && (
         <Button onClick={handleCreate}>공지사항 작성</Button>
       )}
