@@ -35,7 +35,6 @@ const RecommendedProject = () => {
         <Text>당신을 위한 추천 프로젝트</Text>
         <LinkBlock>
           <LinkToRecommand href="/search?order=RECOMMEND">추천 프로젝트 보러가기 <ArrowRightCircleIcon size={15} color="#" /></LinkToRecommand>
-          <LinkToRecommand href="/search?order=RECOMMEND">추천 프로젝트 보러가기 <ArrowRightCircleIcon size={15} color="#" /></LinkToRecommand>
         </LinkBlock>
       </TextLine>
       <CardList>
@@ -54,7 +53,6 @@ const RecommendedProject = () => {
               )}
             </ImageWrapper>
             <TextSection>
-              <Percent>{project.completionRate}% 달성</Percent>
               <Percent>{project.completionRate}% 달성</Percent>
               <ProjectTitle>{project.title}</ProjectTitle>
             </TextSection>
