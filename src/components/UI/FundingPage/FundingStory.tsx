@@ -24,7 +24,7 @@ export const FundingStory = ({ story }: storyProps): JSX.Element => {
 			<Bar />
 			<div style={{minHeight:'800px'}}>
 				{story?.map((story) => (
-					<StoryContent key={story.id} src={`${baseUrl}/image/${story}`} />
+					<StoryContent key={story.id} src={`${baseUrl}/img/${story}`} />
 				))}
 			</div>
 		</InfoWrapper>

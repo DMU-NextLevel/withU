@@ -5,6 +5,7 @@ import { api } from '../AxiosInstance';
 
 const MyPage = () => {
   const baseUrl = process.env.REACT_APP_API_BASE_URL
+  const [fundingCount, setFundingCount] = useState<number>(0)
 
   const [homePhone, setHomePhone] = useState({
     area: '02',
@@ -363,6 +364,23 @@ const fieldMap: Record<string, string> = {
 			window.addEventListener('message', messageListener)
 	}
 
+  useEffect(() => {
+    try {
+      api.post('/public/project/all', {
+        tag: [],
+        page: 0,
+        myPageWhere: 'PROJECT'
+      }).then(
+        (res) => {
+          console.log(res)
+          setFundingCount(res.data.data.totalCount)
+        }
+      )
+    } catch (e:any) {
+      console.log(e)
+    }
+  },[])
+
   return (
 		<Container>
 			{showRecentView && (
@@ -439,7 +457,7 @@ const fieldMap: Record<string, string> = {
         <p>충전하실 금액을 선택하세요</p>
         <ChargeOptions>
           {[1000, 5000, 10000, 20000].map((amount) => (
-            <ChargeBtn key={amount} onClick={() => handleCharge(amount)}>
+            <ChargeBtn key={amount} onClick={() => openPaymentWindow(amount)}>
               {amount.toLocaleString()}P
             </ChargeBtn>
           ))}
@@ -657,7 +675,7 @@ const fieldMap: Record<string, string> = {
 							} else if (label === '포인트') {
 								value = <strong>{point.toLocaleString()}P</strong>
 							} else if (label === '펀딩+') {
-								value = <strong>1</strong>
+								value = <strong>{fundingCount}</strong>
 							} else if (label === '스토어') {
 								value = <strong>0</strong>
 							} else if (label === '쿠폰') {

@@ -23,7 +23,7 @@ const FundingInfo = ({ setPayOpen, title, percent, image, description, amount, p
 
 	return (
 		<FundingInfoWrapper>
-			<InfoImage src={`${baseUrl}/image/${image}`} />
+			<InfoImage src={`${baseUrl}/img/${image}`} />
 			<InfoTagWrapper>
 				<Tag>고양이</Tag>
 				<Tag>장난감</Tag>
