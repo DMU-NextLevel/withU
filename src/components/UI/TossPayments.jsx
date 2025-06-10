@@ -2,6 +2,7 @@ import { loadTossPayments } from '@tosspayments/tosspayments-sdk'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '../../AxiosInstance'
+import styled from 'styled-components'
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
 //UUID로 변경해야함
@@ -78,7 +79,7 @@ return (
       <div id="agreement" />
 
       {/* 결제하기 버튼 */}
-      <button
+      <OrderButton
         className="button"
         disabled={!ready}
         onClick={async () => {
@@ -102,7 +103,7 @@ return (
         }}
       >
         결제하기
-      </button>
+      </OrderButton>
     </div>
   </div>
 );
@@ -144,6 +145,7 @@ export function SuccessPage() {
 			// 결제 성공 비즈니스 로직을 구현하세요.
 			const timeout = setTimeout(() => {
 				if (window.opener && !window.opener.closed) {
+          window.opener.postMessage('payment-success', window.location.origin);
 					window.close()
 				}
 			}, 500)
@@ -175,3 +177,17 @@ export function FailPage() {
 		</div>
 	)
 }
+
+const OrderButton = styled.button`
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 60px;
+  border-radius: 15px;
+  border: none;
+  background-color:rgb(30, 116, 255);
+  color: white;
+  &:hover {
+    cursor: pointer;
+  }
+`
