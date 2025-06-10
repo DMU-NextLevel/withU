@@ -6,12 +6,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Slf4j
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
+    @Value("${baseUrl}")
+    private String baseUrl;
     private final LoginService loginService;
 
     public OAuthSuccessHandler(LoginService loginService) {
@@ -26,5 +29,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         loginService.socialLogin(OAuthUser.getDto(), response);
 
         log.info("social login success");
+
+        response.sendRedirect(baseUrl);
     }
 }
