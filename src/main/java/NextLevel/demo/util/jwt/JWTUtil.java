@@ -82,6 +82,11 @@ public class JWTUtil {
         response.addHeader("Set-Cookie", createCookie(ACCESS_TOKEN, token, ACCESS_TOKEN_TIME));
     }
 
+    public void addAccess(HttpServletResponse response, Long userId, HttpServletRequest request, String role) {
+        String ip = CustomTokenFilter.getIpFromRequest(request);
+        addAccess(response, userId, ip, role);
+    }
+
     public void addRefresh(HttpServletResponse response, @NotNull Long userId, String uuid) {
         HashMap<String, String> claims = new HashMap<>();
         claims.put("uuid", uuid);

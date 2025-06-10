@@ -12,7 +12,6 @@ import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.Random;
@@ -21,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -109,7 +109,7 @@ public class LoginService {
         return userRepository.findUserByNickName(nickName).isEmpty();
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public void updateTempPassword(String email) {
         UserEntity user = userRepository.findUserByEmail(email).orElseThrow(
             ()->{throw new CustomException(ErrorCode.NOT_FOUND, "email");}

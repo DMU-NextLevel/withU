@@ -9,6 +9,7 @@ import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.service.EmailService;
 import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.Collection;
@@ -52,11 +53,13 @@ public class LoginController {
     @PutMapping
     public ResponseEntity<?> login(
         @RequestBody @Valid RequestUserLoginDto requestUserLoginDto,
+        HttpServletRequest httpServletRequest ,
         HttpServletResponse httpServletResponse) {
 
         UserDetailEntity user = loginService.login(requestUserLoginDto);
 
         jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
+        jwtUtil.addAccess(httpServletResponse, user.getUserId(), httpServletRequest, user.getUser().getRole());
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
