@@ -35,7 +35,7 @@ public class EmailService {
     private static Map<String, Pair> map = new HashMap<>();
     private static Random random = new Random();
 
-    public void sendEmail(String toEmail){
+    public void sendEmailCode(String toEmail){
         Pair pair = map.getOrDefault(toEmail, new Pair()).generate();
 
         // send email

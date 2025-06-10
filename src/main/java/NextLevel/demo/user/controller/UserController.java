@@ -35,6 +35,7 @@ public class UserController {
     private final UserService userService;
     private final LikeService likeService;
     private final ProjectService projectService;
+    private final JWTUtil jwtUtil;
 
     @GetMapping
     public ResponseEntity<?> getUserInfo() {
@@ -45,6 +46,12 @@ public class UserController {
         ResponseUserInfoDetailDto dto = ResponseUserInfoDetailDto.of(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        jwtUtil.logout(response);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/my-point")

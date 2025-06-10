@@ -18,6 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Base64;
+import java.util.List;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,7 +62,7 @@ public class UserService {
                 throw new CustomException(ErrorCode.CAN_NOT_CHANGE_EMAIL);
             case "nickName":
                 if(!loginService.checkNickNameIsNotExist(dto.getValue()))
-                    throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
+                    throw new CustomException(ErrorCode.ALREADY_EXISTS_NICKNAME);
                 break;
         }
 

@@ -12,7 +12,6 @@ import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -100,7 +99,7 @@ public class LoginController {
 
     @PostMapping("/email")
     public ResponseEntity<?> sendEmail(@RequestBody Map<String , String> requestMap) {
-        emailService.sendEmail(requestMap.get("email"));
+        emailService.sendEmailCode(requestMap.get("email"));
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 
@@ -111,5 +110,11 @@ public class LoginController {
         else
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new SuccessResponse("not correct", null));
     }
+
+//
+//    @PostMapping("/new-password")
+//    public ResponseEntity<?> newPassword(@RequestBody String email) {
+//
+//    }
 
 }
