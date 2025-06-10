@@ -165,7 +165,7 @@ useEffect(() => {
 
 //////////////////////////////////////////////////////////////////////////////////
 
-  const handleLikeToggle = async (projectId: number, current: boolean) => {
+  const handleLikeToggle = async (projectId: number, isLiked: boolean) => {
     if (!isLoggedIn) {
       navigate('/login');
       return;
@@ -251,6 +251,7 @@ useEffect(() => {
                         e.currentTarget.src = noImage;
                       }}
                     />
+                  </a>
 
                     <HeartIcon
                       className={item.isLiked ? 'bi bi-heart-fill' : 'bi bi-heart'}
