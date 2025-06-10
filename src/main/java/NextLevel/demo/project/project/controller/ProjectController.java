@@ -90,9 +90,6 @@ public class ProjectController {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
         dto.setUserId(userId);
 
-        if(dto.getOrder().equals(ProjectOrderType.CREATED.name()))
-            dto.setDesc(false);
-
         ResponseProjectListDto resultDto = projectService.getAllProjects(dto);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success" ,resultDto));
     }
