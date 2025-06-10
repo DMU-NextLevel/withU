@@ -30,6 +30,6 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         log.info("social login success");
 
-        response.sendRedirect(baseUrl);
+        response.sendRedirect("https://nextlevel.r-e.kr/");
     }
 }
