@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -66,6 +67,7 @@ public class SecurityConfig {
         OAuthFailureHandler oAuthFailureHandler = new OAuthFailureHandler();
 
         http
+            .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (필요에 따라 활성화 가능)
             .formLogin(form -> form.disable()) // 폼 로그인 비활성화
             .httpBasic(httpBasic -> httpBasic.disable()) // 기본 로그인 비활성화

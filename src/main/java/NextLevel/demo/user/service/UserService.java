@@ -57,8 +57,9 @@ public class UserService {
         switch(dto.getName()){
             case "email":
                 throw new CustomException(ErrorCode.CAN_NOT_CHANGE_EMAIL);
-            case "nickname":
-                loginService.checkNickNameIsNotExist(dto.getValue());
+            case "nickName":
+                if(!loginService.checkNickNameIsNotExist(dto.getValue()))
+                    throw new CustomException(ErrorCode.ALREADY_EXISTS_EMAIL);
                 break;
         }
 

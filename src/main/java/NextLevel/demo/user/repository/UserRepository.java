@@ -13,7 +13,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select u from UserEntity u left join fetch UserDetailEntity d on d.userId = u.id where u.id = :userId")
     Optional<UserEntity> findUserFullInfoByUserId(@Param("userId")Long userId);
 
-    List<UserEntity> findUserByNickName(String nickName);
+    @Query("select u from UserEntity u where u.nickName = :nickName")
+    List<UserEntity> findUserByNickName(@Param("nickName") String nickName);
 
     @Modifying
     @Query("update UserEntity u set u.point = u.point + :point where u.id = :userId")
