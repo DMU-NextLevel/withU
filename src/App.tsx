@@ -15,8 +15,16 @@ import ProjectMediaPage from './pages/ProjectMediaPage';
 import ProjectIntroductionPage from './pages/ProjectIntroductionPage';
 import { AuthProvider } from './hooks/AuthContext'
 import ScrollToTop from './hooks/ScrollToTop';
+import NoticeBoard from './pages/NoticeBoard';
+import NoticeDetail from './pages/NoticeDetail';
+import NoticeWrite from './pages/NoticeWrite';
+import NoticeEdit from './pages/NoticeEdit';
+import ProfileHeader from './pages/ProfileHeader';
 import Creater from './pages/Creater';
-import { FailPage, PopupPaymentPage, SuccessPage } from './components/UI/TossPayments'
+import {PopupPaymentPage} from './components/UI/TossPayments';
+import {SuccessPage} from './components/UI/TossPayments';
+import {FailPage} from './components/UI/TossPayments';
+
 
 function App() {
 	return (
@@ -50,6 +58,11 @@ const AppWrapper = () => {
 				<Route path='/popup-payment' element={<PopupPaymentPage />} />
 				<Route path='/popup-payment-success' element={<SuccessPage />} />
 				<Route path='/fail' element={<FailPage />} />
+				<Route path='/notice' element={<NoticeBoard />} />
+				<Route path='/notice/:id' element={<NoticeDetail />} />
+				<Route path='/notice/write' element={<NoticeWrite />} />
+				<Route path='/notice/edit/:id' element={<NoticeEdit />} />
+				<Route path='/profile' element={<ProfileHeader />} />
 			</Routes>
 			{!hideLayout.includes(location.pathname) && <Footer />}
 		</AuthProvider>

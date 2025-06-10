@@ -1,4 +1,5 @@
-import { api } from '../../AxiosInstance';
+import axios from 'axios';
+import { api } from '../AxiosInstance';
 
 interface ProjectItem {
   id: number;
@@ -59,7 +60,7 @@ export const fetchProjectsFromServer = async (input: ProjectRequest): Promise<Pr
 
   console.log('📦 요청 보낼 데이터:', requestData);
 
-  const response = await api.post<ProjectResponse>('/public/project/all', requestData);
+  const response = await axios.post<ProjectResponse>('http://localhost:8080/public/project/all', requestData);
   return response.data.data.projects;
 };
 

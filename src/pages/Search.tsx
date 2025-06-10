@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
-import { api } from '../AxiosInstance';
 import noImage from '../assets/images/noImage.jpg';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/AuthContext';
 import { useSearchParams } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { fetchProjectsFromServer } from '../components/UI/fetchProjectsFromServer';
-import NewProject from '../components/UI/NewProject';
+import { fetchProjectsFromServer } from '../hooks/fetchProjectsFromServer';
 
 
 
@@ -47,6 +45,7 @@ const Search: React.FC = () => {
 
   const [order, setOrder] = useState('RECOMMEND');
   const [page, setPage] = useState('0');
+  const baseUrl = process.env.REACT_APP_API_BASE_URL
   //const [tag, setTag] = useState('');
   const orderIndex = orderOptions.findIndex(opt => opt.value === order);
 
@@ -54,7 +53,6 @@ const Search: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
-  const baseUrl = process.env.REACT_APP_API_BASE_URL
   const lastProjectRef = useCallback((node: HTMLDivElement | null) => {
   if (loading) return;
   if (observer.current) observer.current.disconnect();
@@ -79,7 +77,7 @@ const Search: React.FC = () => {
     setSearchTerm(keyword ?? '');
   }, [searchParams]);
 
-
+  
   useEffect(() => {
     const newTag = searchParams.get('tag');
     if (newTag !== tag) {
@@ -124,7 +122,7 @@ const Search: React.FC = () => {
     try {
       setLoading(true); // 🔐 로딩 시작
       const loadProjects = async () => {
-        const data = await fetchProjectsFromServer({
+        const data = await fetchProjectsFromServer({ 
           order: order || 'RECOMMEND',
           page: 0,
           search: searchTerm,
@@ -142,7 +140,7 @@ const Search: React.FC = () => {
         loadProjects(),
         new Promise((resolve) => setTimeout(resolve, 500))
       ]);
-
+      
     } catch (error) {
       console.error('프로젝트 불러오기 실패:', error);
       setError('프로젝트 불러오기 실패');
@@ -150,7 +148,7 @@ const Search: React.FC = () => {
       setLoading(false);
     }
   };
-
+  
   //좋아요 기능 추후 추가 예정
   const handleLikeToggle = async (projectId: number, current: boolean) => {
     // if (!isLoggedIn) {
@@ -227,7 +225,7 @@ const Search: React.FC = () => {
             <Card key={item.id} ref={isLast ? lastProjectRef : undefined}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div>
-                <a href={`/project/${item.id}`}>
+                <a href={`/project/${item.id}`}>  
                   <CardTopWrapper>
                     <Thumbnail
                       src={`${baseUrl}/img/${item.titleImg}`}
@@ -247,7 +245,7 @@ const Search: React.FC = () => {
                   {/* id:{item.id} */}
                   <CardContent>
                     <InfoRow>{item.completionRate}% 달성</InfoRow>
-                    <a href={`/project/${item.id}`}>
+                    <a href={`/project/${item.id}`}>  
                     <TitleRow>{item.title}</TitleRow>
                     </a>
                     <CreaterRow>회사이름</CreaterRow>
@@ -273,7 +271,7 @@ const Search: React.FC = () => {
           );
         })}
       </CardList>
-
+      
     </Container>
   );
 };
@@ -653,7 +651,7 @@ const DotWaveWrapper = styled.div`
 
 const Dot = styled.span`
   width: 10px;
-  height: 10px;
+  height: 10px; 
   background-color: #A66CFF;
   border-radius: 50%;
   margin: 0 5px;
@@ -680,14 +678,14 @@ const Dot = styled.span`
 `;
 
 const NoResult = styled.div`
-  text-align: center;
+  text-align: center; 
   padding: 130px;
   color: #888;
   p {
     font-size: 32px;
     color: #888;
     font-weight: bold;
-  }
+  } 
 
   i {
     font-weight: bold;
@@ -717,4 +715,4 @@ const CloseButton = styled.button`
   cursor: pointer;
   padding: 0;
 `;
-
+  

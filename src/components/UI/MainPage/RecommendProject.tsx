@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { fetchProjectsFromServer } from './fetchProjectsFromServer';
-import noImage from '../../assets/images/noImage.jpg';
+import { fetchProjectsFromServer } from '../../../hooks/fetchProjectsFromServer';
+import noImage from '../../../assets/images/noImage.jpg';
 const RecommendedProject = () => {
-  const baseUrl = process.env.REACT_APP_API_BASE_URL
 
   const ArrowRightCircleIcon: React.FC<{ size?: number; color?: string }> = ({
       size = 24,
@@ -16,7 +15,6 @@ const RecommendedProject = () => {
   );
 
   const navigate = useNavigate()
-
   const [projects, setProjects] = useState<any[]>([]);
       useEffect(() => {
         const loadProjects = async () => {
@@ -36,24 +34,26 @@ const RecommendedProject = () => {
         <Text>당신을 위한 추천 프로젝트</Text>
         <LinkBlock>
           <LinkToRecommand href="/search?order=RECOMMEND">추천 프로젝트 보러가기 <ArrowRightCircleIcon size={15} color="#" /></LinkToRecommand>
+          <LinkToRecommand href="/search?order=RECOMMEND">추천 프로젝트 보러가기 <ArrowRightCircleIcon size={15} color="#" /></LinkToRecommand>
         </LinkBlock>
       </TextLine>
       <CardList>
         {projects.map((project) => (
-          <ImageTextItem key={project.id} onClick={() => navigate(`/funding/${project.id}`)}>
+          <ImageTextItem key={project.id} onClick={() => navigate(`/project/${project.id}`)}>
             <ImageWrapper>
               {project.titleImg ? (
-                <StyledImage src={project.titleImg ? `${baseUrl}/img/${project.titleImg}` : noImage}
+                <StyledImage src={project.titleImg ? `https://api.nextlevel.r-e.kr/img/${project.titleImg}` : noImage}
                 alt={project.title}
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = noImage;
-                }} />
+                }} /> 
               ) : (
                 <NoImage>이미지 없음</NoImage>
               )}
             </ImageWrapper>
             <TextSection>
+              <Percent>{project.completionRate}% 달성</Percent>
               <Percent>{project.completionRate}% 달성</Percent>
               <ProjectTitle>{project.title}</ProjectTitle>
             </TextSection>

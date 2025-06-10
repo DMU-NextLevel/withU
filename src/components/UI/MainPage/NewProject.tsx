@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from 'react-router-dom';
-import noImage from '../../assets/images/noImage.jpg';
-import { fetchProjectsFromServer } from './fetchProjectsFromServer';
+import noImage from '../../../assets/images/noImage.jpg';
+import { fetchProjectsFromServer } from '../../../hooks/fetchProjectsFromServer';
 
 
 
 const NewProject: React.FC = () => {
   const navigate = useNavigate()
   const [projects, setProjects] = useState<any[]>([]);
-  const baseUrl = process.env.REACT_APP_API_BASE_URL
     useEffect(() => {
       const loadProjects = async () => {
         const data = await fetchProjectsFromServer({ order: "CREATED", pageCount: 4 });
@@ -20,7 +19,7 @@ const NewProject: React.FC = () => {
       };
       loadProjects();
     }, []);
-
+    
   return (
     <Container>
         <Title>신규 프로젝트</Title>
@@ -34,10 +33,10 @@ const NewProject: React.FC = () => {
           const isLast = index === projects.length - 1;
           return (
             <Card key={item.id}>
-                <a href={`/project/${item.id}`}>
+                <a href={`/project/${item.id}`}> 
                   <CardTopWrapper>
-                    <StyledImage
-                      src={item.titleImg ? `${baseUrl}/img/${item.titleImg}` : noImage}
+                    <StyledImage 
+                      src={item.titleImg ? `https://api.nextlevel.r-e.kr/img/${item.titleImg}` : noImage}
                       alt={item.title}
                       onError={(e) => {
                         e.currentTarget.onerror = null;
@@ -50,7 +49,7 @@ const NewProject: React.FC = () => {
                   page:{item.pageCount} */}
                   <CardContent>
                     <InfoRow>{item.completionRate}% 달성</InfoRow>
-                    <a href={`/project/${item.id}`}>
+                    <a href={`/project/${item.id}`}> 
                     <TitleRow>{item.title}</TitleRow>
                     </a>
                     <CreaterRow>회사이름</CreaterRow>
@@ -59,7 +58,7 @@ const NewProject: React.FC = () => {
                       <Tag>{item.tags[0]}</Tag>
                       {item.tags[0] && <Tag>{item.tags[1]}</Tag>}
                     </TagLow>
-
+                    
                   </CardContent>
             </Card>
           );
@@ -67,7 +66,7 @@ const NewProject: React.FC = () => {
       </CardList>
 
 
-
+      
     </Container>
   );
 };
@@ -83,7 +82,7 @@ const Container = styled.div`
 const Title = styled.h2`
   font-size: 24px;
   margin : 0;
-
+  
 `;
 
 const TextLine = styled.div`
@@ -117,7 +116,7 @@ const LinkToRecommand = styled.a`
     cursor: pointer;
     color: #A66CFF;
     font-size: 14px;
-  }
+  } 
 `;
 
 const CardList = styled.div`
@@ -179,7 +178,7 @@ const CreaterRow = styled.div`
     font-weight: bold;
     transition: all 0.2s ease;
   }
-`;
+`;  
 
 const TagLow = styled.div`
   display: flex;
@@ -208,7 +207,7 @@ const Card = styled.div`
   width: 100%;
   border-radius: 10px;
 `;
-
+  
 
 const CardTopWrapper = styled.div`
   justify-content: space-between;
@@ -246,7 +245,7 @@ const CardContent = styled.div`
     text-decoration: none;
     color: inherit;
   }
-`;
+`; 
 
 const Thumbnail = styled.img`
   width: 100%;
@@ -254,4 +253,4 @@ const Thumbnail = styled.img`
   object-fit: cover;
   border-radius: 10px;
 `;
-
+  

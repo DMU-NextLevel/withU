@@ -15,6 +15,8 @@ interface Props {
   onSelect?: (tag: string) => void; // 선택 콜백은 선택사항
 }
 
+
+
 const categories = [
   { label: '전체', icon: 'bi bi-circle', tag: '' },
   { label: '테크/가전', icon: 'bi bi-cpu', tag: '1' },
@@ -68,7 +70,7 @@ const CategoryItem = styled.div`
   align-items: center;
   font-size: 13px;
   min-width: 80px;
-  color:rgb(20, 7, 41);
+  color: rgb(58, 58, 58);
   cursor: pointer;
   transition: all 0.2s ease;
 

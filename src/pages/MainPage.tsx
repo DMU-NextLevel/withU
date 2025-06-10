@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import MainBanner from "../components/UI/MainBanner";
-import RecommendProject from "../components/UI/RecommendProject";
-import PromoBanner from "../components/UI/PromoBanner";
-import RankingList from "../components/UI/RankingList";
-import FollowProjectBanner from "../components/UI/FollowProjectBanner";
-import RealTimeFeed from "../components/UI/RealTimeFeed";
-import CategoryNav from "../components/UI/CategoryNav";
-import CategorySelector from "./CategorySelector";
-import NewProject from "../components/UI/NewProject";
+import MainBanner from "../components/UI/MainPage/MainBanner";
+import RecommendProject from "../components/UI/MainPage/RecommendProject";
+import PromoBanner from "../components/UI/MainPage/PromoBanner";
+import RankingList from "../components/UI/MainPage/RankingList";
+import FollowProjectBanner from "../components/UI/MainPage/FollowProjectBanner";
+import RealTimeFeed from "../components/UI/MainPage/RealTimeFeed";
+import CategorySelector from "../components/UI/MainPage/CategorySelector";
+import NewProject from "../components/UI/MainPage/NewProject";
 
 const categories = [
   { label: '전체', icon: 'bi bi-circle', tag: '' },
@@ -57,11 +56,12 @@ export default MainPage;
   
 const MainWrapper = styled.div`
   
-  margin-left: 0;      
+  margin-left: 0;
   margin-right: auto;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  color:rgb(58, 58, 58);
 `;
 
 const MainContentWrapper = styled.div`
