@@ -201,6 +201,8 @@ const ProjectIntroductionPage: React.FC = () => {
         const projectData = new FormData()
         projectData.append('title', title)
         projectData.append('content', content)
+        if (titleImg !== null)
+          projectData.append('titleImg', titleImg)
         projectData.append('tags', String(tag1))
         if (tag2 !== null)
           projectData.append('tags', String(tag2))
