@@ -10,6 +10,7 @@ import { api } from '../AxiosInstance';
 import { useAuth } from '../hooks/AuthContext';
 
 const Login = () => {
+  const baseUrl = process.env.REACT_APP_API_BASE_URL
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -46,6 +47,17 @@ const Login = () => {
 
   const handleIdfind = () => {
     navigate('/idfind')
+  }
+  const handleSocialGoogle = () => {
+    window.location.href = `${baseUrl}/oauth2/authorization/google`;
+  }
+
+  const handleSocialNaver = () => {
+    window.location.href = `${baseUrl}/oauth2/authorization/naver`;
+  }
+
+  const handleSocialKakao = () => {
+    window.location.href = `${baseUrl}/oauth2/authorization/kakao`;
   }
 
   return (
@@ -97,13 +109,13 @@ const Login = () => {
 
             <p style={styles.socialText}>다른 방법으로 로그인</p>
             <div style={styles.socialIcons}>
-              <RiKakaoTalkFill style={{ ...styles.iconStyle, background: '#fae100' }} />
-              <SiNaver style={{ ...styles.iconStyle, background: '#03c75a', color: 'white' }} />
-              <FcGoogle style={styles.iconStyle} />
+              <RiKakaoTalkFill style={{ ...styles.iconStyle, background: '#fae100' }} onClick={handleSocialKakao} />
+              <SiNaver style={{ ...styles.iconStyle, background: '#03c75a', color: 'white' }} onClick={handleSocialNaver} />
+              <FcGoogle style={styles.iconStyle} onClick={handleSocialGoogle} />
             </div>
 
             <div style={styles.bottomText}>
-              아직 텀블벅 계정이 없으신가요?
+              아직 위드유 계정이 없으신가요?
               <span onClick={handleSignup}  style={styles.link}>회원가입</span>
               <br />
               혹시 비밀번호를 잊으셨나요?
@@ -117,6 +129,7 @@ const Login = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
+            onClick={handleSocialKakao}
           ></motion.div>
 
           <motion.img
@@ -126,6 +139,7 @@ const Login = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.3 }}
+            onClick={handleSocialNaver}
           />
 
           <motion.div
