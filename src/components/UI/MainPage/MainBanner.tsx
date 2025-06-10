@@ -66,8 +66,8 @@ export default SimpleSlider
 const SliderWrapper = styled.div`
 	width: 100%;
 	max-width: 100%;
-	height: 600px;
-	max-height: 600px;
+	height: 630px;
+	max-height: 630px;
 	position: relative;
 	overflow: hidden;
 `
@@ -88,7 +88,7 @@ const SlideVideo = styled.video`
 
 const Slide = styled.div`
 	width: 100%;
-	height: 600px;
+	height: 630px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
