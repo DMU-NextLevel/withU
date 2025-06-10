@@ -55,12 +55,13 @@ export const fetchProjectsFromServer = async (input: ProjectRequest): Promise<Pr
     page,
     search: search.trim() !== '' ? search.trim() : null,
     desc,
-    pageCount
+    pageCount,
   };
 
-  console.log('📦 요청 보낼 데이터:', requestData);
+  console.log('✅ 전달된 input:', input);
+  console.log('📦 요청 보낼 데이터:', JSON.stringify(requestData, null, 2));
 
-  const response = await api.post<ProjectResponse>('http://localhost:8080/public/project/all', requestData);
+  const response = await api.post<ProjectResponse>('/public/project/all', requestData); // ✅ 고정된 경로 사용
   return response.data.data.projects;
 };
 

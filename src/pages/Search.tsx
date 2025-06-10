@@ -7,6 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { fetchProjectsFromServer } from '../hooks/fetchProjectsFromServer';
+import { api } from '../AxiosInstance';
 
 
 
@@ -150,21 +151,21 @@ const Search: React.FC = () => {
   };
   
   //좋아요 기능 추후 추가 예정
-  const handleLikeToggle = async (projectId: number, current: boolean) => {
-    // if (!isLoggedIn) {
-    //   navigate('/login');
-    //   return;
-    // }
-    // try {
-    //   if (current) {
-    //     await api.delete(`/project/like/${projectId}`);
-    //   } else {
-    //     await api.post(`/project/like/${projectId}`);
-    //   }
-    //   fetchProjects();
-    // } catch (e) {
-    //   console.error('좋아요 실패', e);
-    // }
+  const handleLikeToggle = async (projectId: number, isLiked: boolean) => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    try {
+      await api.post('/social/user/like', {
+        like: !isLiked,
+        projectId: projectId
+      });
+      console.log("좋아요 토글 성공");
+      fetchProjects(); // 다시 불러와서 반영
+    } catch (e) {
+      console.error('좋아요 토글 실패:', e);
+    }
   };
 
 
@@ -225,8 +226,9 @@ const Search: React.FC = () => {
             <Card key={item.id} ref={isLast ? lastProjectRef : undefined}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div>
-                <a href={`/project/${item.id}`}>  
+                
                   <CardTopWrapper>
+                  <a href={`/project/${item.id}`}>  
                     <Thumbnail
                       src={`${baseUrl}/img/${item.titleImg}`}
                       alt={item.title}
@@ -235,14 +237,16 @@ const Search: React.FC = () => {
                         e.currentTarget.src = noImage;
                       }}
                     />
+                    </a>
 
                     <HeartIcon
-                      className={item.isRecommend ? 'bi bi-heart-fill' : 'bi bi-heart'}
-                      onClick={() => handleLikeToggle(item.id, item.isRecommend)}
+                      className={item.isLiked ? 'bi bi-heart-fill' : 'bi bi-heart'}
+                      onClick={() => handleLikeToggle(item.id, item.isLiked)}
                     />
                   </CardTopWrapper>
-                  </a>
+                  
                   {/* id:{item.id} */}
+                  
                   <CardContent>
                     <InfoRow>{item.completionRate}% 달성</InfoRow>
                     <a href={`/project/${item.id}`}>  
@@ -631,7 +635,7 @@ const LoadingOverlay = styled.div`
   left: 0;
   right: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(255, 255, 255, 0.6);
   display: flex;
   flex-direction: column;
