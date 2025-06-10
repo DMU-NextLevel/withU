@@ -44,6 +44,7 @@ const CreateButton = styled.button`
 
 
 const HeroSection = styled.section`
+  margin-top : -40px;
   padding: 5rem 1rem;
   text-align: center;
   height: 520px;
