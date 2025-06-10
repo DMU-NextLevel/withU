@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchProjectsFromServer } from '../../../hooks/fetchProjectsFromServer';
+import noImage from '../../../assets/images/noImage.jpg';
 
 
 
 const RankingList:React.FC = () => {
 
+  const baseUrl = process.env.REACT_APP_API_BASE_URL
   const navigate = useNavigate()
   const [projects, setProjects] = useState<any[]>([]);
         useEffect(() => {
@@ -30,11 +32,16 @@ const RankingList:React.FC = () => {
             <RankNumber>{index + 1}</RankNumber>
             <Info>
               <ProjectTitle>{item.title}</ProjectTitle>
-              <Percent>{item.percent}% 달성</Percent>
+              <Percent>{item.completionRate}% 달성</Percent>
             </Info>
             <ImageWrapper>
-              {item.image ? (
-                <img src={item.image} alt={item.title} />
+              {item.titleImg ? (
+                <img src={item.titleImg ? `${baseUrl}/img/${item.titleImg}` : noImage}
+                alt={item.title}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = noImage;
+                }} />
               ) : (
                 <NoImage>이미지 없음</NoImage>
               )}
