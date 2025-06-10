@@ -270,6 +270,9 @@ const fieldMap: Record<string, string> = {
       setShowSettingsOverlay(true);
     } else if (label === '포인트 충전'){
       setShowPointOverlay(true);
+      api.get('/social/user/my-point').then((res) => {
+				setPoint(res.data.data.point)
+			})
     } else {
       alert(`${label} 버튼이 눌렸습니다.`);
     }
@@ -341,11 +344,23 @@ const fieldMap: Record<string, string> = {
 
 		const url = `/popup-payment?amount=${amount}`
 
-      window.open(
-    url,
-    'toss_payment_popup',
-    `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
-  );
+      window.open(url, 'toss_payment_popup', `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`)
+			const messageListener = (event: MessageEvent) => {
+				// 신뢰할 수 있는 도메인인지 확인 (XSS 방어)
+				if (event.origin !== window.location.origin) return
+
+				if (event.data === 'payment-success') {
+					// 결제 성공 후 포인트 재조회
+					api.get('/social/user/my-point').then((res) => {
+						setPoint(res.data.data.point)
+					})
+
+					// 리스너 제거
+					window.removeEventListener('message', messageListener)
+				}
+			}
+
+			window.addEventListener('message', messageListener)
 	}
 
   return (
