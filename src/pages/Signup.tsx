@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import signupImage from '../assets/images/Signup.png';
-import { api, testApi } from '../AxiosInstance'
+import { api } from '../AxiosInstance'
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {

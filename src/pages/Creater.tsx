@@ -44,6 +44,7 @@ const CreateButton = styled.button`
 
 
 const HeroSection = styled.section`
+  margin-top : -40px;
   padding: 5rem 1rem;
   text-align: center;
   height: 520px;
@@ -107,7 +108,7 @@ const PrimaryButton = styled.button`
     background:rgb(137, 84, 218);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    
+
   }
 `;
 
@@ -127,7 +128,7 @@ const CreaterNavItem = styled.nav`
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: #06b6d4; 
+    border-color: #06b6d4;
   }
 `;
 
@@ -191,7 +192,7 @@ const Index: React.FC = () => {
 
   return (
     <Container>
-      
+
 
       <HeroSection >
         <HeroVideo src={CreaterVideo} autoPlay  muted playsInline loop />
@@ -210,7 +211,7 @@ const Index: React.FC = () => {
           </a>
         </ButtonGroup>
       </HeroSection>
-      
+
       <CreaterNav>
         <a onClick={() => handleScroll('section-title')}><CreaterNavItem> 위드유 소개</CreaterNavItem></a>
         <a onClick={() => handleScroll('funding-hero')}><CreaterNavItem>자격 요건</CreaterNavItem></a>

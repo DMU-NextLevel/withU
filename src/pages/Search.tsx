@@ -1,35 +1,15 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
-import { api, testApi } from '../AxiosInstance';
 import noImage from '../assets/images/noImage.jpg';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/AuthContext';
 import { useSearchParams } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import CategorySelector from './CategorySelector';
+import { fetchProjectsFromServer } from '../hooks/fetchProjectsFromServer';
+import { api } from '../AxiosInstance';
 
 
-interface ProjectItem {
-  id: number;
-  title: string;
-  titleImg: string;
-  completionRate: number;
-  recommendCount: number;
-  tags: string[];
-  pageCount: number;
-  totalCount: number;
-  userCount: number;
-  createdAt: string;
-  isRecommend: boolean;
-  expired: string;
-  isExpired: boolean;
-}
-
-interface ProjectResponse {
-  message: string;
-  data: ProjectItem[];
-}
 
 const categories = [
   { label: '전체', icon: 'bi bi-circle', tag: '' },
@@ -60,87 +40,110 @@ const Search: React.FC = () => {
   const [tag, setTag] = useState(initialTag);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const [order, setOrder] = useState('RECOMMEND');
   const [page, setPage] = useState('0');
+  const baseUrl = process.env.REACT_APP_API_BASE_URL
   //const [tag, setTag] = useState('');
   const orderIndex = orderOptions.findIndex(opt => opt.value === order);
 
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
-
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
-
   const lastProjectRef = useCallback((node: HTMLDivElement | null) => {
   if (loading) return;
   if (observer.current) observer.current.disconnect();
 
+
+
   observer.current = new IntersectionObserver(entries => {
     if (entries[0].isIntersecting && hasMore) {
-      setPage(prev => (parseInt(prev) + 1).toString());
+      // Prevent duplicate calls to page 1
+      const nextPage = parseInt(page) + 1;
+      if (page !== '0' || nextPage > 1) {
+        setPage(prev => (parseInt(prev) + 1).toString());
+      }
     }
   });
 
   if (node) observer.current.observe(node);}, [loading, hasMore]);
 
-
+  // 검색 키워드 저장
   useEffect(() => {
-    AOS.init({
-      duration: 800,  // 애니메이션 지속 시간 (ms)
-      once: true,     // 한 번만 실행 (true), 스크롤 시 계속 실행 (false)
-    });
-  }, []);
+    const keyword = searchParams.get('search');
+    setSearchTerm(keyword ?? '');
+  }, [searchParams]);
+
 
   useEffect(() => {
     const newTag = searchParams.get('tag');
     if (newTag !== tag) {
       setTag(newTag || '');
-      fetchProjects(); // URL 파라미터 변경 시 검색 실행
     }
   }, [searchParams]);
 
-  const getRemainingDays = (expiredDateStr: string): string => {
+  useEffect(() => {
+    // tag나 order가 변경될 때만 fetchProjects 호출
+    if (tag || order || searchTerm) {
+      setProjects([]);
+      setHasMore(true);
+      fetchProjects();
+    }
+  }, [tag, order, searchTerm]);
+
+  useEffect(() => {
+    // 페이지가 변경될 때만 fetchProjects 호출
+    if (page && page !== '0') {
+      fetchProjects();
+    }
+  }, [page]);
+
+  const getRemainingDays = (expiredDateStr: string, createdDateStr: string): string => {
     const today = new Date();
     const expiredDate = new Date(expiredDateStr);
+    const createdDate = new Date(createdDateStr);
 
-    // 오늘 자정 기준으로 계산
-    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const expiredMidnight = new Date(expiredDate.getFullYear(), expiredDate.getMonth(), expiredDate.getDate());
-
-    const diffTime = expiredMidnight.getTime() - todayMidnight.getTime();
+    // 남은 일수 계산 (현재 시간 기준)
+    const diffTime = expiredDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    return diffDays < 0 ? '마감' : `${diffDays}일 남음`;
+    // 생성일로부터 24시간 이내면 NEW
+    const createdDiff = today.getTime() - createdDate.getTime();
+    const createdHours = Math.floor(createdDiff / (1000 * 60 * 60));
+
+    return createdHours <=24 ? 'New' : diffDays < 0 ? '마감' : `${diffDays}일 남음`;
   };
 
+
   const fetchProjects = async () => {
-    setLoading(true);
-    setError(null);
     try {
-      const requestData = {
-        order: order || 'RECOMMEND',
-        tag: tag ? [parseInt(tag)] : null,
-        page: parseInt(page),
-        search: searchTerm || null,   // 혹시 검색어가 있다면 포함 (없으면 null)
-        desc: true                    // 필요에 따라 정렬 반대 여부
+      setLoading(true); // 🔐 로딩 시작
+      const loadProjects = async () => {
+        const data = await fetchProjectsFromServer({
+          order: order || 'RECOMMEND',
+          page: 0,
+          search: searchTerm,
+          desc: false,
+          tag: tag !== null && tag !== undefined && !isNaN(parseInt(tag))
+            ? parseInt(tag)
+            : undefined,
+        });
+        console.log("📦 서버에서 받아온 프로젝트:", data);
+        if (Array.isArray(data)) {
+          setProjects(data);
+        }
       };
+      await Promise.all([
+        loadProjects(),
+        new Promise((resolve) => setTimeout(resolve, 500))
+      ]);
 
-      const response = await api.post<ProjectResponse>(
-        '/public/project/all',
-        requestData
-      );
-      const newProjects = response.data.data;
-
-      if (newProjects.length === 0) {
-        setHasMore(false); // 더 이상 가져올 데이터 없음
-      } else {
-        setProjects(prev => [...prev, ...newProjects]);
-      }
-    } catch {
+    } catch (error) {
+      console.error('프로젝트 불러오기 실패:', error);
       setError('프로젝트 불러오기 실패');
     } finally {
       setLoading(false);
@@ -168,22 +171,17 @@ useEffect(() => {
       return;
     }
     try {
-      if (current) {
-        await api.delete(`/project/like/${projectId}`);
-      } else {
-        await api.post(`/project/like/${projectId}`);
-      }
-      fetchProjects();
+      await api.post('/social/user/like', {
+        like: !isLiked,
+        projectId: projectId
+      });
+      console.log("좋아요 토글 성공");
+      fetchProjects(); // 다시 불러와서 반영
     } catch (e) {
-      console.error('좋아요 실패', e);
+      console.error('좋아요 토글 실패:', e);
     }
   };
 
-  useEffect(() => {
-    if (page !== '') {
-      fetchProjects();
-    }
-  }, [page]);
 
   return (
     <Container>
@@ -218,7 +216,17 @@ useEffect(() => {
           </DotWaveWrapper>
         </LoadingOverlay>
       )}
-      {projects.length === 0 && !loading && <div>검색 결과가 없습니다.</div>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {searchTerm && (
+          <SearchTermWrapper>
+            <SearchTerm>{searchTerm}</SearchTerm> 검색 결과
+            <CloseButton onClick={() => setSearchTerm('')}>
+              <i className="bi bi-x"></i>
+            </CloseButton>
+          </SearchTermWrapper>
+        )}
+        </div>
+      {projects.length === 0 && !loading && <NoResult><i className="bi bi-search"></i><p>검색 결과가 없습니다.</p></NoResult>}
       {projects.length > 0 && <div>총 <strong>{projects.length}</strong>개의 프로젝트가 있습니다.</div>}
       {/* {error && <ErrorText>{error}</ErrorText>} */}
 
@@ -232,9 +240,11 @@ useEffect(() => {
             <Card key={item.id} ref={isLast ? lastProjectRef : undefined}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div>
+
                   <CardTopWrapper>
+                  <a href={`/project/${item.id}`}>
                     <Thumbnail
-                      src={`https://api.nextlevel.r-e.kr/img/${item.titleImg}`}
+                      src={`${baseUrl}/img/${item.titleImg}`}
                       alt={item.title}
                       onError={(e) => {
                         e.currentTarget.onerror = null;
@@ -243,22 +253,23 @@ useEffect(() => {
                     />
 
                     <HeartIcon
-                      className={item.isRecommend ? 'bi bi-heart-fill' : 'bi bi-heart'}
-                      onClick={() => handleLikeToggle(item.id, item.isRecommend)}
+                      className={item.isLiked ? 'bi bi-heart-fill' : 'bi bi-heart'}
+                      onClick={() => handleLikeToggle(item.id, item.isLiked)}
                     />
                   </CardTopWrapper>
-                  {/* id:{item.id}|
-                  page:{item.pageCount} */}
+
+                  {/* id:{item.id} */}
+
                   <CardContent>
                     <InfoRow>{item.completionRate}% 달성</InfoRow>
+                    <a href={`/project/${item.id}`}>
                     <TitleRow>{item.title}</TitleRow>
+                    </a>
                     <CreaterRow>회사이름</CreaterRow>
                     {/* <InfoRow>추천 수: {item.recommendCount}</InfoRow> */}
                     <TagLow>
-                    {item.tags.map((tag, index) => (
-                      <Tag key={index}>{tag}</Tag>
-                    ))}
-                     <Tag>{getRemainingDays(item.expired)}</Tag>
+                      <Tag>{item.tags[0]}</Tag>
+                      {item.tags[0] && <Tag>{item.tags[1]}</Tag>}
                     </TagLow>
 
                   </CardContent>
@@ -384,25 +395,6 @@ const CategoryItem = styled.div`
   }
 `;
 
-const SelectedTagText = styled.p`
-  font-size: 16px;
-  margin-bottom: 12px;
-  color: #555;
-`;
-const SearchForm = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  align-items: center;
-  flex-wrap: wrap;
-`;
-const Select = styled.select`
-  padding: 8px;
-  margin-left: 6px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-`;
 const OrderTabWrapper = styled.div`
   position: relative;
   display: flex;
@@ -443,35 +435,10 @@ const OrderButton = styled.button`
   }
 `;
 
-
-const Input = styled.input`
-  padding: 8px;
-  margin-left: 6px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-`;
-
-const SearchButton = styled.button`
-  padding: 8px 16px;
-  background: #A66CFF;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-
-  &:hover {
-    background: #944dff;
-  }
-`;
-
-const ErrorText = styled.h3`
-  color: red;
-`;
-
 const CardList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 50px;
+  column-gap: 50px;
   justify-content: space-between;
   overflow: visible;
   position: relative;
@@ -488,7 +455,10 @@ const Card = styled.div`
   overflow: visible;
   position: relative;
   z-index: 3;
-
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
   &:hover {
     z-index: 5;
   }
@@ -685,11 +655,11 @@ const Tag = styled.span`
 
 
 const LoadingOverlay = styled.div`
-  position: fixed;
-  top: 0;
+  position: absolute;
   left: 0;
+  right: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(255, 255, 255, 0.6);
   display: flex;
   flex-direction: column;
@@ -734,3 +704,43 @@ const Dot = styled.span`
     }
   }
 `;
+
+const NoResult = styled.div`
+  text-align: center;
+  padding: 130px;
+  color: #888;
+  p {
+    font-size: 32px;
+    color: #888;
+    font-weight: bold;
+  }
+
+  i {
+    font-weight: bold;
+    font-size: 64px;
+  }
+`;
+
+
+
+const SearchTermWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: bold;
+  color:#888;
+`;
+
+const SearchTerm = styled.span`
+  margin-right: 8px;
+  color: #000;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+`;
+

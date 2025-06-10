@@ -9,10 +9,23 @@ import MyPage from './pages/MyPage';
 import MainPage from './pages/MainPage'
 import FundingPage from './pages/FundingPage'
 import Search from './pages/Search';
+import ProjectCreatePage from './pages/ProjectCreatePage';
+import ProjectInfoPage from './pages/ProjectInfoPage';
+import ProjectMediaPage from './pages/ProjectMediaPage';
+import ProjectIntroductionPage from './pages/ProjectIntroductionPage';
 import { AuthProvider } from './hooks/AuthContext'
 import ScrollToTop from './hooks/ScrollToTop';
+import NoticeBoard from './pages/NoticeBoard';
+import NoticeDetail from './pages/NoticeDetail';
+import NoticeWrite from './pages/NoticeWrite';
+import NoticeEdit from './pages/NoticeEdit';
+import ProfileHeader from './pages/ProfileHeader';
 import Creater from './pages/Creater';
-import { FailPage, PopupPaymentPage, SuccessPage } from './components/UI/TossPayments'
+import {PopupPaymentPage} from './components/UI/TossPayments';
+import {SuccessPage} from './components/UI/TossPayments';
+import {FailPage} from './components/UI/TossPayments';
+
+
 
 function App() {
 	return (
@@ -26,6 +39,7 @@ function App() {
 const AppWrapper = () => {
 	const location = useLocation()
 	const hideLayout = ['/login', '/signup','/popup-payment', '/popup-payment-success']
+	const hideLayout = ['/login', '/signup','/popup-payment', '/popup-payment-success']
 	const mainPage = ['/']
 	return (
 		<AuthProvider>
@@ -36,12 +50,21 @@ const AppWrapper = () => {
 				<Route path='/signup' element={<Signup />} />
 				<Route path='/idfind' element={<IDFindPage />} />
 				<Route path='/mypage' element={<MyPage />} />
-				<Route path='/funding/:no' element={<FundingPage />} />
+				<Route path='/project/:no' element={<FundingPage />} />
 				<Route path='/search' element={<Search />} />
+				<Route path='/project/create' element={<ProjectCreatePage />} />
+				<Route path='/project/info' element={<ProjectInfoPage />} />
+				<Route path='/project/introduction' element={<ProjectIntroductionPage />} />
+				<Route path='/project/media' element={<ProjectMediaPage />} />
 				<Route path='/creater' element={<Creater />} />
 				<Route path='/popup-payment' element={<PopupPaymentPage />} />
 				<Route path='/popup-payment-success' element={<SuccessPage />} />
 				<Route path='/fail' element={<FailPage />} />
+				<Route path='/notice' element={<NoticeBoard />} />
+				<Route path='/notice/:id' element={<NoticeDetail />} />
+				<Route path='/notice/write' element={<NoticeWrite />} />
+				<Route path='/notice/edit/:id' element={<NoticeEdit />} />
+				<Route path='/profile' element={<ProfileHeader />} />
 			</Routes>
 			{!hideLayout.includes(location.pathname) && <Footer />}
 		</AuthProvider>
