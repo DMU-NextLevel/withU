@@ -66,13 +66,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = () => {
-    localStorage.removeItem('LoginStatus');
-    localStorage.removeItem('UserData');
-    localStorage.removeItem('accessToken');
-    document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    setIsLoggedIn(false);
-    setUser(null);
-  };
+  // 서버에 로그아웃 요청
+  api.post('/social/user/logout')
+    .then(res => {
+      console.log('서버 로그아웃 성공:', res.data);
+    })
+    .catch(err => {
+      console.error('서버 로그아웃 실패:', err);
+    })
+    .finally(() => {
+      // 로컬 상태 및 저장값 정리
+      localStorage.removeItem('LoginStatus');
+      localStorage.removeItem('UserData');
+      localStorage.removeItem('accessToken');
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      setIsLoggedIn(false);
+      setUser(null);
+    });
+};
+
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout, user, setUser }}>

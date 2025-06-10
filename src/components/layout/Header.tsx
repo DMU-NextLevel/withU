@@ -144,7 +144,7 @@
 									<Banner>
 									<i className="fas fa-volume-up" style={{ fontSize: '18px', float: 'right' }} />
 									<BannerImg src={user?.img || UserImage} alt="프로필" />
-									<Name>{user?.name || '익명'}</Name>
+									<Name>{user?.nickName || '익명'}</Name>
 									</Banner>
 									<Email>{user?.email}</Email>
 									<Department>{role=="ADMIN" ? '관리자' : '일반 사용자'}</Department>
