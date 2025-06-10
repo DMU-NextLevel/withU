@@ -6,7 +6,7 @@
 	import { useNavigate } from 'react-router-dom'
 	import { useAuth } from '../../hooks/AuthContext'
 	import { useUserRole } from '../../hooks/useUserRole'
-	
+
 
 	interface HeaderBaseProps {
 		isLoggedIn: boolean
@@ -19,7 +19,7 @@
 		showSearchBar?: boolean
 		showNotification?: boolean
 	}
-	
+
 	const categories = [
 		{ label: '테크/가전', icon: 'bi bi-cpu', tag: '1' },
 		{ label: '라이프스타일', icon: 'bi bi-house', tag: '2' },
@@ -32,7 +32,7 @@
 		{ label: '여행/레저', icon: 'bi bi-airplane', tag: '9' },
 		{ label: '푸드/음료', icon: 'bi bi-cup-straw', tag: '10' },
 	];
-	
+
 	// 링크 설정 객체
 	const searchLinks = {
 		RECOMMEND: '/search?order=RECOMMEND',
@@ -40,13 +40,13 @@
 		EXPIRED: '/search?order=EXPIRED',
 		COMPLETED: '/search?order=COMPLETED'
 	};
-	
+
 	// 링크 생성 함수
 	const createSearchLink = (type: keyof typeof searchLinks) => {
 		return searchLinks[type];
 	};
 
-	
+
 
 	export const HeaderMain: React.FC = () => {
 		const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -66,8 +66,8 @@
 		};
 
 		const handleLogout = () => {
-			logout(); 
-			window.location.href = '/login'; 
+			logout();
+			window.location.href = '/login';
 		}
 
 	const handleLogoClick = () => {
@@ -117,7 +117,7 @@
 				document.removeEventListener('mousedown', handleClickOutside)
 			}
 		}, [showNotification])
-		
+
 		return (
 			<HeaderWrapper>
 				<TopHeader>
@@ -168,18 +168,18 @@
 						)}
 				</TopHeader>
 				<HeaderNavbar>
-					
+
 					<CategoryMenu onClick={handleCategoryClick}>
-						
+
 						<NavItem><Category src={CategoryImage} alt='' /> 메뉴</NavItem>
 					</CategoryMenu>
-					
+
 					<NavItem><a href={createSearchLink('RECOMMEND')}>인기</a></NavItem>
 					<NavItem><a href={createSearchLink('NEW')}>신규</a></NavItem>
 					<NavItem><a href={createSearchLink('EXPIRED')}>마감임박</a></NavItem>
 					<ProjectButton onClick={handleProjectCreate}>프로젝트 시작하기</ProjectButton>
-					
-					
+
+
 
 					<SearchBar onSubmit={handleSubmit}>
 						<SearchInput
@@ -194,7 +194,7 @@
 					</SearchBar>
 
 
-					
+
 				</HeaderNavbar>
 				{
 					<CategoryListLayout isOpen={isOpen}>
@@ -202,8 +202,8 @@
 						<CategorySectionButton>
 							<i className="bi bi-bookmark-check"></i><div>팔로우 프로젝트</div>
 						</CategorySectionButton>
-						<CategorySectionButton onClick={handleProjectCreate} bgColor="rgb(233, 236, 239)"  hoverColor="rgb(206, 208, 211)">
-							<i className="bi bi-buildings"></i><div>메이커 스튜디오</div>
+						<CategorySectionButton onClick={() => navigate('/creater')} bgColor="rgb(233, 236, 239)"  hoverColor="rgb(206, 208, 211)">
+							<i className="bi bi-buildings"></i><div>위더 스튜디오</div>
 						</CategorySectionButton>
 						<CategorySectionButton bgColor="rgb(230, 246, 255)"  hoverColor="rgb(216, 228, 234)">
 							<i className="bi bi-box2"></i><div>즐겨찾기</div>
@@ -243,14 +243,14 @@
 								<NavSectionItem><a href="">고객센터</a></NavSectionItem>
 								<NavSectionItem><a href="/mypage">마이페이지</a></NavSectionItem>
 								<NavSectionItem><a href="">정책 & 약관</a></NavSectionItem>
-								
+
 						</NavSection>
 					</CategorySection>
-					
+
 					</CategoryListLayout>
 				}
-		
-					
+
+
 
 			</HeaderWrapper>
 		)
@@ -279,8 +279,8 @@
 		}
 
 		const handleLogout = () => {
-			logout(); 
-			window.location.href = '/login'; 
+			logout();
+			window.location.href = '/login';
 		}
 
 	const handleLoginClick = () => {
@@ -339,12 +339,12 @@
 					<NavItem><a href={createSearchLink('RECOMMEND')}>인기</a></NavItem>
 					<NavItem><a href={createSearchLink('NEW')}>신규</a></NavItem>
 					<NavItem><a href={createSearchLink('EXPIRED')}>마감임박</a></NavItem>
-					
-					
-					
+
+
+
 					<ProjectButton onClick={handleProjectCreate}>프로젝트 시작하기</ProjectButton>
-					
-					
+
+
 
 						<div style={{ display: 'flex', marginLeft: 'auto', alignItems: 'center', gap: '0px', marginRight: '20px' }}>
 						<SearchBar onSubmit={handleSubmit}>
@@ -410,8 +410,8 @@
 						<CategorySectionButton>
 							<i className="bi bi-bookmark-check"></i><div>팔로우 프로젝트</div>
 						</CategorySectionButton>
-						<CategorySectionButton onClick={handleProjectCreate} bgColor="rgb(233, 236, 239)"  hoverColor="rgb(206, 208, 211)">
-							<i className="bi bi-buildings"></i><div>메이커 스튜디오</div>
+						<CategorySectionButton onClick={() => navigate('/creater')} bgColor="rgb(233, 236, 239)"  hoverColor="rgb(206, 208, 211)">
+							<i className="bi bi-buildings"></i><div>위더 스튜디오</div>
 						</CategorySectionButton>
 						<CategorySectionButton bgColor="rgb(230, 246, 255)"  hoverColor="rgb(216, 228, 234)">
 							<i className="bi bi-box2"></i><div>즐겨찾기</div>
@@ -451,10 +451,10 @@
 								<NavSectionItem><a href="">고객센터</a></NavSectionItem>
 								<NavSectionItem><a href="/mypage">마이페이지</a></NavSectionItem>
 								<NavSectionItem><a href="">정책 & 약관</a></NavSectionItem>
-								
+
 						</NavSection>
 					</CategorySection>
-					
+
 					</CategoryListLayout>
 				}
 				</SubHeaderWrapper>
@@ -469,9 +469,9 @@
 		}
 		@media (max-width: 1200px) {
 			padding: 0 2%;
-		
+
 	`;
-	
+
 	const SubHeaderWrapper = styled.div`
 		padding: 0 15%;
 		border-bottom: 1px solidrgb(215, 215, 215);
@@ -655,7 +655,6 @@ const SearchInput = styled.input`
 			transition: opacity 0.2s ease;
 		}
 	`
-
 	const Search = styled.img`
 		width: 20px;
 		cursor: pointer;
@@ -708,10 +707,10 @@ const CategoryListLayout = styled.div<{ isOpen: boolean }>`
 		margin-top: 2px;
 
 		grid-template-columns: repeat(2, 1fr);
-		row-gap: 15px;                         
-		column-gap: 40px;                      
+		row-gap: 15px;
+		column-gap: 40px;
 		min-width: 100px;
-		
+
 	`;
 	const CategorySectionButton = styled.div<{
 		bgColor?: string;
@@ -730,16 +729,16 @@ const CategoryListLayout = styled.div<{ isOpen: boolean }>`
 		font-weight: bold;
 		transition: background-color 0.1s;
 		margin-bottom: 10px;
-	  
+
 		&:hover {
 		  background-color: ${({ hoverColor }) => hoverColor || 'rgb(238, 232, 217)'};
 		}
-	  
+
 		div {
 		  align-items: center;
 		  justify-content: center;
 		}
-	  
+
 		i {
 		  background: white;
 		  padding: 5px;
@@ -749,10 +748,10 @@ const CategoryListLayout = styled.div<{ isOpen: boolean }>`
 		  margin-right: 10px;
 		}
 	  `;
-	  
-	
-	
-	
+
+
+
+
 
 	const CategoryListItem = styled.p`
 		text-align: left;
@@ -773,7 +772,7 @@ const CategoryListLayout = styled.div<{ isOpen: boolean }>`
 			text-decoration: none;
 			color: #333;
 		}
-		
+
 	`
 
 const NavSection = styled.div`
@@ -781,8 +780,8 @@ const NavSection = styled.div`
 	margin-top: 2px;
 
 		grid-template-columns: repeat(2, 1fr);
-		row-gap: 12px;                         
-		column-gap: 20px;                      
+		row-gap: 12px;
+		column-gap: 20px;
 		min-width: 100px;
 
 
@@ -795,7 +794,7 @@ const NavSection = styled.div`
 		text-align: left;
 		margin: 0 0 15px 0;
 		padding:  0;
-	
+
 		transition: all 0.3s ease;
 		box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 		color: #333;

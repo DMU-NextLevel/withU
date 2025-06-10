@@ -78,7 +78,7 @@ const Search: React.FC = () => {
     setSearchTerm(keyword ?? '');
   }, [searchParams]);
 
-  
+
   useEffect(() => {
     const newTag = searchParams.get('tag');
     if (newTag !== tag) {
@@ -123,7 +123,7 @@ const Search: React.FC = () => {
     try {
       setLoading(true); // 🔐 로딩 시작
       const loadProjects = async () => {
-        const data = await fetchProjectsFromServer({ 
+        const data = await fetchProjectsFromServer({
           order: order || 'RECOMMEND',
           page: 0,
           search: searchTerm,
@@ -141,7 +141,7 @@ const Search: React.FC = () => {
         loadProjects(),
         new Promise((resolve) => setTimeout(resolve, 500))
       ]);
-      
+
     } catch (error) {
       console.error('프로젝트 불러오기 실패:', error);
       setError('프로젝트 불러오기 실패');
@@ -149,9 +149,23 @@ const Search: React.FC = () => {
       setLoading(false);
     }
   };
-  
-  //좋아요 기능 추후 추가 예정
-  const handleLikeToggle = async (projectId: number, isLiked: boolean) => {
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+useEffect(() => {
+  setProjects([]);
+  setHasMore(true);
+  setPage('1');
+  fetchProjects();  // ✅ 직접 호출
+}, [tag, order]);
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+  const handleLikeToggle = async (projectId: number, current: boolean) => {
     if (!isLoggedIn) {
       navigate('/login');
       return;
@@ -226,9 +240,9 @@ const Search: React.FC = () => {
             <Card key={item.id} ref={isLast ? lastProjectRef : undefined}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div>
-                
+
                   <CardTopWrapper>
-                  <a href={`/project/${item.id}`}>  
+                  <a href={`/project/${item.id}`}>
                     <Thumbnail
                       src={`${baseUrl}/img/${item.titleImg}`}
                       alt={item.title}
@@ -237,19 +251,18 @@ const Search: React.FC = () => {
                         e.currentTarget.src = noImage;
                       }}
                     />
-                    </a>
 
                     <HeartIcon
                       className={item.isLiked ? 'bi bi-heart-fill' : 'bi bi-heart'}
                       onClick={() => handleLikeToggle(item.id, item.isLiked)}
                     />
                   </CardTopWrapper>
-                  
+
                   {/* id:{item.id} */}
-                  
+
                   <CardContent>
                     <InfoRow>{item.completionRate}% 달성</InfoRow>
-                    <a href={`/project/${item.id}`}>  
+                    <a href={`/project/${item.id}`}>
                     <TitleRow>{item.title}</TitleRow>
                     </a>
                     <CreaterRow>회사이름</CreaterRow>
@@ -275,7 +288,18 @@ const Search: React.FC = () => {
           );
         })}
       </CardList>
-      
+
+
+
+
+
+      <div data-aos="fade-up"
+        	 data-aos-offset="200"
+             data-aos-easing="ease-out-cubic"
+             data-aos-duration="2000"
+             >
+        </div>
+
     </Container>
   );
 };
@@ -655,7 +679,7 @@ const DotWaveWrapper = styled.div`
 
 const Dot = styled.span`
   width: 10px;
-  height: 10px; 
+  height: 10px;
   background-color: #A66CFF;
   border-radius: 50%;
   margin: 0 5px;
@@ -682,14 +706,14 @@ const Dot = styled.span`
 `;
 
 const NoResult = styled.div`
-  text-align: center; 
+  text-align: center;
   padding: 130px;
   color: #888;
   p {
     font-size: 32px;
     color: #888;
     font-weight: bold;
-  } 
+  }
 
   i {
     font-weight: bold;
@@ -719,4 +743,4 @@ const CloseButton = styled.button`
   cursor: pointer;
   padding: 0;
 `;
-  
+

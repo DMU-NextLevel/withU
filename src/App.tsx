@@ -39,6 +39,7 @@ function App() {
 const AppWrapper = () => {
 	const location = useLocation()
 	const hideLayout = ['/login', '/signup','/popup-payment', '/popup-payment-success']
+	const hideLayout = ['/login', '/signup','/popup-payment', '/popup-payment-success']
 	const mainPage = ['/']
 	return (
 		<AuthProvider>

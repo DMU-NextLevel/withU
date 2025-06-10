@@ -439,7 +439,7 @@ const fieldMap: Record<string, string> = {
         <p>충전하실 금액을 선택하세요</p>
         <ChargeOptions>
           {[1000, 5000, 10000, 20000].map((amount) => (
-            <ChargeBtn key={amount} onClick={() => openPaymentWindow(amount)}>
+            <ChargeBtn key={amount} onClick={() => handleCharge(amount)}>
               {amount.toLocaleString()}P
             </ChargeBtn>
           ))}
@@ -506,7 +506,7 @@ const fieldMap: Record<string, string> = {
       </Content>
       {editFields[field as keyof typeof editFields] ? (
         <ChangeBtn onClick={() => {
-          handleSaveClick(field)
+          setEditFields((prev) => ({...prev, [field]: false}));
         }}>변경완료</ChangeBtn>
       ) : (
         <ChangeBtn onClick={() => handleEditClick(field)}>변경</ChangeBtn>
