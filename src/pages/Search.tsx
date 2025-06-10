@@ -7,7 +7,6 @@ import { useSearchParams } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { fetchProjectsFromServer } from '../hooks/fetchProjectsFromServer';
-import { api } from '../AxiosInstance';
 
 
 
@@ -78,7 +77,7 @@ const Search: React.FC = () => {
     setSearchTerm(keyword ?? '');
   }, [searchParams]);
 
-
+  
   useEffect(() => {
     const newTag = searchParams.get('tag');
     if (newTag !== tag) {
@@ -123,7 +122,7 @@ const Search: React.FC = () => {
     try {
       setLoading(true); // 🔐 로딩 시작
       const loadProjects = async () => {
-        const data = await fetchProjectsFromServer({
+        const data = await fetchProjectsFromServer({ 
           order: order || 'RECOMMEND',
           page: 0,
           search: searchTerm,
@@ -141,7 +140,7 @@ const Search: React.FC = () => {
         loadProjects(),
         new Promise((resolve) => setTimeout(resolve, 500))
       ]);
-
+      
     } catch (error) {
       console.error('프로젝트 불러오기 실패:', error);
       setError('프로젝트 불러오기 실패');
@@ -149,37 +148,23 @@ const Search: React.FC = () => {
       setLoading(false);
     }
   };
-
-
-///////////////////////////////////////////////////////////////////////////////////////
-
-useEffect(() => {
-  setProjects([]);
-  setHasMore(true);
-  setPage('1');
-  fetchProjects();  // ✅ 직접 호출
-}, [tag, order]);
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////
-
-  const handleLikeToggle = async (projectId: number, isLiked: boolean) => {
-    if (!isLoggedIn) {
-      navigate('/login');
-      return;
-    }
-    try {
-      await api.post('/social/user/like', {
-        like: !isLiked,
-        projectId: projectId
-      });
-      console.log("좋아요 토글 성공");
-      fetchProjects(); // 다시 불러와서 반영
-    } catch (e) {
-      console.error('좋아요 토글 실패:', e);
-    }
+  
+  //좋아요 기능 추후 추가 예정
+  const handleLikeToggle = async (projectId: number, current: boolean) => {
+    // if (!isLoggedIn) {
+    //   navigate('/login');
+    //   return;
+    // }
+    // try {
+    //   if (current) {
+    //     await api.delete(`/project/like/${projectId}`);
+    //   } else {
+    //     await api.post(`/project/like/${projectId}`);
+    //   }
+    //   fetchProjects();
+    // } catch (e) {
+    //   console.error('좋아요 실패', e);
+    // }
   };
 
 
@@ -240,9 +225,8 @@ useEffect(() => {
             <Card key={item.id} ref={isLast ? lastProjectRef : undefined}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div>
-
+                <a href={`/project/${item.id}`}>  
                   <CardTopWrapper>
-                  <a href={`/project/${item.id}`}>
                     <Thumbnail
                       src={`${baseUrl}/img/${item.titleImg}`}
                       alt={item.title}
@@ -251,19 +235,17 @@ useEffect(() => {
                         e.currentTarget.src = noImage;
                       }}
                     />
-                  </a>
 
                     <HeartIcon
-                      className={item.isLiked ? 'bi bi-heart-fill' : 'bi bi-heart'}
-                      onClick={() => handleLikeToggle(item.id, item.isLiked)}
+                      className={item.isRecommend ? 'bi bi-heart-fill' : 'bi bi-heart'}
+                      onClick={() => handleLikeToggle(item.id, item.isRecommend)}
                     />
                   </CardTopWrapper>
-
+                  </a>
                   {/* id:{item.id} */}
-
                   <CardContent>
                     <InfoRow>{item.completionRate}% 달성</InfoRow>
-                    <a href={`/project/${item.id}`}>
+                    <a href={`/project/${item.id}`}>  
                     <TitleRow>{item.title}</TitleRow>
                     </a>
                     <CreaterRow>회사이름</CreaterRow>
@@ -289,18 +271,7 @@ useEffect(() => {
           );
         })}
       </CardList>
-
-
-
-
-
-      <div data-aos="fade-up"
-        	 data-aos-offset="200"
-             data-aos-easing="ease-out-cubic"
-             data-aos-duration="2000"
-             >
-        </div>
-
+      
     </Container>
   );
 };
@@ -656,11 +627,13 @@ const Tag = styled.span`
 
 
 const LoadingOverlay = styled.div`
-  position: absolute;
+  position: fixed;
+  top: 80px;
   left: 0;
   right: 0;
+  bottom: 0;
   width: 100%;
-  height: 100vh;
+  height: calc(100% - 80px);
   background-color: rgba(255, 255, 255, 0.6);
   display: flex;
   flex-direction: column;
@@ -680,7 +653,7 @@ const DotWaveWrapper = styled.div`
 
 const Dot = styled.span`
   width: 10px;
-  height: 10px;
+  height: 10px; 
   background-color: #A66CFF;
   border-radius: 50%;
   margin: 0 5px;
@@ -707,14 +680,14 @@ const Dot = styled.span`
 `;
 
 const NoResult = styled.div`
-  text-align: center;
+  text-align: center; 
   padding: 130px;
   color: #888;
   p {
     font-size: 32px;
     color: #888;
     font-weight: bold;
-  }
+  } 
 
   i {
     font-weight: bold;
@@ -744,4 +717,4 @@ const CloseButton = styled.button`
   cursor: pointer;
   padding: 0;
 `;
-
+  
