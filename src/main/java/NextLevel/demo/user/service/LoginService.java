@@ -36,7 +36,7 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserDetailEntity socialLogin(RequestUserCreateDto socialLoginDto, HttpServletResponse response) {
+    public UserDetailEntity socialLogin(RequestUserCreateDto socialLoginDto) {
         String socialProvider = socialLoginDto.getSocialProvider();
         String socialId = socialLoginDto.getSocialId();
 
