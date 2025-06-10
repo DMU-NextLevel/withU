@@ -20,9 +20,9 @@ public class OAuthFailureHandler implements AuthenticationFailureHandler {
 
         log.info("social login fail" + exception.getMessage());
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json;charset=UTF-8");
-
-        response.getWriter().write("social login failed :: " + exception.getMessage());
+//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//        response.setContentType("application/json;charset=UTF-8");
+//
+//        response.getWriter().write("social login failed :: " + exception.getMessage());
     }
 }
