@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Swal from 'sweetalert2';
+import { api } from '../AxiosInstance';
 
 const MyPage = () => {
 
@@ -128,10 +129,64 @@ const MyPage = () => {
     setEditFields((prev) => ({ ...prev,[field]: true}));
   };
 
-  const handleSaveClick = (field: string) => {
-  setEditFields((prev) => ({ ...prev, [field]: false }));
-  setUserInfo(tempUserInfo);
+const fieldMap: Record<string, string> = {
+    name: 'name',
+    nickname: 'nickName',
+    phone: 'number',
+    password: 'password',
+    passwordcf: 'passwordcf',
   };
+
+  //이게 회원정보 수정 api로 적음
+  const handleSaveClick = async (field: string) => {
+    try {
+      const newValue = tempUserInfo[field as keyof typeof tempUserInfo];
+
+      if (field === 'email') {
+        await Swal.fire({
+          icon: 'error',
+          title: '이메일은 변경할 수 없습니다.',
+          confirmButtonColor: '#a66cff',
+        });
+        return;
+      }
+
+      // ✅ 여기가 핵심: API 요청 보내기
+      const response = await fetch('https://api.nextlevel.r-e.kr/social/user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ name: fieldMap[field], value: newValue }),
+      });
+
+      const result = await response.json();
+
+      if (result.message !== 'success') {
+        throw new Error('업데이트 실패');
+      }
+
+      // 성공 시 상태 반영
+      setEditFields((prev) => ({ ...prev, [field]: false }));
+      setUserInfo((prev) => ({ ...prev, [field]: newValue }));
+
+      await Swal.fire({
+        icon: 'success',
+        title: '변경되었습니다!',
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: '변경 실패',
+        text: '다시 시도해주세요.',
+        confirmButtonColor: '#a66cff',
+      });
+    }
+  };
+
 
 
   const handleResetClick = () => {
@@ -159,6 +214,48 @@ const MyPage = () => {
     };
   }, [showRecentView, showSettingsOverlay, showPointOverlay]);
 
+  useEffect(() => {
+    api.get('/social/user')
+      .then(response => {
+        const user = response.data.data;
+
+        setUserInfo({
+          name: user.name || '',
+          nickname: user.nickName || '',
+          phone: user.number || '',
+          email: user.email || '',
+          password: '비밀번호 변경하기',
+          passwordcf: '비밀번호 확인',
+        });
+
+        setTempUserInfo({
+          name: user.name || '',
+          nickname: user.nickName || '',
+          phone: user.number || '',
+          email: user.email || '',
+          password: '비밀번호 변경하기',
+          passwordcf: '비밀번호 확인',
+        });
+
+        setPoint(user.point || 0);
+
+        const areaParts = user.areaNumber?.split('-') || [];
+        setHomePhone({
+          area: areaParts[0] || '02',
+          number: areaParts.slice(1).join('') || '',
+        });
+
+        if (user.img) {
+          const imageUrl = `https://api.nextlevel.r-e.kr/img/${user.img}`;
+          setProfileImage(imageUrl);
+          setTempProfileImage(imageUrl);
+        }
+      })
+      .catch(error => {
+        console.error('유저 정보 불러오기 실패:', error);
+      });
+  }, []);
+
   const handleClick = (label: string) => {
     setShowRecentView(false);
     setShowSettingsOverlay(false);
@@ -175,14 +272,56 @@ const MyPage = () => {
     }
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+
+  //이게 프로필 이미지 변경 api로 적음
+
+   //이게 프로필 이미지 변경 api로 적음
+
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setTempProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const fieldMap: Record<string, string> = {
+      name: 'name',
+      nickname: 'nickName',
+      phone: 'number',
+      password: 'password',
+      passwordcf: 'passwordcf',
+    };
+
+    const formData = new FormData();
+    formData.append('img', file);
+
+    try {
+      const res = await fetch('https://api.nextlevel.r-e.kr/social/user/img', {
+        method: 'PUT',
+        credentials: 'include',
+        body: formData,
+      });
+
+      const result = await res.json();
+
+      if (result.message !== 'success') {
+        throw new Error('업로드 실패');
+      }
+
+      const uploadedUrl = result.imageUrl;
+      setTempProfileImage(uploadedUrl);
+
+      await Swal.fire({
+        icon: 'success',
+        title: '이미지가 변경되었습니다!',
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      console.error('이미지 업로드 에러:', error);
+      await Swal.fire({
+        icon: 'error',
+        title: '이미지 변경 실패',
+        text: '잠시 후 다시 시도해주세요.',
+        confirmButtonColor: '#a66cff',
+      });
     }
   };
 
@@ -225,127 +364,137 @@ const MyPage = () => {
 									})
 								}
 
-								setShowSettingsOverlay(false)
-							}}>
-							x
-						</CloseButton>
-					</OverlayHeader>
-					<ScrollableContent>
-						<Tabs>
-							<TabGroup>
-								<ActiveTab>최근 본</ActiveTab>
-							</TabGroup>
-							<FilterGroup>
-								{['전체', ...allTags].map((cat) => (
-									<FilterBtn key={cat} active={selectedFilter === cat} onClick={() => setSelectedFilter(cat)}>
-										{cat}
-									</FilterBtn>
-								))}
-							</FilterGroup>
-						</Tabs>
-						<ItemCount>전체 {filteredProducts.length}개</ItemCount>
-						<ProductColumn>
-							{filteredProducts.map((item) => (
-								<ProductCardOverlay key={item.id}>
-									<img src={item.image} alt={item.name} />
-									<CardContent>
-										<Price>
-											<span>{item.price}</span>
-										</Price>
-										<p>{item.name}</p>
-										<HashtagList>
-											{item.tags.map((tag, i) => (
-												<Hashtag key={i}>#{tag}</Hashtag>
-											))}
-										</HashtagList>
-									</CardContent>
-								</ProductCardOverlay>
-							))}
-						</ProductColumn>
-					</ScrollableContent>
-				</RecentOverlay>
-			)}
-			{showPointOverlay && (
-				<Overlay>
-					<OverlayHeader>
-						<h2>포인트 충전</h2>
-						<CloseButton onClick={() => setShowPointOverlay(false)}>×</CloseButton>
-					</OverlayHeader>
-					<OverlayContent>
-						<PointAmount>
-							현재 보유 포인트: <strong>{point.toLocaleString()}P</strong>
-						</PointAmount>
-						<ChargeBox>
-							<p>충전하실 금액을 선택하세요</p>
-							<ChargeOptions>
-								{[1000, 5000, 10000, 20000].map((amount) => (
-									<ChargeBtn key={amount} onClick={() => openPaymentWindow(amount)}>
-										{amount.toLocaleString()}P
-									</ChargeBtn>
-								))}
-							</ChargeOptions>
-						</ChargeBox>
-					</OverlayContent>
-				</Overlay>
-			)}
-			{showSettingsOverlay && (
-				<SettingsOverlay>
-					<OverlayHeader>
-						<h2>내 정보 설정</h2>
-						<CloseButton onClick={() => setShowSettingsOverlay(false)}>×</CloseButton>
-					</OverlayHeader>
-					<ScrollableContent>
-						<div style={{ textAlign: 'center', marginBottom: '24px' }}>
-							<ImageInputLabel>
-								<AvatarImg
-									src={
-										tempProfileImage ||
-										profileImage ||
-										'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA2MjVfMTkz%2FMDAxNzE5MjkxMTA5MzY4.6JsIEfv3ged1X5Tm8X64E27sIL935yGSV-9T_pNE9sUg.txCrKMz0Emxy98jwwxnmWi8mqcU91uaLyXx88Z1X1iQg.JPEG%2FB7A00E50-ABFD-43A4-AE4C-9901F147A4DC.jpeg&type=sc960_832'
-									}
-									alt='프로필'
-									style={{ width: '100px', height: '100px' }}
-								/>
-							</ImageInputLabel>
-							<HiddenFileInput id='profile-upload-settings' type='file' accept='image/*' onChange={handleImageChange} />
-							<div style={{ display: 'flex', justifyContent: 'center' }}>
-								<ChangeBtn as='label' htmlFor='profile-upload-settings' style={{ marginTop: '10px' }}>
-									이미지변경
-								</ChangeBtn>
-							</div>
-						</div>
-						{[
-							{ label: '이름', field: 'name' },
-							{ label: '닉네임', field: 'nickname' },
-							{ label: '전화번호', field: 'phone' },
-							{ label: '이메일 주소', field: 'email' },
-							{ label: '비밀번호', field: 'password' },
-							{ label: '비밀번호 확인', field: 'passwordcf' },
-						].map(({ label, field }) => (
-							<InfoItem key={field}>
-								<Label>
-									{label}
-									{['이름', '닉네임', '전화번호', '이메일 주소'].includes(label) && <RequiredMark> *</RequiredMark>}
-								</Label>
-								<Content>
-									{editFields[field as keyof typeof editFields] ? (
-										<input type='text' value={tempUserInfo[field as keyof typeof tempUserInfo]} onChange={(e) => handleInputChange(e, field)} />
-									) : (
-										tempUserInfo[field as keyof typeof tempUserInfo]
-									)}
-								</Content>
-								{editFields[field as keyof typeof editFields] ? (
-									<ChangeBtn
-										onClick={() => {
-											setEditFields((prev) => ({ ...prev, [field]: false }))
-										}}>
-										변경완료
-									</ChangeBtn>
-								) : (
-									<ChangeBtn onClick={() => handleEditClick(field)}>변경</ChangeBtn>
-								)}
-							</InfoItem>
-						))}
+                  setShowSettingsOverlay(false);
+                }}
+                >
+                  x
+                </CloseButton>
+          </OverlayHeader>
+          <ScrollableContent>
+            <Tabs>
+              <TabGroup>
+                <ActiveTab>최근 본</ActiveTab>
+              </TabGroup>
+              <FilterGroup>
+                {['전체', ...allTags].map((cat) => (
+                  <FilterBtn
+                  key={cat}
+                  active={selectedFilter ===cat}
+                  onClick={() => setSelectedFilter(cat)}
+                >
+                  {cat}
+                  </FilterBtn>
+                ))}
+              </FilterGroup>
+            </Tabs>
+            <ItemCount>전체 {filteredProducts.length}개</ItemCount>
+            <ProductColumn>
+              {filteredProducts.map((item) => (
+  <ProductCardOverlay key={item.id}>
+    <img src={item.image} alt={item.name} />
+    <CardContent>
+      <Price><span>{item.price}</span></Price>
+      <p>{item.name}</p>
+      <HashtagList>
+        {item.tags.map((tag, i) => (
+          <Hashtag key={i}>#{tag}</Hashtag>
+        ))}
+      </HashtagList>
+    </CardContent>
+  </ProductCardOverlay>
+))}
+
+
+            </ProductColumn>
+          </ScrollableContent>
+        </RecentOverlay>
+      )}
+      {showPointOverlay && (
+        <Overlay>
+         <OverlayHeader>
+          <h2>포인트 충전</h2>
+           <CloseButton onClick={() => setShowPointOverlay(false)}>×</CloseButton>
+         </OverlayHeader>
+          <OverlayContent>
+      <PointAmount>현재 보유 포인트: <strong>{point.toLocaleString()}P</strong></PointAmount>
+      <ChargeBox>
+        <p>충전하실 금액을 선택하세요</p>
+        <ChargeOptions>
+          {[1000, 5000, 10000, 20000].map((amount) => (
+            <ChargeBtn key={amount} onClick={() => openPaymentWindow(amount)}>
+              {amount.toLocaleString()}P
+            </ChargeBtn>
+          ))}
+        </ChargeOptions>
+      </ChargeBox>
+    </OverlayContent>
+  </Overlay>
+)}
+      {showSettingsOverlay && (
+        <SettingsOverlay>
+          <OverlayHeader>
+            <h2>내 정보 설정</h2>
+            <CloseButton onClick={() => setShowSettingsOverlay(false)}>×</CloseButton>
+          </OverlayHeader>
+          <ScrollableContent>
+            <div style={{textAlign:'center', marginBottom:'24px'}}>
+              <ImageInputLabel>
+              <AvatarImg
+                src={
+                  tempProfileImage || profileImage ||
+                  'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA2MjVfMTkz%2FMDAxNzE5MjkxMTA5MzY4.6JsIEfv3ged1X5Tm8X64E27sIL935yGSV-9T_pNE9sUg.txCrKMz0Emxy98jwwxnmWi8mqcU91uaLyXx88Z1X1iQg.JPEG%2FB7A00E50-ABFD-43A4-AE4C-9901F147A4DC.jpeg&type=sc960_832'
+                }
+                alt="프로필"
+                style={{width:'100px', height:'100px'}}
+                />
+            </ImageInputLabel>
+            <HiddenFileInput
+              id='profile-upload-settings'
+              type='file'
+              accept='image/*'
+              onChange={handleImageChange}
+              />
+              <div style={{display:'flex', justifyContent:'center'}}>
+              <ChangeBtn as='label' htmlFor='profile-upload-settings' style={{marginTop:'10px'}}>
+                이미지변경
+              </ChangeBtn>
+            </div>
+            </div>
+  {[
+    { label: '이름', field: 'name' },
+    { label: '닉네임', field: 'nickname' },
+    { label: '전화번호', field: 'phone' },
+    { label: '이메일 주소', field: 'email' },
+    { label: '비밀번호', field: 'password' },
+    { label: '비밀번호 확인', field: 'passwordcf'}
+  ].map(({ label, field }) => (
+    <InfoItem key={field}>
+      <Label>
+        {label}
+        {['이름', '닉네임', '전화번호', '이메일 주소'].includes(label) && (
+          <RequiredMark> *</RequiredMark>
+        )}
+        </Label>
+      <Content>
+        {editFields [field as keyof typeof editFields] ? (
+          <input
+            type="text"
+            value={tempUserInfo[field as keyof typeof tempUserInfo]}
+            onChange={(e) => handleInputChange(e, field)}
+          />
+        ) : (
+          tempUserInfo[field as keyof typeof tempUserInfo]
+        )}
+      </Content>
+      {editFields[field as keyof typeof editFields] ? (
+        <ChangeBtn onClick={() => {
+          handleSaveClick(field)
+        }}>변경완료</ChangeBtn>
+      ) : (
+        <ChangeBtn onClick={() => handleEditClick(field)}>변경</ChangeBtn>
+      )}
+    </InfoItem>
+  ))}
 
 						<InfoItem>
 							<Label>집전화번호</Label>
@@ -476,13 +625,14 @@ const MyPage = () => {
 				)}
 			</Sidebar>
 
-			<Main>
-				<Greeting>
-					<h2>{userInfo.name}님 안녕하세요.</h2>
-					<InviteBox>뭘 넣을까요??</InviteBox>
-					<StatGrid>
-						{['펀딩+', '스토어', '지지서명', '알림신청', '포인트', '쿠폰'].map((label) => {
-							let value: React.ReactNode
+      <Main>
+        <Greeting>
+          <h2>{userInfo.name}님 안녕하세요.</h2>
+          <InviteBox>당신의 아이디어, 펀딩으로 연결하세요!</InviteBox>
+          <StatGrid>
+
+  {['펀딩+', '스토어', '지지서명', '알림신청', '포인트', '쿠폰'].map((label) => {
+    let value: React.ReactNode;
 
 							if (label === '지지서명' || label === '알림신청') {
 								value = <button onClick={() => handleClick(label)}>보기</button>
@@ -535,10 +685,20 @@ const fadeIn = keyframes`
 
 const Container = styled.div`
   display: flex;
-  padding:  15px 15px;
+  padding: 15px;
   box-sizing: border-box;
   font-family: 'Pretendard', sans-serif;
+
+  width: 100%;
+  max-width: 100vw; /* ✅ 넘침 방지 */
+  min-height: 100vh;
+  overflow-x: hidden; /* ✅ 가로 스크롤 제거 */
 `;
+
+
+
+
+
 
 const Sidebar = styled.aside`
   width: 260px;
@@ -674,9 +834,13 @@ const ActivityMenu = styled.div`
 
 const Main = styled.main`
   flex: 1;
+  min-width: 0;       // ✅ flex-child overflow 방지
   padding: 40px 15px;
   background: #fff;
+  overflow-x: hidden;
 `;
+
+
 
 const Greeting = styled.div`
   margin-bottom: 30px;
@@ -734,25 +898,30 @@ const SectionTitle = styled.div`
 `;
 
 const ProductList = styled.div`
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));  /* ✅ 간격 여유 */
+  gap: 24px;  /* ✅ 사진 간격 넓게 */
   padding-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
 `;
 
+
+
+
 const ProductCardNormal = styled.div`
-  min-width: 140px;
   background: #fff;
   border: 1px solid #eee;
   border-radius: 12px;
   text-align: center;
   padding: 12px;
+  transition: transform 0.2s;
 
   img {
-    border-radius: 8px;
-    width: 300px;
+    width: 100%;
     height: 180px;
     object-fit: cover;
+    border-radius: 8px;
   }
 
   .discount {
@@ -760,7 +929,12 @@ const ProductCardNormal = styled.div`
     margin-top: 10px;
     font-size: 14px;
   }
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
+
 
 const Overlay = styled.div`
   position: fixed;
@@ -848,7 +1022,26 @@ const RecentOverlay = styled.div`
   animation: ${fadeIn} 0.3s ease-out;
 `;
 
-const SettingsOverlay = styled(RecentOverlay)``;
+const SettingsOverlay = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 520px; // 또는 max-width: 90vw;
+  max-width: 90vw;
+  height: auto;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  z-index: 9999;
+`;
+
+
+
+
 
 const ScrollableContent = styled.div`
   flex: 1;
