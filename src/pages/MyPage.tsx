@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { api } from '../AxiosInstance';
 
 const MyPage = () => {
+  const baseUrl = process.env.REACT_APP_API_BASE_URL
 
   const [homePhone, setHomePhone] = useState({
     area: '02',
@@ -152,16 +153,18 @@ const fieldMap: Record<string, string> = {
       }
 
       // ✅ 여기가 핵심: API 요청 보내기
-      const response = await fetch('https://api.nextlevel.r-e.kr/social/user', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ name: fieldMap[field], value: newValue }),
-      });
+      const response = await api.put(
+  '/social/user',
+  { name: fieldMap[field], value: newValue },
+  {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    withCredentials: true
+  }
+);
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.message !== 'success') {
         throw new Error('업데이트 실패');
@@ -246,7 +249,7 @@ const fieldMap: Record<string, string> = {
         });
 
         if (user.img) {
-          const imageUrl = `https://api.nextlevel.r-e.kr/img/${user.img}`;
+          const imageUrl = `${baseUrl}/img/${user.img}`;
           setProfileImage(imageUrl);
           setTempProfileImage(imageUrl);
         }
@@ -293,7 +296,7 @@ const fieldMap: Record<string, string> = {
     formData.append('img', file);
 
     try {
-      const res = await fetch('https://api.nextlevel.r-e.kr/social/user/img', {
+      const res = await fetch(`${baseUrl}/social/user/img`, {
         method: 'PUT',
         credentials: 'include',
         body: formData,
@@ -1036,7 +1039,6 @@ const SettingsOverlay = styled.div`
   padding: 24px;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  z-index: 9999;
 `;
 
 
