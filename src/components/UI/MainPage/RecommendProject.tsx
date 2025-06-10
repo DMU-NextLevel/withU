@@ -19,7 +19,7 @@ const RecommendedProject = () => {
   const [projects, setProjects] = useState<any[]>([]);
       useEffect(() => {
         const loadProjects = async () => {
-          const data = await fetchProjectsFromServer({ order: "COMPLETION", pageCount: 6 });
+          const data = await fetchProjectsFromServer({ order: "RECOMMEND", desc: true, pageCount: 6 });
           console.log("📦 서버에서 받아온 프로젝트:", data);
           if (Array.isArray(data)) {
             setProjects(data);
