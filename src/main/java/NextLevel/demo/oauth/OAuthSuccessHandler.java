@@ -30,7 +30,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         Authentication authentication) throws IOException, ServletException {
         OAuth2User OAuthUser = (OAuth2User) authentication.getPrincipal();
 
-        UserDetailEntity userDetail = loginService.socialLogin(OAuthUser.getDto(), response);
+        UserDetailEntity userDetail = loginService.socialLogin(OAuthUser.getDto());
 
         jwtUtil.addRefresh(response, userDetail.getUserId(), userDetail.getUUID());
         jwtUtil.addAccess(response, userDetail.getUserId(), request, userDetail.getUser().getRole());

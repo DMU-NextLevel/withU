@@ -5,6 +5,7 @@ import NextLevel.demo.config.security.filter.RefreshTokenFilter;
 import NextLevel.demo.config.security.filter.UserHistoryFilter;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
+import NextLevel.demo.oauth.NullAuthorizedClientRepository;
 import NextLevel.demo.oauth.OAuthFailureHandler;
 import NextLevel.demo.oauth.OAuthSuccessHandler;
 import NextLevel.demo.oauth.SocialLoginService;
@@ -83,9 +84,9 @@ public class SecurityConfig {
                 .anyRequest().denyAll() // 그 외 요청은 모두 거절
             )
 
-            .oauth2Login((social) -> social
-                .userInfoEndpoint(s -> s.userService(socialLoginService))
-                // .authorizedClientRepository()
+            .oauth2Login(oauth2 -> oauth2
+                .authorizedClientRepository(new NullAuthorizedClientRepository())
+                .userInfoEndpoint(user -> user.userService(socialLoginService))
                 .successHandler(oAuthSuccessHandler)
                 .failureHandler(oAuthFailureHandler)
             )
