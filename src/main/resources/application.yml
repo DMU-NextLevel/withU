@@ -7,14 +7,6 @@ FRONT:
   baseUrl:
     ${FRONT.baseUrl}
 
-logging:
-  level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: debug
-
 spring:
   servlet:
     multipart:
@@ -35,17 +27,11 @@ spring:
     properties:
       hibernate:
         show_sql: true
-    :hibernate:
     hibernate:
       ddl-auto: update
   sql:
     init:
       mode: never
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-        show_sql: true
 
   security:
     oauth2:

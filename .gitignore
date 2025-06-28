@@ -1,6 +1,7 @@
 src/main/resources/application-prod.yml
 src/main/resources/static/img/
 src/main/generated/
+log.txt
 
 HELP.md
 .gradle
