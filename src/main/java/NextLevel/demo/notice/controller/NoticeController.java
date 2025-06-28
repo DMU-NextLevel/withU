@@ -36,7 +36,7 @@ public class NoticeController {
 
     @PostMapping("/admin/notice")
     public ResponseEntity<?> addNotice(@ModelAttribute SaveNoticeDto dto) {
-        noticeService.addNotice(dto);
+        noticeService.addNotice(dto, null);
 
         return ResponseEntity.ok(new SuccessResponse("success", null));
     }
@@ -46,7 +46,7 @@ public class NoticeController {
         dto.setId(id);
         noticeService.updateNotice(dto);
         if(dto.getImgs() != null && dto.getImgs().size() > 0 && dto.getImgs().get(0) != null) {
-            noticeService.updateImg(dto.getId(), dto.getImgs());
+            noticeService.updateImg(dto.getId(), dto.getImgs(), null);
         }
         return ResponseEntity.ok(new SuccessResponse("success", null));
     }

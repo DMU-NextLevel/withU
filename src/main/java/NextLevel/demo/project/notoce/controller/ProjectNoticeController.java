@@ -25,14 +25,14 @@ public class ProjectNoticeController {
     @PostMapping("/api1/project/{projectId}/notice")
     public ResponseEntity<?> addProjectNotice(@PathVariable("projectId") long projectId, @ModelAttribute @Valid SaveProjectNoticeRequestDto dto) {
         dto.setProjectId(projectId);
-        projectNoticeService.saveProjectNotice(dto);
+        projectNoticeService.saveProjectNotice(dto, null);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 
     @PutMapping("/api1/project/notice/{noticeId}")
     public ResponseEntity<?> updateProjectNotice(@PathVariable("noticeId") long noticeId, @ModelAttribute @Valid SaveProjectNoticeRequestDto dto) {
         dto.setNoticeId(noticeId);
-        projectNoticeService.saveProjectNotice(dto);
+        projectNoticeService.saveProjectNotice(dto, null);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 

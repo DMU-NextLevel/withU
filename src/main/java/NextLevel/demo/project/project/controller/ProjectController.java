@@ -43,7 +43,7 @@ public class ProjectController {
         Long userId = JWTUtil.getUserIdFromSecurityContext();
         dto.setUserId(userId);
 
-        projectService.save(dto);
+        projectService.save(dto, null);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("success", null));
     }
@@ -54,7 +54,7 @@ public class ProjectController {
         dto.setUserId(JWTUtil.getUserIdFromSecurityContext());
         dto.setId(projectId);
 
-        projectService.update(dto);
+        projectService.update(dto, null);
 
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }

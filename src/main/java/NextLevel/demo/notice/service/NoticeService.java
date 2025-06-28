@@ -4,11 +4,13 @@ import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.notice.dto.SaveNoticeDto;
 import NextLevel.demo.notice.entity.NoticeEntity;
 import NextLevel.demo.notice.entity.NoticeImgEntity;
 import NextLevel.demo.notice.repository.NoticeImgRepository;
 import NextLevel.demo.notice.repository.NoticeRepository;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +32,15 @@ public class NoticeService {
         return noticeRepository.findAll();
     }
 
+    @ImgTransaction
     @Transactional
-    public void addNotice(SaveNoticeDto dto) {
+    public void addNotice(SaveNoticeDto dto, ArrayList<Path> imgPaths) {
         NoticeEntity newNotice = dto.toEntity();
         List<ImgEntity> newImgs = new ArrayList<ImgEntity>();
         if(dto.getImgs()!=null && !dto.getImgs().isEmpty()) {
             dto.getImgs().stream().forEach(file -> {
                 if(file != null && !file.isEmpty())
-                    newImgs.add(imgService.saveImg(file));
+                    newImgs.add(imgService.saveImg(file, imgPaths));
             });
             newNotice.setImgs(
                 newImgs
@@ -71,8 +74,9 @@ public class NoticeService {
         noticeRepository.save(oldNotice);
     }
 
+    @ImgTransaction
     @Transactional
-    public void updateImg(Long noticeId, List<MultipartFile> imgFiles) {
+    public void updateImg(Long noticeId, List<MultipartFile> imgFiles, ArrayList<Path> imgPaths) {
         NoticeEntity notice = noticeRepository.findById(noticeId).orElseThrow(
             () -> {throw new CustomException(ErrorCode.NOT_FOUND, "notice");}
         );
@@ -80,7 +84,7 @@ public class NoticeService {
         List<ImgEntity> oldImgs = oldNoticeImgs.stream().map(NoticeImgEntity::getImg).toList();
 
         List<ImgEntity> newImgs = new ArrayList<>();
-        imgFiles.stream().forEach(i->newImgs.add(imgService.saveImg(i)));
+        imgFiles.stream().forEach(i->newImgs.add(imgService.saveImg(i, imgPaths)));
         List<NoticeImgEntity> newNoticeImgs = new ArrayList<>();
         newImgs
             .stream()

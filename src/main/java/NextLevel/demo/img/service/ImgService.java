@@ -11,6 +11,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,8 @@ public class ImgService {
 
     private final ImgRepository imgRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ImgEntity saveImg(MultipartFile imgFile) {
+    // @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ImgEntity saveImg(MultipartFile imgFile, ArrayList<Path> imgPaths) {
         try {
             byte[] bytes = imgFile.getBytes();
             String fileName = imgFile.getOriginalFilename();
@@ -45,6 +46,7 @@ public class ImgService {
             Path path = Paths.get(System.getProperty("user.dir") ,IMG_DEFAULT_PATH, fileName);
 
             Files.write(path, bytes);
+            imgPaths.add(path);
 
             ImgEntity saved = imgRepository.save(new ImgEntity(fileName));
 
@@ -59,9 +61,9 @@ public class ImgService {
     }
 
     // img uri 변경 없이 진짜 파일 값만 덮어쓰기
-    public ImgEntity updateImg(MultipartFile imgFile, ImgEntity oldImg) {
+    public ImgEntity updateImg(MultipartFile imgFile, ImgEntity oldImg, ArrayList<Path> imgPaths) {
         if(oldImg == null){
-            return saveImg(imgFile);
+            return saveImg(imgFile, imgPaths);
         }
 
         try {
@@ -81,7 +83,7 @@ public class ImgService {
         }
     }
 
-    @Transactional
+    // @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deleteImg(ImgEntity img) {
         if(img == null)
             return;
@@ -147,5 +149,12 @@ public class ImgService {
         Long imgCount = imgRepository.getImgCount(imgName.length()+1, imgName);
 
         return imgName + imgCount + extension;
+    }
+
+    public void deleteImgFile(List<Path> filePath) throws IOException {
+        for(Path path : filePath){
+            log.info("delete img file " + path);
+            Files.deleteIfExists(path);
+        }
     }
 }

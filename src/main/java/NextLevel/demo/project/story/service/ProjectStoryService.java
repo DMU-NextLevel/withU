@@ -4,10 +4,12 @@ import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.story.repository.ProjectStoryRepository;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,8 +29,9 @@ public class ProjectStoryService {
     private final ProjectStoryRepository projectStoryRepository;
     private final ImgService imgService;
 
+    @ImgTransaction
     @Transactional
-    public void saveProjectStory(Long projectId, Long userId, List<MultipartFile> imgFiles){
+    public void saveProjectStory(Long projectId, Long userId, List<MultipartFile> imgFiles, ArrayList<Path> imgPaths){
         ProjectEntity oldProject = projectRepository.findByIdWithAll(projectId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND, "project"));
         if(oldProject.getUser().getId() != userId)
             throw new CustomException(ErrorCode.NOT_AUTHOR);
@@ -39,7 +42,7 @@ public class ProjectStoryService {
         List<ImgEntity> newImgs = new ArrayList<>();
         imgFiles
             .stream()
-            .forEach(i->{newImgs.add(imgService.saveImg(i));});
+            .forEach(i->{newImgs.add(imgService.saveImg(i, imgPaths));});
 
         Set<ProjectStoryEntity> newStories = newImgs
             .stream()

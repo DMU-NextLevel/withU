@@ -2,15 +2,19 @@ package NextLevel.demo.project.notoce.service;
 
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.project.notoce.dto.request.SaveProjectNoticeRequestDto;
 import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
 import NextLevel.demo.project.notoce.repository.ProjectNoticeRepository;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import jakarta.persistence.EntityManager;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +25,9 @@ public class ProjectNoticeService {
     private final ImgService imgService;
     private final EntityManager entityManager;
 
-    public void saveProjectNotice(SaveProjectNoticeRequestDto dto) {
+    @Transactional
+    @ImgTransaction
+    public void saveProjectNotice(SaveProjectNoticeRequestDto dto, ArrayList<Path> imgPaths) {
         Optional<ProjectNoticeEntity> oldNotice = projectNoticeRepository.findByIdWithProject(dto.getNoticeId());
 
         ImgEntity saveImg = null;
@@ -34,7 +40,7 @@ public class ProjectNoticeService {
                 saveImg = oldNotice.get().getImg();
         }else {
             // save
-            saveImg = imgService.saveImg(dto.getImg());
+            saveImg = imgService.saveImg(dto.getImg(), imgPaths);
             saveProject = entityManager.getReference(ProjectEntity.class, dto.getProjectId());
         }
 

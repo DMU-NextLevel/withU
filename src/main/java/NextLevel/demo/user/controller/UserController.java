@@ -73,7 +73,7 @@ public class UserController {
     @PutMapping("/img")
     public ResponseEntity<?> updateUserImg(@RequestParam(name = "img", required = true) MultipartFile img) {
         Long userId = JWTUtil.getUserIdFromSecurityContext();
-        userService.updateUserImg(userId, img);
+        userService.updateUserImg(userId, img, null);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 

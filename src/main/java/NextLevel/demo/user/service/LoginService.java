@@ -2,6 +2,7 @@ package NextLevel.demo.user.service;
 
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.dto.login.RequestUserLoginDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
@@ -12,6 +13,8 @@ import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.Random;
@@ -60,14 +63,15 @@ public class LoginService {
     }
 
     // user UserController : post register
+    @ImgTransaction
     @Transactional
-    public UserDetailEntity register(RequestUserCreateDto dto) {
+    public UserDetailEntity register(RequestUserCreateDto dto, ArrayList<Path> imgPaths) {
         checkEmailAndNickNameElseThrow(dto.getEmail(), dto.getNickName());
 
         // save img get uri
         ImgEntity savedImg = null;
         try {
-            savedImg = imgService.saveImg(dto.getImg());
+            savedImg = imgService.saveImg(dto.getImg(), imgPaths);
         }catch (CustomException e) {;}
         dto.setImgEntity(savedImg);
 

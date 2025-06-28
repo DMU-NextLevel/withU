@@ -43,7 +43,7 @@ public class LoginController {
         @ModelAttribute @Valid RequestUserCreateDto requestUserCreateDto,
         HttpServletResponse httpServletResponse) {
 
-        UserDetailEntity createdUser = loginService.register(requestUserCreateDto);
+        UserDetailEntity createdUser = loginService.register(requestUserCreateDto, null);
 
         jwtUtil.addRefresh(httpServletResponse, createdUser.getUser().getId(), createdUser.getUUID());
 

@@ -4,6 +4,7 @@ import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.role.UserRole;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
@@ -18,6 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Random;
@@ -99,15 +102,16 @@ public class UserService {
         userDetailRepository.updatePasswordByUserId(newPassword, user.getId());
     }
 
+    @ImgTransaction
     @Transactional
-    public void updateUserImg(Long userId, MultipartFile img) {
+    public void updateUserImg(Long userId, MultipartFile img, ArrayList<Path> imgPaths) {
         UserEntity oldUser = userRepository.findById(userId).orElseThrow(
             ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
         );
         if(img == null)
             throw new CustomException(ErrorCode.INPUT_REQUIRED_PARAMETER);
 
-        ImgEntity imgEntity = imgService.updateImg(img, oldUser.getImg());
+        ImgEntity imgEntity = imgService.updateImg(img, oldUser.getImg(), imgPaths);
 
         if(oldUser.getImg() == null)
             oldUser.setImg(imgEntity);

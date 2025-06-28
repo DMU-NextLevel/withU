@@ -9,6 +9,7 @@ import NextLevel.demo.funding.repository.FundingRepository;
 import NextLevel.demo.funding.repository.OptionRepository;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
@@ -22,6 +23,7 @@ import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.service.UserService;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +50,9 @@ public class ProjectService {
     private final ProjectDslRepository projectDslRepository;
 
     // 추가
+    @ImgTransaction
     @Transactional
-    public void save(CreateProjectDto dto) {
+    public void save(CreateProjectDto dto, ArrayList<Path> imgPaths) {
         // user 처리
         UserEntity user = userService.getUserInfo(dto.getUserId());
         validateUser(user);
@@ -57,11 +60,25 @@ public class ProjectService {
 
         ImgEntity img = null;
         try{
-            img = imgService.saveImg(dto.getTitleImg());
+            img = imgService.saveImg(dto.getTitleImg(), imgPaths);
         }catch (CustomException e){;}
         dto.setTitleImgEntity(img);
 
         ProjectEntity newProject = dto.toEntity();
+
+        // img 처리
+        List<ImgEntity> imgEntitys = new ArrayList<>();
+        dto.getImgs().forEach(imgEntity -> {imgEntitys.add(imgService.saveImg(imgEntity, imgPaths));});
+
+        newProject.setStories(
+            imgEntitys.stream().map((e)->{
+                return ProjectStoryEntity
+                    .builder()
+                    .project(newProject)
+                    .img(e)
+                    .build();
+            }).collect(Collectors.toSet())
+        );
 
         // tag 처리
         newProject.setTags(tagService.getTagEntitysByIds(dto.getTags())
@@ -74,20 +91,6 @@ public class ProjectService {
                     .build();
             }).toList());
 
-        // img 처리
-        List<ImgEntity> imgEntitys = new ArrayList<>();
-        dto.getImgs().forEach(imgEntity -> {imgEntitys.add(imgService.saveImg(imgEntity));});
-
-        newProject.setStories(
-            imgEntitys.stream().map((e)->{
-                return ProjectStoryEntity
-                    .builder()
-                    .project(newProject)
-                    .img(e)
-                    .build();
-            }).collect(Collectors.toSet())
-        );
-
         projectRepository.save(newProject);
     }
     private void validateUser(UserEntity user) {
@@ -96,8 +99,9 @@ public class ProjectService {
     }
 
     // 수정
+    @ImgTransaction
     @Transactional
-    public void update(CreateProjectDto dto) {
+    public void update(CreateProjectDto dto, ArrayList<Path> imgPaths) {
         Optional<ProjectEntity> oldProjectOptional = projectRepository.findByIdWithAll(dto.getId());
 
         if(oldProjectOptional.isEmpty())
@@ -113,7 +117,7 @@ public class ProjectService {
         if(dto.getTitleImg() == null)
             dto.setTitleImgEntity(oldProject.getTitleImg());
         else
-            dto.setTitleImgEntity(imgService.updateImg(dto.getTitleImg(), oldProject.getTitleImg()));
+            dto.setTitleImgEntity(imgService.updateImg(dto.getTitleImg(), oldProject.getTitleImg(), imgPaths));
 
         ProjectEntity newProject = dto.toEntity();
 
@@ -134,7 +138,7 @@ public class ProjectService {
         if(dto.getImgs() != null) {
             List<ImgEntity> imgEntitys = new ArrayList<>();
             dto.getImgs().forEach(imgEntity -> {
-                imgEntitys.add(imgService.saveImg(imgEntity));
+                imgEntitys.add(imgService.saveImg(imgEntity, imgPaths));
             });
 
             newProject.setStories(
