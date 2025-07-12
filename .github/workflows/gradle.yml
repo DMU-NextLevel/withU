@@ -72,12 +72,6 @@ jobs:
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
       # run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
       
-      # Step 8: Push both Docker images to Docker Hub
-    - name: Push Docker images
-      run: |
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx
-
   ssh_aws:
     needs: build
     runs-on: ubuntu-latest
