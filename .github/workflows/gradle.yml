@@ -47,12 +47,12 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
     - name: repaire docker builder container driver
-    - uses: docker/setup-buildx-action@v3
+      uses: docker/setup-buildx-action@v3
       with:
         driver: docker-container
         
     - name: docker image build
-    - uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v5
       with: 
         context: .
         file: Dockerfile
