@@ -46,18 +46,32 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+    - name: repaire docker builder container driver
+      uses: docker/setup-buildx-action@v3
+      with:
+        driver: docker-container
+        
     - name: docker image build
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot -f Dockerfile .
+      uses: docker/build-push-action@v5
+      with: 
+        context: .
+        file: Dockerfile
+        push: true
+        platforms: linux/amd64,linux/arm64,linux/aarch64
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
+      # run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot -f Dockerfile .
 
       # Step 7: Build Nginx image
     - name: Build Nginx Docker image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
-          # Step 8: Push both Docker images to Docker Hub
-    - name: Push Docker images
-      run: |
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx
-
+      uses: docker/build-push-action@v5
+      with: 
+        context: .
+        file: nginx/Dockerfile
+        push: true
+        platforms: linux/amd64,linux/arm64,linux/aarch64
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
+      # run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
+      
   ssh_aws:
     needs: build
     runs-on: ubuntu-latest
@@ -103,7 +117,7 @@ jobs:
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
          
-         docker-compose up -d
+         docker compose up -d
 
          docker image prune -f
 
@@ -153,6 +167,6 @@ jobs:
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
 
          cd /home/${{ secrets.RASPBERRY_USERNAME }}/withU
-         docker-compose up -d
+         docker compose up -d
 
          docker image prune -f
