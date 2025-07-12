@@ -127,7 +127,8 @@ jobs:
         
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
-         
+
+         cd /home/${{ secrets.RASPBERRY_USERNAME }}/withU
          docker-compose up -d
 
          docker image prune -f
