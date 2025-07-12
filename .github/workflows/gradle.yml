@@ -67,7 +67,7 @@ jobs:
 
      - name: make docker-compose file
        env:
-         PROJECT_DIR: /home/${{ secrets.RASPBERRY_USERNAME }}
+         PROJECT_DIR: /home/${{ secrets.SERVER_USERNAME }}
        run: |
          envsubst < docker-compose.tpl.yml > docker-compose.yml
    
