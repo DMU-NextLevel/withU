@@ -67,7 +67,7 @@ jobs:
 
      - name: make docker-compose file
        env:
-         PROJECT_DIR: /home/${{ secrets.RASPBERRY_USERNAME }}
+         PROJECT_DIR: /home/${{ secrets.SERVER_USERNAME }}
        run: |
          envsubst < docker-compose.tpl.yml > docker-compose.yml
    
@@ -77,7 +77,7 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_KEY }}
-        source: docker-compose.yml, springboot.conf
+        source: docker-compose.yml, nginx.conf
         target: "/home/${{ secrets.SERVER_USERNAME }}/"
  
      - name: ssh
