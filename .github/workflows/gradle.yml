@@ -90,7 +90,7 @@ jobs:
        env:
          SERVER_DOMAIN: ${{ secrets.SERVER_HOST }}
        run: |
-         envsubst < nginx.tpl.conf > nginx.conf
+         envsubst '${SERVER_DOMAIN}' < nginx.tpl.conf > nginx.conf
    
      - name: scp
        uses: appleboy/scp-action@v0.1.6
@@ -139,7 +139,7 @@ jobs:
        env:
          SERVER_DOMAIN: ${{ secrets.RASPBERRY_HOST }}
        run: |
-         envsubst < nginx.tpl.conf > nginx.conf
+         envsubst '${SERVER_DOMAIN}' < nginx.tpl.conf > nginx.conf
    
      - name: scp
        uses: appleboy/scp-action@v0.1.6
