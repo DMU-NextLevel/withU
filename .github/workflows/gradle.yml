@@ -46,13 +46,12 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: docker image build
-    - uses: docker/setup-qemu-action@v3
-    
+    - name: repaire docker builder container driver
     - uses: docker/setup-buildx-action@v3
       with:
         driver: docker-container
-          
+        
+    - name: docker image build
     - uses: docker/build-push-action@v5
       with: 
         context: .
