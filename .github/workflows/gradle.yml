@@ -84,13 +84,13 @@ jobs:
          PROJECT_DIR: /home/${{ secrets.SERVER_USERNAME }}
          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
        run: |
-         envsubst < docker-compose.tpl.conf > docker-compose.conf
+         envsubst < docker-compose.tpl.yml > docker-compose.yml
 
      - name: make nginx file
        env:
          SERVER_DOMAIN: ${{ secrets.SERVER_HOST }}
        run: |
-         envsubst < nginx.tpl.yml > nginx.yml
+         envsubst < nginx.tpl.conf > nginx.conf
    
      - name: scp
        uses: appleboy/scp-action@v0.1.6
@@ -133,13 +133,13 @@ jobs:
          PROJECT_DIR: /home/${{ secrets.RASPBERRY_USERNAME }}/withU
          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
        run: |
-         envsubst < docker-compose.tpl.conf > docker-compose.conf
+         envsubst < docker-compose.tpl.yml > docker-compose.yml
 
      - name: make nginx file
        env:
          SERVER_DOMAIN: ${{ secrets.RASPBERRY_HOST }}
        run: |
-         envsubst < nginx.tpl.yml > nginx.yml
+         envsubst < nginx.tpl.conf > nginx.conf
    
      - name: scp
        uses: appleboy/scp-action@v0.1.6
