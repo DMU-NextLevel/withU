@@ -105,19 +105,19 @@ jobs:
      - name: scp
        uses: appleboy/scp-action@v0.1.6
        with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_KEY }}
+        host: ${{ secrets.RASPBERRY_HOST }}
+        username: ${{ secrets.RASPBERRY_USERNAME }}
+        password: ${{ secrets.RASPBERRY_PASSWORD }}
         source: docker-compose.yml, springboot.conf
-        target: "/home/${{ secrets.SERVER_USERNAME }}/withU"
+        target: "/home/${{ secrets.RASPBERRY_USERNAME }}/withU"
  
 
      - name: ssh
        uses: appleboy/ssh-action@v0.1.6
        with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_KEY }}
+        host: ${{ secrets.RASPBERRY_HOST }}
+        username: ${{ secrets.RASPBERRY_USERNAME }}
+        password: ${{ secrets.RASPBERRY_PASSWORD }}
         port: 22
         script: |
          docker stop springboot nginx
