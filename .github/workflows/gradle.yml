@@ -57,7 +57,7 @@ jobs:
         context: .
         file: Dockerfile
         push: true
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64,linux/arm64,linux/aarch64
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
       # run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot -f Dockerfile .
 
@@ -68,7 +68,7 @@ jobs:
         context: .
         file: nginx/Dockerfile
         push: true
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64,linux/arm64,linux/aarch64
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
       # run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
       
