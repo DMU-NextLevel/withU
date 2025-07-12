@@ -84,7 +84,7 @@ jobs:
          PROJECT_DIR: /home/${{ secrets.SERVER_USERNAME }}
          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
        run: |
-         envsubst < docker-compose.tpl.yml > docker-compose.yml
+         envsubst < docker-compose.tpl.conf > docker-compose.conf
 
      - name: make nginx file
        env:
@@ -133,7 +133,7 @@ jobs:
          PROJECT_DIR: /home/${{ secrets.RASPBERRY_USERNAME }}/withU
          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
        run: |
-         envsubst < docker-compose.tpl.yml > docker-compose.yml
+         envsubst < docker-compose.tpl.conf > docker-compose.conf
 
      - name: make nginx file
        env:
