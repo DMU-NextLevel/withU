@@ -10,6 +10,8 @@ services:
       - ${PROJECT_DIR}/application-prod.yml:/app/application-prod.yml
       - ${PROJECT_DIR}/img:/app/img
     command: ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod", "--spring.config.additional-location=file:/app/application-prod.yml"]
+    depends_on:
+      - mysql
     networks:
       - app-network
 
@@ -27,13 +29,11 @@ services:
     networks:
       - app-network
 
-  nginx:
+  mysql:
     image: lkh8033/nextlevel-mysql:latest
     container_name: mysql
     ports:
       - "3306:3306"
-    depends_on:
-      - springboot
     networks:
       - app-network
 
