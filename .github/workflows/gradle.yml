@@ -147,6 +147,7 @@ jobs:
         host: ${{ secrets.RASPBERRY_HOST }}
         username: ${{ secrets.RASPBERRY_USERNAME }}
         password: ${{ secrets.RASPBERRY_PASSWORD }}
+        port: 8082
         source: docker-compose.yml, nginx.conf
         target: "/home/${{ secrets.RASPBERRY_USERNAME }}/withU"
  
@@ -156,7 +157,7 @@ jobs:
         host: ${{ secrets.RASPBERRY_HOST }}
         username: ${{ secrets.RASPBERRY_USERNAME }}
         password: ${{ secrets.RASPBERRY_PASSWORD }}
-        port: 22
+        port: 8082
         script: |
          docker stop springboot nginx
          docker rm springboot nginx
