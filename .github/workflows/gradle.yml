@@ -72,54 +72,54 @@ jobs:
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
       # run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx -f nginx/Dockerfile .
       
-  ssh_aws:
-    needs: build
-    runs-on: ubuntu-latest
+  # ssh_aws:
+  #   needs: build
+  #   runs-on: ubuntu-latest
 
-    steps:
-     - uses: actions/checkout@v4
+  #   steps:
+  #    - uses: actions/checkout@v4
 
-     - name: make docker-compose file
-       env:
-         PROJECT_DIR: /home/${{ secrets.SERVER_USERNAME }}
-         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-       run: |
-         envsubst < docker-compose.tpl.yml > docker-compose.yml
+  #    - name: make docker-compose file
+  #      env:
+  #        PROJECT_DIR: /home/${{ secrets.SERVER_USERNAME }}
+  #        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  #      run: |
+  #        envsubst < docker-compose.tpl.yml > docker-compose.yml
 
-     - name: make nginx file
-       env:
-         SERVER_DOMAIN: ${{ secrets.SERVER_HOST }}
-       run: |
-         envsubst '${SERVER_DOMAIN}' < nginx.tpl.conf > nginx.conf
+  #    - name: make nginx file
+  #      env:
+  #        SERVER_DOMAIN: ${{ secrets.SERVER_HOST }}
+  #      run: |
+  #        envsubst '${SERVER_DOMAIN}' < nginx.tpl.conf > nginx.conf
    
-     - name: scp
-       uses: appleboy/scp-action@v0.1.6
-       with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_KEY }}
-        source: docker-compose.yml, nginx.conf
-        target: "/home/${{ secrets.SERVER_USERNAME }}/"
+  #    - name: scp
+  #      uses: appleboy/scp-action@v0.1.6
+  #      with:
+  #       host: ${{ secrets.SERVER_HOST }}
+  #       username: ${{ secrets.SERVER_USERNAME }}
+  #       key: ${{ secrets.SERVER_KEY }}
+  #       source: docker-compose.yml, nginx.conf
+  #       target: "/home/${{ secrets.SERVER_USERNAME }}/"
  
-     - name: ssh
-       uses: appleboy/ssh-action@v0.1.6
-       with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_KEY }}
-        port: 22
-        script: |
-         docker stop springboot nginx
-         docker rm springboot nginx
-         docker rmi springboot
-         docker rmi nginx
+  #    - name: ssh
+  #      uses: appleboy/ssh-action@v0.1.6
+  #      with:
+  #       host: ${{ secrets.SERVER_HOST }}
+  #       username: ${{ secrets.SERVER_USERNAME }}
+  #       key: ${{ secrets.SERVER_KEY }}
+  #       port: 22
+  #       script: |
+  #        docker stop springboot nginx
+  #        docker rm springboot nginx
+  #        docker rmi springboot
+  #        docker rmi nginx
         
-         docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
-         docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
+  #        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-springboot:latest
+  #        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nextlevel-nginx:latest
          
-         docker compose up -d
+  #        docker compose up -d
 
-         docker image prune -f
+  #        docker image prune -f
 
   ssh_raspberry:
     needs: build
