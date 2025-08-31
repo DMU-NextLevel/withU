@@ -8,7 +8,7 @@ import NextLevel.demo.funding.entity.OptionEntity;
 import NextLevel.demo.funding.repository.FundingRepository;
 import NextLevel.demo.funding.repository.OptionRepository;
 import NextLevel.demo.img.entity.ImgEntity;
-import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
@@ -22,6 +22,7 @@ import NextLevel.demo.project.project.entity.ProjectTagEntity;
 import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
+import NextLevel.demo.user.repository.UserDao;
 import NextLevel.demo.user.service.UserService;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -42,19 +43,20 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserService userService;
-    private final ImgService imgService;
+    private final ImgServiceImpl imgService;
     private final TagService tagService;
     private final OptionRepository optionRepository;
     private final FundingRepository fundingRepository;
     private final ProjectViewService projectViewService;
     private final ProjectDslRepository projectDslRepository;
+    private final UserDao userDao;
 
     // 추가
     @ImgTransaction
     @Transactional
     public void save(CreateProjectDto dto, ArrayList<Path> imgPaths) {
         // user 처리
-        UserEntity user = userService.getUserInfo(dto.getUserId());
+        UserEntity user = userDao.getUserInfo(dto.getUserId());
         validateUser(user);
         dto.setUser(user);
 

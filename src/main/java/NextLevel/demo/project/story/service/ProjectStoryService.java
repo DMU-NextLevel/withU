@@ -3,7 +3,7 @@ package NextLevel.demo.project.story.service;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
-import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.repository.ProjectRepository;
@@ -27,7 +27,7 @@ public class ProjectStoryService {
 
     private final ProjectRepository projectRepository;
     private final ProjectStoryRepository projectStoryRepository;
-    private final ImgService imgService;
+    private final ImgServiceImpl imgService;
 
     @ImgTransaction
     @Transactional

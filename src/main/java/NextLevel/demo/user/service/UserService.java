@@ -5,12 +5,10 @@ import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.img.service.ImgTransaction;
-import NextLevel.demo.role.UserRole;
-import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
 import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
-import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
+import NextLevel.demo.user.repository.UserDao;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.util.StringUtil;
@@ -22,15 +20,14 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.Random;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -39,32 +36,21 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
+    private final UserDao userDao;
     private final ImgService imgService;
-    private final LoginService loginService;
     @Qualifier("passwordEncoder")
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
 
-    public UserEntity getUserInfo(Long userId) {
-        return userRepository.findUserFullInfoByUserId(userId).orElseThrow(
-            ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
-        );
-    }
-
     @Transactional
     public void updateUserInfo(RequestUpdateUserInfoDto dto, HttpServletRequest request, HttpServletResponse response) {
-        UserEntity oldUser = getUserInfo(dto.getId());
-
-        // email 변경 불가
-        if(dto.getName().equals("email") || dto.getName().equals("id")) {
-            throw new CustomException(ErrorCode.CAN_NOT_CHANGE_EMAIL);
-        }
+        UserEntity oldUser = userDao.getUserInfo(dto.getId());
 
         switch(dto.getName()){
             case "email":
                 throw new CustomException(ErrorCode.CAN_NOT_CHANGE_EMAIL);
             case "nickName":
-                if(!loginService.checkNickNameIsNotExist(dto.getValue()))
+                if(!userDao.checkNickNameIsNotExist(dto.getValue()))
                     throw new CustomException(ErrorCode.ALREADY_EXISTS_NICKNAME);
                 break;
         }
@@ -94,7 +80,6 @@ public class UserService {
         if(!passwordEncoder.matches(dto.getOldPassword(), user.getUserDetail().getPassword()))
             throw new CustomException(ErrorCode.LOGIN_FAILED);
 
-
         String newPassword = passwordEncoder.encode(dto.getNewPassword());
 
         log.info("passwd encode " + newPassword);
@@ -115,6 +100,20 @@ public class UserService {
 
         if(oldUser.getImg() == null)
             oldUser.setImg(imgEntity);
+    }
+
+    @Transactional
+    public void updateTempPassword(String email) { // 임시 비밀번호 아직 미정
+        UserEntity user = userRepository.findUserByEmail(email).orElseThrow(
+                ()->{throw new CustomException(ErrorCode.NOT_FOUND, "email");}
+        );
+
+        String randomPassword = Base64.getEncoder().encodeToString( String.valueOf(new Random().nextDouble()).getBytes() );
+        log.info("email : " + email + " new random password : " + randomPassword);
+
+        // emailService.sendEmailCode(email, );
+
+        user.getUserDetail().setPassword(randomPassword);
     }
 
 }

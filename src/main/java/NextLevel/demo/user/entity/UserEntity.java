@@ -15,10 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -61,6 +58,7 @@ public class UserEntity {
     @OneToOne(mappedBy = "user")
     private UserDetailEntity userDetail;
 
+    @Builder
     public UserEntity(Long id, String name,String nickName, int point, String address, String number, String areaNumber, ImgEntity img) {
         this.id = id;
         this.name = name;

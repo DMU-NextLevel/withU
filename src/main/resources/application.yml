@@ -1,21 +1,20 @@
-baseUrl:
-  ${baseUrl}
-DOMAIN:
-  ${DOMAIN}
+baseUrl: http://localhost:8080
+DOMAIN: localhost
 
 FRONT:
   baseUrl:
-    ${FRONT.baseUrl}
+    http://localhost:3000
 
 spring:
+  application:
+    name: demo
+  config:
+    import: optional:file:.env[.properties]
+
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
-  profiles:
-    active: prod
-  application:
-    name: demo
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_URL}
@@ -88,14 +87,6 @@ jwt:
 server:
   servlet:
     context-path: /
-#  ssl:
-#    enabled: true
-#    key-store: ${SSL_PATH}
-#    key-store-type: ${SSL_TYPE}
-#    key-alias: ssl
-#    key-store-password: ${SSL_PASSWORD}
-#    protocol: TLS
-#    protocols: TLSv1.2
   port: 8080
 
 payment:
@@ -115,3 +106,18 @@ email:
   EMAIL_TIME: 300000 # 5 * 60 * 1000 # 5분
   EMAIL: ${EMAIL}
   EMAIL_PASSWORD: "${EMAIL_PASSWORD}"
+
+---
+spring:
+  config:
+    on-profile: prod
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+
+baseUrl: https://api.nextlevel.r-e.kr
+DOMAIN: nextlevel.r-e.kr
+
+FRONT:
+  baseUrl:
+    https://nextlevel.r-e.kr

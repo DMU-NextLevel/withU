@@ -1,11 +1,12 @@
 package NextLevel.demo.user.controller;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.role.UserRole;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
-import NextLevel.demo.user.dto.login.RequestUserLoginDto;
+import NextLevel.demo.user.dto.login.RequestEmailLoginDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
+import NextLevel.demo.user.repository.UserDao;
 import NextLevel.demo.user.service.EmailService;
 import NextLevel.demo.user.service.LoginService;
 import NextLevel.demo.util.jwt.JWTUtil;
@@ -34,8 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
+    private final UserDao userDao;
     private final JWTUtil jwtUtil;
-    private final ImgService imgService;
     private final EmailService emailService;
 
     @PostMapping
@@ -52,11 +53,11 @@ public class LoginController {
 
     @PutMapping
     public ResponseEntity<?> login(
-        @RequestBody @Valid RequestUserLoginDto requestUserLoginDto,
+        @RequestBody @Valid RequestEmailLoginDto requestEmailLoginDto,
         HttpServletRequest httpServletRequest ,
         HttpServletResponse httpServletResponse) {
 
-        UserDetailEntity user = loginService.login(requestUserLoginDto);
+        UserDetailEntity user = loginService.login(requestEmailLoginDto);
 
         jwtUtil.addRefresh(httpServletResponse, user.getUser().getId(), user.getUUID());
         jwtUtil.addAccess(httpServletResponse, user.getUserId(), httpServletRequest, user.getUser().getRole());
@@ -86,7 +87,7 @@ public class LoginController {
 
     @GetMapping("/nickName")
     public ResponseEntity<?> checkNickName(@RequestParam("nickName") String nickName) {
-        if(loginService.checkNickNameIsNotExist(nickName))
+        if(userDao.checkNickNameIsNotExist(nickName))
             return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("not exist", null));
         else
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new SuccessResponse("exist", null));
@@ -94,7 +95,7 @@ public class LoginController {
 
     @GetMapping("/email")
     public ResponseEntity<?> checkEmailIsNotExist(@RequestParam("email") String email) {
-        if(loginService.checkEmailIsNotExist(email))
+        if(userDao.checkEmailIsNotExist(email))
             return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("not exist", null));
         else
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new SuccessResponse("exist", null));

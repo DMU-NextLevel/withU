@@ -1,10 +1,10 @@
 package NextLevel.demo.oauth;
 
-import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
-import NextLevel.demo.user.repository.UserDetailRepository;
+
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SocialLoginService extends DefaultOAuth2UserService {
 
-    private final ImgService imgService;
+    private final ImgServiceImpl imgService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

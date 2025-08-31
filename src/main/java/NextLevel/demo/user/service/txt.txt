@@ -1,0 +1,43 @@
+user.service package refactoring
+목적 : userDao 생성, 의존성이 엉킨 UserService, LoginService 병합
+
+Long Service
+    social login(RequestUserCreateDto);
+    register(RequestUserCreateDto, ArrayList<Path> imgPath)
+    login(RequestUserLoginDto)
+    checkEmailAndNickNameElseThrow(String email, String nickName)
+    checkEmailIsNotExist
+    checkNickNameIsNotExist
+
+UserService
+    updateUserInfo
+    updateUserPassword
+    updateUserImg
+
+병합 후 (예상)
+    login(RequestEmailLoginDto)
+    register(RequestUserCreateDto, ArrayList<Path> imgPath)
+
+    socialLogin(RequestUserCreateDto)
+
+    updateUserInfo
+    updateUserPassword
+    updateUserImg
+
+    checkEmailIsNotExist
+    checkNickNameIsNotExist
+
+    private checkEmailAndNickName (미정)
+
+다른 service에서 빈번하게 UserService를 의존 할 텐데 이걸 병합시키는 것은 옭지 않다 라고 판단
+UserDao를 두어서 getUserInfo()를 처리
+LoginService의 checkEmailIsNotExist, checkNickNameisNotExist 함수를 UserDao로 이동 (loginService와 UserService의존관계 해제)
+
+LoginService와 userService가 서로 의존하지 않고
+UserService가 충분히 경량화되었음으로 User.service package refactoring 종료
+
+refactoring 확인을 위한 user.service 부분 Test 코드 작성
+    Test 대상 : login, social login, updateUserInfo(img포함)
+
+추가 refactoring 대상 :
+    1. UserDao를 통해 user, userDetail crud 통합 (UserDao가 무거워 질 것을 우려)

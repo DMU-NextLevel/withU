@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class ImgTransactionAop {
-    private final ImgService imgService;
+    private final ImgServiceImpl imgService;
 
     @Around("@annotation(imgTransaction)")
     public Object around(ProceedingJoinPoint joinPoint, ImgTransaction imgTransaction) throws Throwable {

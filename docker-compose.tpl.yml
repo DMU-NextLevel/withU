@@ -7,9 +7,9 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ${PROJECT_DIR}/application-prod.yml:/app/application-prod.yml
+      - ${PROJECT_DIR}/.env:/app/.env
       - ${PROJECT_DIR}/img:/app/img
-    command: ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod", "--spring.config.additional-location=file:/app/application-prod.yml"]
+    command: ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]
     depends_on:
       - mysql
     networks:

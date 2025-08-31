@@ -1,14 +1,12 @@
 package NextLevel.demo.user.auth;
 
-import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
-import NextLevel.demo.user.entity.UserEntity;
-import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.user.service.LoginService;
-import NextLevel.demo.user.service.UserService;
+
 import java.util.Map;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +24,7 @@ import reactor.core.publisher.Mono;
 public class GoogleService {
 
     private final LoginService loginService;
-    private final ImgService imgService;
+    private final ImgServiceImpl imgService;
 
     @Value("${spring.security.oauth2.client.provider.google.token-uri}")
     private String AccessTokenURI;

@@ -1,6 +1,6 @@
 package NextLevel.demo.user.auth;
 
-import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.user.dto.RequestUserCreateDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.service.LoginService;
@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 public class KakaoService {
 
     private final LoginService loginService;
-    private final ImgService imgService;
+    private final ImgServiceImpl imgService;
 
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String AccessTokenURI;

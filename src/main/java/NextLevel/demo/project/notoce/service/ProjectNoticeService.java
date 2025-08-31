@@ -1,7 +1,7 @@
 package NextLevel.demo.project.notoce.service;
 
 import NextLevel.demo.img.entity.ImgEntity;
-import NextLevel.demo.img.service.ImgService;
+import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.project.notoce.dto.request.SaveProjectNoticeRequestDto;
 import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectNoticeService {
 
     private final ProjectNoticeRepository projectNoticeRepository;
-    private final ImgService imgService;
+    private final ImgServiceImpl imgService;
     private final EntityManager entityManager;
 
     @Transactional

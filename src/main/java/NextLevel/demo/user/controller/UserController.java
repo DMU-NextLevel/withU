@@ -8,6 +8,7 @@ import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
 import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.dto.user.ResponseUserInfoDetailDto;
 import NextLevel.demo.user.entity.UserEntity;
+import NextLevel.demo.user.repository.UserDao;
 import NextLevel.demo.user.service.LikeService;
 import NextLevel.demo.user.service.UserService;
 import NextLevel.demo.util.jwt.JWTUtil;
@@ -36,12 +37,13 @@ public class UserController {
     private final LikeService likeService;
     private final ProjectService projectService;
     private final JWTUtil jwtUtil;
+    private final UserDao userDao;
 
     @GetMapping
     public ResponseEntity<?> getUserInfo() {
         Long userId = JWTUtil.getUserIdFromSecurityContext();
 
-        UserEntity user = userService.getUserInfo(userId);
+        UserEntity user = userDao.getUserInfo(userId);
 
         ResponseUserInfoDetailDto dto = ResponseUserInfoDetailDto.of(user);
 
@@ -56,7 +58,7 @@ public class UserController {
 
     @GetMapping("/my-point")
     public ResponseEntity<?> getUser() {
-        UserEntity user = userService.getUserInfo(JWTUtil.getUserIdFromSecurityContext());
+        UserEntity user = userDao.getUserInfo(JWTUtil.getUserIdFromSecurityContext());
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", Map.of("point",user.getPoint())));
     }
 
