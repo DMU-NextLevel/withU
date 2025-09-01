@@ -43,7 +43,7 @@ public class UserService {
     private final JWTUtil jwtUtil;
 
     @Transactional
-    public void updateUserInfo(RequestUpdateUserInfoDto dto, HttpServletRequest request, HttpServletResponse response) {
+    public UserEntity updateUserInfo(RequestUpdateUserInfoDto dto, HttpServletRequest request, HttpServletResponse response) {
         UserEntity oldUser = userDao.getUserInfo(dto.getId());
 
         switch(dto.getName()){
@@ -56,12 +56,14 @@ public class UserService {
         }
 
         try {
-            Method setterMethod = oldUser.getClass().getDeclaredMethod(StringUtil.setGetterName(dto.getName()), String.class), String;
+            Method setterMethod = UserEntity.class.getDeclaredMethod(StringUtil.setGetterName(dto.getName()), String.class);
             setterMethod.invoke(oldUser, dto.getValue());
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-            throw new CustomException(ErrorCode.SIBAL_WHAT_IS_IT, e.getMessage());
-        } catch (NoSuchMethodException e) {
+        } catch (InvocationTargetException e) {
+            if(e.getTargetException() instanceof CustomException)
+                throw (CustomException) e.getTargetException();
+            else
+                throw new CustomException(ErrorCode.SIBAL_WHAT_IS_IT, e.getTargetException().getMessage());
+        } catch (IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
             throw new CustomException(ErrorCode.CAN_NOT_INVOKE, dto.getName());
         }
@@ -70,6 +72,7 @@ public class UserService {
         userRepository.save(oldUser);
 
         jwtUtil.refreshAccessToken(request, response, oldUser.getRole());
+        return oldUser;
     }
 
     @Transactional

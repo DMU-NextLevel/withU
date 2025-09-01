@@ -9,10 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -44,6 +41,7 @@ public class UserDetailEntity {
     @Column(nullable = true)
     private String socialId;
 
+    @Builder
     public UserDetailEntity(UserEntity user, String UUID, String role, String email, String password,
         String socialProvider, String socialId) {
         this.user = user;
