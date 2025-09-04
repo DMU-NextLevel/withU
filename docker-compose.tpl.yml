@@ -4,6 +4,8 @@ services:
     container_name: springboot
     ports:
       - "9001:8080"
+    env_file:
+      - ${PROJECT_DIR}/.env
     volumes:
       - ${PROJECT_DIR}/.env:/app/.env
       - ${PROJECT_DIR}/img:/app/img
