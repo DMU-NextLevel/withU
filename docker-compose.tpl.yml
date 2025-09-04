@@ -8,8 +8,6 @@ services:
       - ${PROJECT_DIR}/.env:/app/.env
       - ${PROJECT_DIR}/img:/app/img
     command: ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]
-    depends_on:
-      - mysql
     networks:
       - mysql-network
 
