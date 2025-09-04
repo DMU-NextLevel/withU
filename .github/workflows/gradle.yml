@@ -111,6 +111,7 @@ jobs:
         password: ${{ secrets.RASPBERRY_PASSWORD }}
         port: 8082
         script: |
+         chmod 777 /home/${{ secrets.RASPBERRY_USERNAME }}/withU/nextlevel-nginx.conf
          mv /home/${{ secrets.RASPBERRY_USERNAME }}/withU/nextlevel-nginx.conf /etc/nginx/conf.d
         
          docker stop springboot nginx
