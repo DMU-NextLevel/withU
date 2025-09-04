@@ -10,7 +10,8 @@ spring:
     name: demo
   config:
     import: optional:file:.env[.properties]
-
+#  profiles:
+#    active: prod
   servlet:
     multipart:
       max-file-size: 10MB
