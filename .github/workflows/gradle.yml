@@ -100,18 +100,8 @@ jobs:
         username: ${{ secrets.RASPBERRY_USERNAME }}
         password: ${{ secrets.RASPBERRY_PASSWORD }}
         port: 8082
-        source: docker-compose.yml, nginx.conf
+        source: docker-compose.yml, nginx.conf, nextlevel-nginx.conf
         target: "/home/${{ secrets.RASPBERRY_USERNAME }}/withU"
-
-     - name: scp default nginx
-       uses: appleboy/scp-action@v0.1.6
-       with:
-        host: ${{ secrets.RASPBERRY_HOST }}
-        username: ${{ secrets.RASPBERRY_USERNAME }}
-        password: ${{ secrets.RASPBERRY_PASSWORD }}
-        port: 8082
-        source: nextlevel.conf
-        target: "/etc/nginx/conf.d"
  
      - name: ssh
        uses: appleboy/ssh-action@v0.1.6
@@ -121,6 +111,8 @@ jobs:
         password: ${{ secrets.RASPBERRY_PASSWORD }}
         port: 8082
         script: |
+         mv /home/${{ secrets.RASPBERRY_USERNAME }}/withU/nextlevel-nginx.conf /etc/nginx/conf.d
+        
          docker stop springboot nginx
          docker rm springboot nginx
          docker rmi springboot
