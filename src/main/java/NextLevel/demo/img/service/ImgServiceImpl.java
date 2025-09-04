@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ImgServiceImpl {
+public class ImgServiceImpl implements ImgService {
 
     @Value("${img.default_dir}")
     private String IMG_DEFAULT_PATH;

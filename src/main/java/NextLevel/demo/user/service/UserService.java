@@ -92,17 +92,18 @@ public class UserService {
 
     @ImgTransaction
     @Transactional
-    public void updateUserImg(Long userId, MultipartFile img, ArrayList<Path> imgPaths) {
+    public UserEntity updateUserImg(Long userId, MultipartFile img, ArrayList<Path> imgPaths) {
         UserEntity oldUser = userRepository.findById(userId).orElseThrow(
             ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
         );
         if(img == null)
             throw new CustomException(ErrorCode.INPUT_REQUIRED_PARAMETER);
 
-        ImgEntity imgEntity = imgService.updateImg(img, oldUser.getImg(), imgPaths);
-
         if(oldUser.getImg() == null)
-            oldUser.setImg(imgEntity);
+            oldUser.setImg(imgService.saveImg(img, imgPaths));
+        else
+            imgService.updateImg(img, oldUser.getImg(), imgPaths);
+        return oldUser;
     }
 
     @Transactional

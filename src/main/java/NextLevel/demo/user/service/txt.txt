@@ -41,3 +41,4 @@ refactoring 확인을 위한 user.service 부분 Test 코드 작성
 
 추가 refactoring 대상 :
     1. UserDao를 통해 user, userDetail crud 통합 (UserDao가 무거워 질 것을 우려)
+    2. userService 에서 사용중인 userRepository.findById 함수 private 로 변경 or UserDao에 통합

@@ -2,6 +2,7 @@ package NextLevel.demo.user.service.userService;
 
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
+import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.entity.UserEntity;
@@ -14,15 +15,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateUserInfoMethodTest {
+public class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
@@ -41,6 +44,7 @@ public class UpdateUserInfoMethodTest {
     private JWTUtil jwtUtil;
 
     private UserEntity mockUser;
+    private ImgEntity mockImg;
 
     @BeforeEach
     public void setUp() {
@@ -54,11 +58,15 @@ public class UpdateUserInfoMethodTest {
                 .areaNumber("02-1111-1111")
                 .number("010-1111-1111")
                 .build();
+        mockImg = ImgEntity.builder().id(1L).build();
+
+        Mockito.lenient().when(userDao.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
+        Mockito.lenient().when(imgService.saveImg(Mockito.any(), Mockito.any())).thenReturn(mockImg);
+        Mockito.lenient().when(imgService.updateImg(Mockito.any(),Mockito.any(),Mockito.any())).thenReturn(mockImg);
     }
 
     @Test
     public void updateUserEmailOrNicknameTest() {
-        Mockito.when(userDao.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
         RequestUpdateUserInfoDto updateEmailDto = new RequestUpdateUserInfoDto();
         updateEmailDto.setId(1L); updateEmailDto.setName("email"); updateEmailDto.setValue("updated eamil");
         RequestUpdateUserInfoDto updateNicknameDto = new RequestUpdateUserInfoDto();
@@ -78,7 +86,6 @@ public class UpdateUserInfoMethodTest {
 
     @Test
     public void updateInvalidNumberTest() {
-        Mockito.when(userDao.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
         RequestUpdateUserInfoDto updateNumberDto = new RequestUpdateUserInfoDto();
         updateNumberDto.setId(1L); updateNumberDto.setName("number"); updateNumberDto.setValue("111-11-11");
 
@@ -99,7 +106,6 @@ public class UpdateUserInfoMethodTest {
 
     @Test
     public void updateAlreadyExistNickName() {
-        Mockito.when(userDao.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
         Mockito.when(userDao.checkNickNameIsNotExist(Mockito.anyString())).thenReturn(false);
         RequestUpdateUserInfoDto updateNameDto = new RequestUpdateUserInfoDto();
         updateNameDto.setId(1L); updateNameDto.setName("nickName"); updateNameDto.setValue("updated nickname");
@@ -112,7 +118,6 @@ public class UpdateUserInfoMethodTest {
 
     @Test
     public void updateUserInfoTest() {
-        Mockito.when(userDao.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
         Mockito.when(userDao.checkNickNameIsNotExist(Mockito.anyString())).thenReturn(true);
         RequestUpdateUserInfoDto updateNameDto = new RequestUpdateUserInfoDto();
         updateNameDto.setId(1L); updateNameDto.setName("nickName"); updateNameDto.setValue("updated nickname");
@@ -124,7 +129,6 @@ public class UpdateUserInfoMethodTest {
 
     @Test
     public void updatePointTest() {
-        Mockito.when(userDao.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
         RequestUpdateUserInfoDto updatePointDto = new RequestUpdateUserInfoDto();
         updatePointDto.setId(1L); updatePointDto.setName("point"); updatePointDto.setValue("5");
 
@@ -135,4 +139,38 @@ public class UpdateUserInfoMethodTest {
         );
         Assertions.assertEquals(notFoundMethod.errorCode, ErrorCode.CAN_NOT_INVOKE);
     }
+
+    @Test
+    public void updateUserImgWithNull() {
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockUser));
+
+        Assertions.assertThrows(
+                CustomException.class,
+                ()->userService.updateUserImg(1L, null, new ArrayList<Path>())
+        );
+    }
+
+    @Test
+    // imgService가 mock이기 때문에 imgPath 관련 test는 하지 않음 -> imgService에서 test 예정
+    public void updateUserImgSuccessWhenHaveOldImg() {
+        ImgEntity oldImg = ImgEntity.builder().id(2L).build();
+        mockUser.setImg(oldImg);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockUser));
+        ArgumentCaptor<ArrayList<Path>> captor = ArgumentCaptor.forClass(ArrayList.class);
+
+        UserEntity user = userService.updateUserImg(0L, Mockito.mock(MultipartFile.class) , new ArrayList<Path>());
+
+        Assertions.assertEquals(oldImg, user.getImg());
+    }
+
+    @Test
+    public void updateUserImgSuccessWhenNoOldImg() {
+        mockUser.setImg(null);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockUser));
+
+        UserEntity user = userService.updateUserImg(0L, Mockito.mock(MultipartFile.class), new ArrayList<Path>());
+
+        Assertions.assertEquals(mockImg, user.getImg());
+    }
+
 }
