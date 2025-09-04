@@ -91,7 +91,7 @@ jobs:
          PROJECT_DIR: /home/${{ secrets.RASPBERRY_USERNAME }}/withU
          SERVER_DOMAIN: ${{ secrets.RASPBERRY_HOST }}
        run: |
-         envsubst < nginx/nginx.tpl.conf > nginx.conf
+         envsubst '${SERVER_DOMAIN}' < nginx/nginx.tpl.conf > nginx.conf
    
      - name: scp
        uses: appleboy/scp-action@v0.1.6
