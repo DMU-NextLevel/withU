@@ -19,7 +19,7 @@ services:
     ports:
       - "9000:80"
     volumes:
-      - ${PROJECT_DIR}/nginx.conf:/etc/nginx/config.dnginx.conf
+      - ${PROJECT_DIR}/nginx.conf:/etc/nginx/conf.d/nginx.conf
       - ${PROJECT_DIR}/img:/usr/share/nginx/html/img
     depends_on:
       - springboot

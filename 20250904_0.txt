@@ -1,0 +1,32 @@
+2025-09-04 21:01:31.613 [INFO] [http-nio-8080-exec-4] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:01:31.617 [INFO] [http-nio-8080-exec-4] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:01:36.084 [INFO] [http-nio-8080-exec-3] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:01:36.085 [INFO] [http-nio-8080-exec-3] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:02:38.813 [INFO] [http-nio-8080-exec-5] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:02:38.813 [INFO] [http-nio-8080-exec-5] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:02:49.601 [INFO] [http-nio-8080-exec-7] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:02:49.602 [INFO] [http-nio-8080-exec-7] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:03:07.612 [INFO] [http-nio-8080-exec-8] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:03:07.613 [INFO] [http-nio-8080-exec-8] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:03:38.539 [INFO] [http-nio-8080-exec-9] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:03:38.540 [INFO] [http-nio-8080-exec-9] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:03:52.829 [INFO] [http-nio-8080-exec-2] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:03:52.829 [INFO] [http-nio-8080-exec-2] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:04:36.167 [INFO] [http-nio-8080-exec-1] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:04:36.168 [INFO] [http-nio-8080-exec-1] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:04:41.106 [INFO] [http-nio-8080-exec-4] [N.d.c.s.filter.AccessTokenFilter    ] - access token fail
+2025-09-04 21:04:41.106 [INFO] [http-nio-8080-exec-4] [N.d.c.s.filter.RefreshTokenFilter   ] - refresh token fail
+2025-09-04 21:05:31.369 [INFO] [http-nio-8080-exec-3] [N.d.c.s.filter.AccessTokenFilter    ] - access token :: success
+2025-09-04 21:05:31.370 [INFO] [http-nio-8080-exec-3] [N.d.c.s.filter.UserHistoryFilter    ] - user history Filter :: authorities = [[ROLE_USER, ROLE_SOCIAL]] ip = [0:0:0:0:0:0:0:1] userId = [1]
+2025-09-04 21:05:31.391 [INFO] [http-nio-8080-exec-3] [NextLevel.demo.config.log.LogAop    ] - [시작] UserController.getUserInfo at 2025-09-04T21:05:31.390105900
+2025-09-04 21:05:31.401 [INFO] [http-nio-8080-exec-3] [NextLevel.demo.config.log.LogAop    ] - [성공] 걸린 시간: 11ms
+2025-09-04 21:08:12.723 [INFO] [http-nio-8080-exec-6] [N.d.c.s.filter.AccessTokenFilter    ] - access token :: success
+2025-09-04 21:08:12.724 [INFO] [http-nio-8080-exec-6] [N.d.c.s.filter.UserHistoryFilter    ] - user history Filter :: authorities = [[ROLE_USER, ROLE_SOCIAL]] ip = [0:0:0:0:0:0:0:1] userId = [1]
+2025-09-04 21:15:45.168 [INFO] [http-nio-8080-exec-1] [N.d.c.s.filter.AccessTokenFilter    ] - access token :: success
+2025-09-04 21:15:45.173 [INFO] [http-nio-8080-exec-1] [N.d.c.s.filter.UserHistoryFilter    ] - user history Filter :: authorities = [[ROLE_USER, ROLE_SOCIAL]] ip = [0:0:0:0:0:0:0:1] userId = [1]
+2025-09-04 21:15:52.928 [INFO] [http-nio-8080-exec-2] [N.d.c.s.filter.AccessTokenFilter    ] - access token :: success
+2025-09-04 21:15:52.928 [INFO] [http-nio-8080-exec-2] [N.d.c.s.filter.UserHistoryFilter    ] - user history Filter :: authorities = [[ROLE_USER, ROLE_SOCIAL]] ip = [0:0:0:0:0:0:0:1] userId = [1]
+2025-09-04 21:15:52.961 [INFO] [http-nio-8080-exec-2] [NextLevel.demo.config.log.LogAop    ] - [시작] UserController.getUserInfo at 2025-09-04T21:15:52.958896600
+2025-09-04 21:15:53.086 [INFO] [http-nio-8080-exec-2] [NextLevel.demo.config.log.LogAop    ] - [성공] 걸린 시간: 127ms
+2025-09-04 21:16:00.382 [INFO] [http-nio-8080-exec-4] [N.d.c.s.filter.AccessTokenFilter    ] - access token :: success
+2025-09-04 21:16:00.382 [INFO] [http-nio-8080-exec-4] [N.d.c.s.filter.UserHistoryFilter    ] - user history Filter :: authorities = [[ROLE_USER, ROLE_SOCIAL]] ip = [0:0:0:0:0:0:0:1] userId = [1]
