@@ -111,13 +111,13 @@ public class ImgServiceImpl implements ImgService {
             File file = new File(System.getProperty("user.dir") + IMG_DEFAULT_PATH + addImgNumber(imgURL));
             file.createNewFile();
 
-            ImageIO.write(image, imgURL.substring(imgURL.indexOf('.') + 1), file);
+            ImageIO.write(image, file.getName().substring(file.getName().indexOf('.') + 1), file);
 
             ImgEntity saved = imgRepository.save(new ImgEntity(file.getName()));
 
             return saved;
         } catch (IOException e) {
-            log.info(e.getMessage());
+            e.printStackTrace();
             throw new CustomException(ErrorCode.ERROR_ON_SAVE_IMG);
         }
     }
