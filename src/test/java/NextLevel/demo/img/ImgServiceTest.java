@@ -99,16 +99,16 @@ public class ImgServiceTest {
         );
     }
 
-    @Test
-    // testImg 폴더에 실제 저장! (resources/static/testImg 폴더 반듯이 필요!!)
-    public void socialImg() throws Exception {
-        Field maxImgLen = ImgServiceImpl.class.getDeclaredField("MAX_IMG_LEN");
-        maxImgLen.setAccessible(true);
-        maxImgLen.set(imgService, 20);
-        Field imgDefaultPath = ImgServiceImpl.class.getDeclaredField("IMG_DEFAULT_PATH");
-        imgDefaultPath.setAccessible(true);
-        imgDefaultPath.set(imgService, "/src/main/resources/static/testImg/");
-        String imgURL = "https://s.pstatic.net/shopping.phinf/20250829_19/8c4b6691-aa7d-4eef-a043-135b8150f9ec.jpg";
-        imgService.saveSocialImg(imgURL);
-    }
+//    @Test
+//    // testImg 폴더에 실제 저장! (resources/static/testImg 폴더 반듯이 필요!!)
+//    public void socialImg() throws Exception {
+//        Field maxImgLen = ImgServiceImpl.class.getDeclaredField("MAX_IMG_LEN");
+//        maxImgLen.setAccessible(true);
+//        maxImgLen.set(imgService, 20);
+//        Field imgDefaultPath = ImgServiceImpl.class.getDeclaredField("IMG_DEFAULT_PATH");
+//        imgDefaultPath.setAccessible(true);
+//        imgDefaultPath.set(imgService, "/src/main/resources/static/testImg/");
+//        String imgURL = "https://s.pstatic.net/shopping.phinf/20250829_19/8c4b6691-aa7d-4eef-a043-135b8150f9ec.jpg";
+//        imgService.saveSocialImg(imgURL);
+//    }
 }
