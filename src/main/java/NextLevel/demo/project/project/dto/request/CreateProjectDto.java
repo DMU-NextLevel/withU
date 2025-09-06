@@ -5,10 +5,13 @@ import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
-import NextLevel.demo.project.project.entity.ProjectTagEntity;
+import NextLevel.demo.project.tag.entity.ProjectTagEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import java.util.List;
 import java.util.Set;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,36 +25,29 @@ import org.springframework.web.multipart.MultipartFile;
 public class CreateProjectDto {
     private Long id;
     private Long userId;
-    private UserEntity user;
 
-    // @NotEmpty
+    @NotEmpty
     private String title;
-    // @NotEmpty
+    @NotEmpty
     private String content;
 
     private String expired;
     private Long goal;
 
     private List<Long> tags;
-    // @NotNull
+    @NotNull
     private MultipartFile titleImg;
-    // @NotNull
+    @NotNull
     private List<MultipartFile> imgs;
 
-    private List<ProjectTagEntity> tagEntitys;
-    private ImgEntity titleImgEntity;
-    private Set<ProjectStoryEntity> imgEntitys;
-
-    public ProjectEntity toEntity() {
+    public ProjectEntity toProjectEntity(UserEntity user, ImgEntity titleImg) {
         try {
             return ProjectEntity.builder()
                 .id(id)
                 .user(user)
                 .title(title)
                 .content(content)
-                .tags(tagEntitys)
-                .titleImg(titleImgEntity)
-                .stories(imgEntitys)
+                .titleImg(titleImg)
                 .expired(expired)
                 .goal(goal)
                 .build();

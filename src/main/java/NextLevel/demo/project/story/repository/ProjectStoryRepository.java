@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProjectStoryRepository extends JpaRepository<ProjectStoryEntity, Long> {
     @Modifying
-    @Query("delete from ProjectStoryEntity s where s.id in :ids")
-    void deleteAll(@Param("ids") List<Long> ids);
+    @Query("delete from ProjectStoryEntity s where s.project.id = :id")
+    void deleteAllByProjectId(@Param("id") Long projectId);
 
 }

@@ -54,7 +54,7 @@ public class ProjectController {
 
         projectService.update(dto, null);
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 
     // 모두 조회

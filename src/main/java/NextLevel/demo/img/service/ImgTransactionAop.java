@@ -19,6 +19,7 @@ public class ImgTransactionAop {
     @Around("@annotation(imgTransaction)")
     public Object around(ProceedingJoinPoint joinPoint, ImgTransaction imgTransaction) throws Throwable {
         ArrayList<Path> imgPaths = new ArrayList<>();
+        log.info("img transaction start");
         try{
             Object[] args = joinPoint.getArgs();
             args[args.length-1] = imgPaths;

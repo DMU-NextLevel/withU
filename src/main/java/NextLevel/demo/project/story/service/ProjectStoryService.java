@@ -11,6 +11,7 @@ import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.story.repository.ProjectStoryRepository;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,32 +32,38 @@ public class ProjectStoryService {
 
     @ImgTransaction
     @Transactional
-    public void saveProjectStory(Long projectId, Long userId, List<MultipartFile> imgFiles, ArrayList<Path> imgPaths){
-        ProjectEntity oldProject = projectRepository.findByIdWithAll(projectId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND, "project"));
+    public void saveNewProjectStory(ProjectEntity project, List<MultipartFile> imgFiles, ArrayList<Path> imgPaths) {
+        imgFiles.forEach(imgFile -> {
+            projectStoryRepository.save(
+                    ProjectStoryEntity
+                            .builder()
+                            .project(project)
+                            .img(imgService.saveImg(imgFile, imgPaths))
+                            .build()
+            );
+        });
+    }
+
+    @Transactional
+    @ImgTransaction
+    public void updateProjectStory(ProjectEntity project, List<MultipartFile> imgFiles, ArrayList<Path> imgPaths) {
+        List<ImgEntity> oldImgs = project.getStories().stream().map(projectImg -> projectImg.getImg()).toList();
+        log.info(Arrays.toString(oldImgs.toArray()));
+        projectStoryRepository.deleteAllByProjectId(project.getId());
+        log.info(Arrays.toString(oldImgs.toArray()));
+        oldImgs.forEach(img->imgService.deleteImg(img));
+        saveNewProjectStory(project, imgFiles, imgPaths);
+    }
+
+    @ImgTransaction
+    @Transactional
+    public void updateProjectStory(Long projectId, Long userId, List<MultipartFile> imgFiles, ArrayList<Path> imgPaths){
+        ProjectEntity oldProject = projectRepository.findByIdWithAll(projectId).orElseThrow(
+                ()->new CustomException(ErrorCode.NOT_FOUND, "project")
+        );
         if(oldProject.getUser().getId() != userId)
             throw new CustomException(ErrorCode.NOT_AUTHOR);
 
-        Set<ProjectStoryEntity> oldStories = oldProject.getStories();
-        List<ImgEntity> oldImgs = oldProject.getStories().stream().map(pe->pe.getImg()).toList();
-
-        List<ImgEntity> newImgs = new ArrayList<>();
-        imgFiles
-            .stream()
-            .forEach(i->{newImgs.add(imgService.saveImg(i, imgPaths));});
-
-        Set<ProjectStoryEntity> newStories = newImgs
-            .stream()
-            .map(
-                i->
-                ProjectStoryEntity.builder()
-                    .project(oldProject)
-                    .img(i)
-                    .build()
-            )
-            .collect(Collectors.toSet());
-
-        projectStoryRepository.saveAll(newStories);
-        projectStoryRepository.deleteAll(oldStories.stream().map(ProjectStoryEntity::getId).toList());
-        oldImgs.forEach(i->imgService.deleteImg(i));
+        updateProjectStory(oldProject, imgFiles, imgPaths);
     }
 }

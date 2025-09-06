@@ -2,14 +2,14 @@ package NextLevel.demo.project.project.repository;
 
 import static NextLevel.demo.funding.entity.QFundingEntity.fundingEntity;
 import static NextLevel.demo.project.project.entity.QProjectEntity.projectEntity;
-import static NextLevel.demo.project.project.entity.QProjectTagEntity.projectTagEntity;
 import static NextLevel.demo.project.project.entity.QProjectViewEntity.projectViewEntity;
+import static NextLevel.demo.project.tag.entity.QProjectTagEntity.projectTagEntity;
 import static NextLevel.demo.user.entity.QLikeEntity.likeEntity;
 
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.entity.QProjectEntity;
-import NextLevel.demo.project.project.entity.QProjectTagEntity;
+import NextLevel.demo.project.tag.entity.QProjectTagEntity;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;

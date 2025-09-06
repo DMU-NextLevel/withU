@@ -18,12 +18,13 @@ import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.repository.ProjectDslRepository;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
-import NextLevel.demo.project.project.entity.ProjectTagEntity;
+import NextLevel.demo.project.tag.entity.ProjectTagEntity;
 import NextLevel.demo.project.project.repository.ProjectRepository;
+import NextLevel.demo.project.story.service.ProjectStoryService;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.repository.UserDao;
-import NextLevel.demo.user.service.UserService;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,14 +43,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final UserService userService;
+    private final ProjectDslRepository projectDslRepository;
+
+    private final UserDao userDao;
+
+    private final ProjectViewService projectViewService;
     private final ImgServiceImpl imgService;
     private final TagService tagService;
+    private final ProjectStoryService projectStoryService;
+
+    // 밑에는 잘못된 의존성
     private final OptionRepository optionRepository;
     private final FundingRepository fundingRepository;
-    private final ProjectViewService projectViewService;
-    private final ProjectDslRepository projectDslRepository;
-    private final UserDao userDao;
 
     // 추가
     @ImgTransaction
@@ -58,42 +63,16 @@ public class ProjectService {
         // user 처리
         UserEntity user = userDao.getUserInfo(dto.getUserId());
         validateUser(user);
-        dto.setUser(user);
 
         ImgEntity img = null;
         try{
             img = imgService.saveImg(dto.getTitleImg(), imgPaths);
         }catch (CustomException e){;}
-        dto.setTitleImgEntity(img);
 
-        ProjectEntity newProject = dto.toEntity();
+        ProjectEntity newProject = projectRepository.save(dto.toProjectEntity(user, img));
 
-        // img 처리
-        List<ImgEntity> imgEntitys = new ArrayList<>();
-        dto.getImgs().forEach(imgEntity -> {imgEntitys.add(imgService.saveImg(imgEntity, imgPaths));});
-
-        newProject.setStories(
-            imgEntitys.stream().map((e)->{
-                return ProjectStoryEntity
-                    .builder()
-                    .project(newProject)
-                    .img(e)
-                    .build();
-            }).collect(Collectors.toSet())
-        );
-
-        // tag 처리
-        newProject.setTags(tagService.getTagEntitysByIds(dto.getTags())
-            .stream()
-            .map((t)->{
-                return ProjectTagEntity
-                    .builder()
-                    .project(newProject)
-                    .tag(t)
-                    .build();
-            }).toList());
-
-        projectRepository.save(newProject);
+        projectStoryService.saveNewProjectStory(newProject, dto.getImgs(), imgPaths);
+        tagService.saveNewTags(newProject, dto.getTags());
     }
     private void validateUser(UserEntity user) {
         // user 당 한달에 생성 가능한 펀딩 갯수 제한?
@@ -114,54 +93,19 @@ public class ProjectService {
         if(oldProject.getUser().getId() != dto.getUserId())
             throw new CustomException(ErrorCode.NOT_AUTHOR);
 
-        dto.setUser(oldProject.getUser());
-
-        if(dto.getTitleImg() == null)
-            dto.setTitleImgEntity(oldProject.getTitleImg());
-        else
-            dto.setTitleImgEntity(imgService.updateImg(dto.getTitleImg(), oldProject.getTitleImg(), imgPaths));
-
-        ProjectEntity newProject = dto.toEntity();
+        ImgEntity img = oldProject.getTitleImg();
+        if(dto.getTitleImg() != null)
+            img = imgService.updateImg(dto.getTitleImg(), oldProject.getTitleImg(), imgPaths);
 
         // tag 처리
-        newProject.setTags(tagService.getTagEntitysByIds(dto.getTags())
-            .stream()
-            .map((t)->{
-                return ProjectTagEntity
-                    .builder()
-                    .project(newProject)
-                    .tag(t)
-                    .build();
-            })
-            .toList()
-        );
+        if(dto.getTags() != null && !dto.getTags().isEmpty())
+            tagService.updateTags(oldProject, dto.getTags());
 
         // img 처리
-        if(dto.getImgs() != null) {
-            List<ImgEntity> imgEntitys = new ArrayList<>();
-            dto.getImgs().forEach(imgEntity -> {
-                imgEntitys.add(imgService.saveImg(imgEntity, imgPaths));
-            });
+        if(dto.getImgs() != null && !dto.getImgs().isEmpty())
+            projectStoryService.updateProjectStory(oldProject, dto.getImgs(), imgPaths);
 
-            newProject.setStories(
-                imgEntitys.stream().map((e) -> {
-                    return ProjectStoryEntity
-                        .builder()
-                        .project(newProject)
-                        .img(e)
-                        .build();
-                }).collect(Collectors.toSet())
-            );
-        }else{
-            newProject.setStories(oldProject.getStories());
-        }
-
-        // 여기 부분 다시 수정해라 ㅅㅂ 이미지 값이 없어도 무조건 삭제 잖아
-        
-        List<ImgEntity> oldImgs = oldProject.getStories().stream().map(pe -> pe.getImg()).toList();
-        oldImgs.forEach(i->{ imgService.deleteImg(i);});
-
-        projectRepository.save(newProject);
+        projectRepository.save(dto.toProjectEntity(oldProject.getUser(), img)); // 값이 있는 것만 update 형식으로 수정 필요
     }
 
     // 삭제
