@@ -1,5 +1,6 @@
 package NextLevel.demo.user.dto.user;
 
+import NextLevel.demo.img.ImgDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class ResponseUserInfoDetailDto {
     private String email;
     private String socialProvider;
 
-    private String img;
+    private ImgDto img;
 
     public static ResponseUserInfoDetailDto of(UserEntity userFullEntity) {
         UserDetailEntity detail = userFullEntity.getUserDetail();
@@ -29,7 +30,7 @@ public class ResponseUserInfoDetailDto {
             detail.getSocialProvider());
 
         if(userFullEntity.getImg() != null) {
-            dto.setImg(userFullEntity.getImg().getUri());
+            dto.img = new ImgDto(userFullEntity.getImg());
         }
 
         return dto;
