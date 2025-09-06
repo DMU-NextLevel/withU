@@ -1,6 +1,7 @@
 package NextLevel.demo.project.project.dto.response;
 
 import NextLevel.demo.funding.FundingUtil;
+import NextLevel.demo.img.ImgDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class ResponseProjectDetailDto {
     private String title;
     private String content;
 
-    private String titleImg;
+    private ImgDto titleImg;
 
     private Date createdAt;
     private Date expiredAt;
@@ -46,12 +47,12 @@ public class ResponseProjectDetailDto {
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
-        dto.setTitleImg(entity.getTitleImg().getUri());
+        dto.setTitleImg(new ImgDto(entity.getTitleImg()));
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setExpiredAt(entity.getExpired());
         dto.setAuthorNickName(entity.getUser().getNickName());
         dto.setGoal(entity.getGoal());
-        dto.setSum(entity.getFundings().stream().mapToLong(e->e.getFreePrice()).sum());
+        dto.setSum(entity.getFundings().stream().mapToLong(e->e.getTotalPrice()).sum());
         dto.setCompletionRate(FundingUtil.getCompletionRate(dto.sum, entity.getGoal()));
         dto.setLikeCount(entity.getLikes().size());
         dto.setFundingCount(entity.getFundings().size());

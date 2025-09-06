@@ -36,7 +36,7 @@ public class ProjectDslRepository {
             .selectDistinct(Projections.constructor(ResponseProjectListDetailDto.class,
                 projectEntity.id,
                 projectEntity.title,
-                projectEntity.titleImg.uri,
+                projectEntity.titleImg,
                 projectEntity.createdAt,
                 projectEntity.expired,
                 projectEntity.goal,
@@ -67,7 +67,7 @@ public class ProjectDslRepository {
                 where(projectEntity, projectTagEntity, dto.getUserId(), dto.getTagIds(), dto.getSearch(), dto.getMyPageWhere())
             )
             .orderBy(
-                orderByType(projectEntity, dto.getUserId(), ProjectOrderType.getType(dto.getOrder()), dto.getDesc()),
+                orderByType(projectEntity, ProjectOrderType.getType(dto.getOrder()), dto.getDesc()),
                 projectEntity.createdAt.desc()
             )
             .limit(dto.getPageCount())
@@ -101,7 +101,7 @@ public class ProjectDslRepository {
         return Expressions.TRUE;
     }
 
-    private OrderSpecifier<?> orderByType(QProjectEntity projectEntity, Long userId, ProjectOrderType type, boolean desc) {
+    private OrderSpecifier<?> orderByType(QProjectEntity projectEntity, ProjectOrderType type, boolean desc) {
         ComparableExpressionBase<?> order = null;
         switch(type) {
             case ProjectOrderType.CREATED:
@@ -139,17 +139,19 @@ public class ProjectDslRepository {
             .where(where(projectEntity, projectTagEntity, dto.getUserId(), dto.getTagIds(), dto.getSearch(), dto.getMyPageWhere()));
     }
 
+    // 추후 funding entity 정규화 후 다시 수정 (일단 작동은 함)
     private Expression<Double> completeRate(QProjectEntity projectEntity) {
         return JPAExpressions
             .select(
-                fundingEntity.freePrice
-                    .add(fundingEntity.option.price)
-                    .sum()
+                fundingEntity
+                    .freePrice.sum().coalesce(0)
+                    .add(fundingEntity.option.price.multiply(fundingEntity.count).sum().coalesce(0))
                     .doubleValue()
                     .divide(projectEntity.goal)
                     .multiply(100)
             )
             .from(fundingEntity)
+            .leftJoin(fundingEntity.option)
             .where(fundingEntity.project.id.eq(projectEntity.id));
     }
 
@@ -170,6 +172,7 @@ public class ProjectDslRepository {
             .where(projectViewEntity.project.id.eq(projectEntity.id));
     }
 
+    // 자유, option 펀딩 각각 임으로 user 별 distinct한 값이 더 정확하지 않을까?
     private Expression<Long> fundingUserCount(QProjectEntity projectEntity) {
         return JPAExpressions
             .select(fundingEntity.count())

@@ -60,6 +60,10 @@ public class FundingEntity {
         this.freePrice += freePrice;
     }
 
+    public Long getTotalPrice() {
+        return (long)freePrice + option.getPrice() * count;
+    }
+
     @Override
     public String toString() {
         return "FundingEntity{" +
