@@ -1,4 +1,4 @@
-package NextLevel.demo.project.notoce.entity;
+package NextLevel.demo.project.notice.entity;
 
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;

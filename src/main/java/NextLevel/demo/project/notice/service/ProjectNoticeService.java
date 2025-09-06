@@ -1,11 +1,11 @@
-package NextLevel.demo.project.notoce.service;
+package NextLevel.demo.project.notice.service;
 
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.img.service.ImgTransaction;
-import NextLevel.demo.project.notoce.dto.request.SaveProjectNoticeRequestDto;
-import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
-import NextLevel.demo.project.notoce.repository.ProjectNoticeRepository;
+import NextLevel.demo.project.notice.dto.request.SaveProjectNoticeRequestDto;
+import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
+import NextLevel.demo.project.notice.repository.ProjectNoticeRepository;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import jakarta.persistence.EntityManager;
 import java.nio.file.Path;

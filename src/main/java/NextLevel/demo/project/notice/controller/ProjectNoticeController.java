@@ -1,8 +1,8 @@
-package NextLevel.demo.project.notoce.controller;
+package NextLevel.demo.project.notice.controller;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.project.notoce.dto.request.SaveProjectNoticeRequestDto;
-import NextLevel.demo.project.notoce.service.ProjectNoticeService;
+import NextLevel.demo.project.notice.dto.request.SaveProjectNoticeRequestDto;
+import NextLevel.demo.project.notice.service.ProjectNoticeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

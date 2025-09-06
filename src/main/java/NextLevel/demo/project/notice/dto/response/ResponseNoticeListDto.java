@@ -1,6 +1,6 @@
-package NextLevel.demo.project.notoce.dto.response;
+package NextLevel.demo.project.notice.dto.response;
 
-import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
+import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
 import java.util.List;
 import java.util.Set;
 import lombok.Getter;

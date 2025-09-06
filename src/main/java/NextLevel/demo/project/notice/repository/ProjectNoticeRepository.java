@@ -1,6 +1,6 @@
-package NextLevel.demo.project.notoce.repository;
+package NextLevel.demo.project.notice.repository;
 
-import NextLevel.demo.project.notoce.entity.ProjectNoticeEntity;
+import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
