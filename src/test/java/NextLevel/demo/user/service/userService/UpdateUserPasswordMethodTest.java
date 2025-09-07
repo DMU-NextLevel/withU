@@ -3,10 +3,10 @@ package NextLevel.demo.user.service.userService;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.role.UserRole;
-import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
+import NextLevel.demo.user.dto.user.request.RequestUpdatePasswordDto;
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
-import NextLevel.demo.user.repository.UserDao;
+import NextLevel.demo.user.service.UserValidateService;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.user.service.UserService;
@@ -32,7 +32,7 @@ public class UpdateUserPasswordMethodTest {
     @Mock
     private UserDetailRepository userDetailRepository;
     @Mock
-    private UserDao userDao;
+    private UserValidateService userValidateService;
     @Mock
     private ImgService imgService;
     @Spy

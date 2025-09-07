@@ -2,16 +2,12 @@ package NextLevel.demo.project.project.controller;
 
 import NextLevel.demo.common.SuccessResponse;
 import NextLevel.demo.funding.dto.response.FundingResponseDto;
-import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
-import NextLevel.demo.project.notice.dto.response.ResponseNoticeListDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectAllDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
-import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.service.ProjectService;
-import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -104,13 +100,7 @@ public class ProjectController {
 
     @GetMapping("/public/project/{projectId}/all")
     public ResponseEntity<?> getProjectNotice(@PathVariable("projectId") Long projectId) {
-        ProjectEntity project = projectService.getProjectCommunityAndNoticeAndStoryById(projectId);
-
-        ResponseProjectAllDto dto = ResponseProjectAllDto.builder()
-            .story(new ResponseProjectStoryListDto(project.getStories()))
-            .notice(new ResponseNoticeListDto(project.getNotices()))
-            .community(new ResponseCommunityListDto(project.getCommunities()))
-            .build();
+        ResponseProjectAllDto dto = projectService.getProjectCommunityAndNoticeAndStoryDto(projectId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
     }

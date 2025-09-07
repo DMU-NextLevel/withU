@@ -9,15 +9,13 @@ import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
-import NextLevel.demo.user.repository.UserDao;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Optional;
-import java.util.Random;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,18 +34,18 @@ public class LoginService {
     private final ImgServiceImpl imgService;
     @Qualifier("passwordEncoder")
     private final PasswordEncoder passwordEncoder;
-    private final UserDao userDao;
+    private final UserValidateService userValidateService;
 
     @Transactional
     public UserDetailEntity socialLogin(RequestUserCreateDto socialLoginDto) {
         String socialProvider = socialLoginDto.getSocialProvider();
         String socialId = socialLoginDto.getSocialId();
 
-        Optional<UserDetailEntity> userDetailOptional = userDao.findBySocialProviderAndSocialId(socialProvider, socialId);
+        Optional<UserDetailEntity> userDetailOptional = userValidateService.findBySocialProviderAndSocialId(socialProvider, socialId);
         UserDetailEntity userDetail = null;
         if(userDetailOptional.isEmpty()) {
             // email, nick name 검증
-            userDao.checkEmailAndNickNameElseThrow(socialLoginDto.getEmail(), socialLoginDto.getNickName());
+            userValidateService.checkEmailAndNickNameElseThrow(socialLoginDto.getEmail(), socialLoginDto.getNickName());
 
             UserEntity user = userRepository.save(socialLoginDto.toUserEntity());
 
@@ -66,7 +64,7 @@ public class LoginService {
     @ImgTransaction
     @Transactional
     public UserDetailEntity register(RequestUserCreateDto dto, ArrayList<Path> imgPaths) {
-        userDao.checkEmailAndNickNameElseThrow(dto.getEmail(), dto.getNickName());
+        userValidateService.checkEmailAndNickNameElseThrow(dto.getEmail(), dto.getNickName());
 
         // save img get uri
         ImgEntity savedImg = null;

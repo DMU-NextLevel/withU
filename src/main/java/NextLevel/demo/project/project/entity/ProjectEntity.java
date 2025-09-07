@@ -4,7 +4,7 @@ import NextLevel.demo.BasedEntity;
 import NextLevel.demo.funding.entity.FundingEntity;
 import NextLevel.demo.funding.entity.OptionEntity;
 import NextLevel.demo.img.entity.ImgEntity;
-import NextLevel.demo.project.community.entity.ProjectCommunityEntity;
+import NextLevel.demo.project.community.entity.ProjectCommunityAskEntity;
 import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.tag.entity.ProjectTagEntity;
@@ -77,7 +77,7 @@ public class ProjectEntity extends BasedEntity {
     private Set<LikeEntity> likes;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private Set<ProjectCommunityEntity> communities;
+    private Set<ProjectCommunityAskEntity> communities;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<ProjectNoticeEntity> notices;

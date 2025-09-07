@@ -4,11 +4,11 @@ import NextLevel.demo.common.SuccessResponse;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.user.dto.LikeDto;
-import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
-import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
-import NextLevel.demo.user.dto.user.ResponseUserInfoDetailDto;
+import NextLevel.demo.user.dto.user.request.RequestUpdatePasswordDto;
+import NextLevel.demo.user.dto.user.request.RequestUpdateUserInfoDto;
+import NextLevel.demo.user.dto.user.response.ResponseUserInfoDetailDto;
 import NextLevel.demo.user.entity.UserEntity;
-import NextLevel.demo.user.repository.UserDao;
+import NextLevel.demo.user.service.UserValidateService;
 import NextLevel.demo.user.service.LikeService;
 import NextLevel.demo.user.service.UserService;
 import NextLevel.demo.util.jwt.JWTUtil;
@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,13 +36,13 @@ public class UserController {
     private final LikeService likeService;
     private final ProjectService projectService;
     private final JWTUtil jwtUtil;
-    private final UserDao userDao;
+    private final UserValidateService userValidateService;
 
     @GetMapping
     public ResponseEntity<?> getUserInfo() {
         Long userId = JWTUtil.getUserIdFromSecurityContext();
 
-        UserEntity user = userDao.getUserInfo(userId);
+        UserEntity user = userValidateService.getUserInfo(userId);
 
         ResponseUserInfoDetailDto dto = ResponseUserInfoDetailDto.of(user);
 
@@ -58,7 +57,7 @@ public class UserController {
 
     @GetMapping("/my-point")
     public ResponseEntity<?> getUser() {
-        UserEntity user = userDao.getUserInfo(JWTUtil.getUserIdFromSecurityContext());
+        UserEntity user = userValidateService.getUserInfo(JWTUtil.getUserIdFromSecurityContext());
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", Map.of("point",user.getPoint())));
     }
 

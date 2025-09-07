@@ -4,9 +4,9 @@ import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
-import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
+import NextLevel.demo.user.dto.user.request.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.entity.UserEntity;
-import NextLevel.demo.user.repository.UserDao;
+import NextLevel.demo.user.service.UserValidateService;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.user.service.UserService;
@@ -35,7 +35,7 @@ public class UserServiceTest {
     @Mock
     private UserDetailRepository userDetailRepository;
     @Mock
-    private UserDao userDao;
+    private UserValidateService userValidateService;
     @Mock
     private ImgService imgService;
     @Spy
@@ -60,7 +60,7 @@ public class UserServiceTest {
                 .build();
         mockImg = ImgEntity.builder().id(1L).build();
 
-        Mockito.lenient().when(userDao.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
+        Mockito.lenient().when(userValidateService.getUserInfo(Mockito.anyLong())).thenReturn(mockUser);
         Mockito.lenient().when(imgService.saveImg(Mockito.any(), Mockito.any())).thenReturn(mockImg);
         Mockito.lenient().when(imgService.updateImg(Mockito.any(),Mockito.any(),Mockito.any())).thenReturn(mockImg);
     }
@@ -106,7 +106,7 @@ public class UserServiceTest {
 
     @Test
     public void updateAlreadyExistNickName() {
-        Mockito.when(userDao.checkNickNameIsNotExist(Mockito.anyString())).thenReturn(false);
+        Mockito.when(userValidateService.checkNickNameIsNotExist(Mockito.anyString())).thenReturn(false);
         RequestUpdateUserInfoDto updateNameDto = new RequestUpdateUserInfoDto();
         updateNameDto.setId(1L); updateNameDto.setName("nickName"); updateNameDto.setValue("updated nickname");
 
@@ -118,7 +118,7 @@ public class UserServiceTest {
 
     @Test
     public void updateUserInfoTest() {
-        Mockito.when(userDao.checkNickNameIsNotExist(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userValidateService.checkNickNameIsNotExist(Mockito.anyString())).thenReturn(true);
         RequestUpdateUserInfoDto updateNameDto = new RequestUpdateUserInfoDto();
         updateNameDto.setId(1L); updateNameDto.setName("nickName"); updateNameDto.setValue("updated nickname");
 

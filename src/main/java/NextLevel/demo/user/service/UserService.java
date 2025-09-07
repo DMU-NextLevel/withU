@@ -2,13 +2,11 @@ package NextLevel.demo.user.service;
 
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
-import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.img.service.ImgTransaction;
-import NextLevel.demo.user.dto.user.RequestUpdatePasswordDto;
-import NextLevel.demo.user.dto.user.RequestUpdateUserInfoDto;
+import NextLevel.demo.user.dto.user.request.RequestUpdatePasswordDto;
+import NextLevel.demo.user.dto.user.request.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.entity.UserEntity;
-import NextLevel.demo.user.repository.UserDao;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.util.StringUtil;
@@ -36,7 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
-    private final UserDao userDao;
+    private final UserValidateService userValidateService;
     private final ImgService imgService;
     @Qualifier("passwordEncoder")
     private final PasswordEncoder passwordEncoder;
@@ -44,13 +42,13 @@ public class UserService {
 
     @Transactional
     public UserEntity updateUserInfo(RequestUpdateUserInfoDto dto, HttpServletRequest request, HttpServletResponse response) {
-        UserEntity oldUser = userDao.getUserInfo(dto.getId());
+        UserEntity oldUser = userValidateService.getUserInfo(dto.getId());
 
         switch(dto.getName()){
             case "email":
                 throw new CustomException(ErrorCode.CAN_NOT_CHANGE_EMAIL);
             case "nickName":
-                if(!userDao.checkNickNameIsNotExist(dto.getValue()))
+                if(!userValidateService.checkNickNameIsNotExist(dto.getValue()))
                     throw new CustomException(ErrorCode.ALREADY_EXISTS_NICKNAME);
                 break;
         }

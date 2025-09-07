@@ -2,14 +2,13 @@ package NextLevel.demo.funding.dto.response;
 
 import NextLevel.demo.funding.entity.FundingEntity;
 import NextLevel.demo.funding.entity.OptionEntity;
-import NextLevel.demo.user.dto.user.UserFundingInfoDto;
+import NextLevel.demo.user.dto.user.response.UserFundingInfoDto;
 import NextLevel.demo.user.entity.UserEntity;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
 @Getter

@@ -1,9 +1,11 @@
-package NextLevel.demo.user.repository;
+package NextLevel.demo.user.service;
 
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.user.entity.UserDetailEntity;
 import NextLevel.demo.user.entity.UserEntity;
+import NextLevel.demo.user.repository.UserDetailRepository;
+import NextLevel.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserDao {
+public class UserValidateService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
 

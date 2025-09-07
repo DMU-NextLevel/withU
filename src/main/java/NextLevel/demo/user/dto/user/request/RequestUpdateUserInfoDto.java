@@ -1,4 +1,4 @@
-package NextLevel.demo.user.dto.user;
+package NextLevel.demo.user.dto.user.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;

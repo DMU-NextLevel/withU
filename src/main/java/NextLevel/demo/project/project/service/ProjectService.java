@@ -10,28 +10,26 @@ import NextLevel.demo.funding.repository.OptionRepository;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.img.service.ImgTransaction;
+import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
+import NextLevel.demo.project.notice.dto.response.ResponseNoticeListDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectAllDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.project.project.repository.ProjectDslRepository;
-import NextLevel.demo.project.story.entity.ProjectStoryEntity;
-import NextLevel.demo.project.tag.entity.ProjectTagEntity;
 import NextLevel.demo.project.project.repository.ProjectRepository;
+import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.project.story.service.ProjectStoryService;
 import NextLevel.demo.project.tag.service.TagService;
 import NextLevel.demo.user.entity.UserEntity;
-import NextLevel.demo.user.repository.UserDao;
+import NextLevel.demo.user.service.UserValidateService;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,7 +43,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectDslRepository projectDslRepository;
 
-    private final UserDao userDao;
+    private final UserValidateService userValidateService;
 
     private final ProjectViewService projectViewService;
     private final ImgServiceImpl imgService;
@@ -61,7 +59,7 @@ public class ProjectService {
     @Transactional
     public void save(CreateProjectDto dto, ArrayList<Path> imgPaths) {
         // user 처리
-        UserEntity user = userDao.getUserInfo(dto.getUserId());
+        UserEntity user = userValidateService.getUserInfo(dto.getUserId());
         validateUser(user);
 
         ImgEntity img = null;
@@ -156,13 +154,22 @@ public class ProjectService {
     }
 
     // notice and community and story
-    public ProjectEntity getProjectCommunityAndNoticeAndStoryById(Long id) {
-        return projectRepository.findProjectWithNoticesAndCommunityAndStory(id).orElseThrow(
+    @Transactional
+    public ResponseProjectAllDto getProjectCommunityAndNoticeAndStoryDto(Long projectId) {
+        ProjectEntity project = projectRepository.findProjectWithNoticesAndCommunityAndStory(projectId).orElseThrow(
                 ()-> new CustomException(ErrorCode.NOT_FOUND,"project")
         );
+
+        return ResponseProjectAllDto
+                .builder()
+                .community(new ResponseCommunityListDto(project.getCommunities()))
+                .notice(new ResponseNoticeListDto(project.getNotices()))
+                .story(new ResponseProjectStoryListDto(project.getStories()))
+                .build();
     }
 
     @Transactional
+    // 이 함수 왜 여기 와있는 거죠? 예??!
     public List<FundingResponseDto> getAllOptionWithFunding(Long projectId, Long userId) {
         ProjectEntity project = projectRepository.findById(projectId).orElseThrow(
             () -> new CustomException(ErrorCode.NOT_FOUND, "project")

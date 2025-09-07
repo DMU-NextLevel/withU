@@ -1,4 +1,4 @@
-package NextLevel.demo.user.dto.user;
+package NextLevel.demo.user.dto.user.response;
 
 import NextLevel.demo.img.ImgDto;
 import NextLevel.demo.user.entity.UserDetailEntity;

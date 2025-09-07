@@ -1,41 +1,21 @@
 package NextLevel.demo.project.community.dto.response;
 
-import NextLevel.demo.project.community.entity.ProjectCommunityEntity;
-import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import NextLevel.demo.project.community.entity.ProjectCommunityAskEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
-@Builder
-@AllArgsConstructor
+@Setter
+@Getter
 public class ResponseProjectCommunityDto {
+    private ResponseProjectCommunityAskDto ask;
+    private ResponseProjectCommunityAnswerDto answer;
 
-    private Long id;
-
-    private String ask;
-
-    private Date askAt;
-
-    private String askerNickname;
-
-    private String answer;
-
-    private Date answerAt;
-
-    public static ResponseProjectCommunityDto of(ProjectCommunityEntity entity) {
+    public static ResponseProjectCommunityDto of(ProjectCommunityAskEntity askEntity) {
         ResponseProjectCommunityDto dto = new ResponseProjectCommunityDto();
-        dto.setId(entity.getId());
-        dto.setAsk(entity.getAsk());
-        dto.setAskAt(entity.getAskAt());
-        dto.setAnswer(entity.getAnswer());
-        dto.setAnswerAt(entity.getAnswerAt());
-        dto.setAskerNickname(entity.getAsker().getNickName());
+        dto.ask = ResponseProjectCommunityAskDto.of(askEntity);
+        dto.answer = ResponseProjectCommunityAnswerDto.of(askEntity.getAnswer());
         return dto;
     }
-
 }
