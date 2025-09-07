@@ -32,7 +32,7 @@ public class ProjectNoticeController {
     @PutMapping("/api1/project/notice/{noticeId}")
     public ResponseEntity<?> updateProjectNotice(@PathVariable("noticeId") long noticeId, @ModelAttribute @Valid SaveProjectNoticeRequestDto dto) {
         dto.setNoticeId(noticeId);
-        projectNoticeService.saveProjectNotice(dto, null);
+        projectNoticeService.updateNotice(dto, null);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", null));
     }
 

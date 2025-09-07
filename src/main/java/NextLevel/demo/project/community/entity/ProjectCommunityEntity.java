@@ -18,12 +18,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "project_community")
+@Table(name = "project_community_ask")
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @Getter
-public class ProjectCommunityEntity {
+public class ProjectCommunityEntity extends Entity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,18 +34,10 @@ public class ProjectCommunityEntity {
     private ProjectEntity project;
 
     @Column(nullable = false)
-    private String ask;
+    private String content;
 
     @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "asker_id")
-    private UserEntity asker;
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
-    @Column(name = "ask_at", nullable = false)
-    private Date askAt;
-
-    @Column
-    private String answer;
-
-    @Column(name = "answer_at")
-    private Date answerAt;
 }

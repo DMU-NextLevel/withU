@@ -1,5 +1,6 @@
 package NextLevel.demo.project.notice.dto.response;
 
+import NextLevel.demo.img.ImgDto;
 import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class ResponseProjectNoticeDto {
 
     private String content;
 
-    private String img;
+    private ImgDto img;
 
     private Date createTime;
 
@@ -30,7 +31,7 @@ public class ResponseProjectNoticeDto {
         dto.Id = entity.getId();
         dto.content = entity.getContent();
         dto.title = entity.getTitle();
-        dto.img = entity.getImg().getUri();
+        dto.img = new ImgDto(entity.getImg());
         dto.createTime = entity.getCreatedAt();
         return dto;
     }

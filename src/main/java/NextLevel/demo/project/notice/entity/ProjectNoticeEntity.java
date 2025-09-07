@@ -1,6 +1,7 @@
 package NextLevel.demo.project.notice.entity;
 
 import NextLevel.demo.img.entity.ImgEntity;
+import NextLevel.demo.project.notice.dto.request.SaveProjectNoticeRequestDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,10 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @Entity
 @Table(name = "project_notice")
@@ -24,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @Getter
+@Setter
 public class ProjectNoticeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,9 +38,15 @@ public class ProjectNoticeEntity {
 
     @Column
     private String title;
-
     @Column
     private String content;
+
+    public void update(SaveProjectNoticeRequestDto dto) {
+        if(dto.getContent() != null && !dto.getContent().isEmpty())
+            content = dto.getContent();
+        if(dto.getTitle() != null && !dto.getTitle().isEmpty())
+            title = dto.getTitle();
+    }
 
     @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private ImgEntity img;
