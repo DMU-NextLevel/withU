@@ -1,5 +1,6 @@
 package NextLevel.demo.project.community.entity;
 
+import NextLevel.demo.BasedEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.Column;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @Getter
-public class ProjectCommunityEntity extends Entity {
+public class ProjectCommunityEntity extends BasedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

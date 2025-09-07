@@ -1,5 +1,6 @@
 package NextLevel.demo.notice.entity;
 
+import NextLevel.demo.BasedEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NoticeEntity {
+public class NoticeEntity extends BasedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,9 +34,6 @@ public class NoticeEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column
-    private LocalDateTime createdAt;
-
     @OneToMany(targetEntity = NoticeImgEntity.class, mappedBy = "notice", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<NoticeImgEntity> imgs;
 
@@ -44,7 +42,6 @@ public class NoticeEntity {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.createdAt = LocalDateTime.now();
     }
 
     @Override
@@ -53,7 +50,6 @@ public class NoticeEntity {
             "id=" + id +
             ", title='" + title + '\'' +
             ", content='" + content + '\'' +
-            ", createdAt=" + createdAt +
             '}';
     }
 

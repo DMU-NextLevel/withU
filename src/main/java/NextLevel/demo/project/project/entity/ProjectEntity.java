@@ -1,5 +1,6 @@
 package NextLevel.demo.project.project.entity;
 
+import NextLevel.demo.BasedEntity;
 import NextLevel.demo.funding.entity.FundingEntity;
 import NextLevel.demo.funding.entity.OptionEntity;
 import NextLevel.demo.img.entity.ImgEntity;
@@ -35,7 +36,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "project")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProjectEntity {
+public class ProjectEntity extends BasedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,9 +50,6 @@ public class ProjectEntity {
 
     @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false,name="created_at", columnDefinition = " datetime default NOW() ")
-    private Date createdAt = new Date();
 
     @ManyToOne(targetEntity = ImgEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "img_id")
@@ -103,7 +101,6 @@ public class ProjectEntity {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.createdAt = new Date();
         this.goal = goal;
         this.titleImg = titleImg;
         this.expired = new SimpleDateFormat("yyyy-MM-dd").parse(expired);

@@ -1,5 +1,6 @@
 package NextLevel.demo.user.entity;
 
+import NextLevel.demo.BasedEntity;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.role.UserRole;
 import NextLevel.demo.util.StringUtil;
@@ -23,7 +24,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity {
+public class UserEntity extends BasedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

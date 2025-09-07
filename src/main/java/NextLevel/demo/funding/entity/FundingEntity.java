@@ -1,5 +1,6 @@
 package NextLevel.demo.funding.entity;
 
+import NextLevel.demo.BasedEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.Column;
@@ -25,7 +26,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class FundingEntity {
+public class FundingEntity extends BasedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,10 +49,6 @@ public class FundingEntity {
     @Column
     private int freePrice;
 
-    @Column(name = "created_at", updatable = false, nullable = false)
-    @CreationTimestamp
-    private Timestamp createdAt;
-
     public void upCount(int count) {
         this.count += count;
     }
@@ -70,7 +67,6 @@ public class FundingEntity {
             "id=" + id +
             ", count=" + count +
             ", freePrice=" + freePrice +
-            ", createdAt=" + createdAt +
             '}';
     }
 }

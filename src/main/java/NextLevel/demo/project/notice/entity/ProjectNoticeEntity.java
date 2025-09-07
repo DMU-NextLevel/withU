@@ -1,5 +1,6 @@
 package NextLevel.demo.project.notice.entity;
 
+import NextLevel.demo.BasedEntity;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.notice.dto.request.SaveProjectNoticeRequestDto;
 import NextLevel.demo.project.project.entity.ProjectEntity;
@@ -24,7 +25,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProjectNoticeEntity {
+public class ProjectNoticeEntity extends BasedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,9 +33,6 @@ public class ProjectNoticeEntity {
     @ManyToOne(targetEntity = ProjectEntity.class)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
-
-    @Column(name = "created_at")
-    private Date createdAt;
 
     @Column
     private String title;
