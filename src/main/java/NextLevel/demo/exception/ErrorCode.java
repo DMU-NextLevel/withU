@@ -34,7 +34,6 @@ public enum ErrorCode {
 
     // funding
     NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "05001","not enough point left:%s, need:%s"),
-    NOT_ENOUGH_PRICE_OPTION(HttpStatus.BAD_REQUEST, "05002","not enough price option option:%s, price:%s"),
 
     // option
 

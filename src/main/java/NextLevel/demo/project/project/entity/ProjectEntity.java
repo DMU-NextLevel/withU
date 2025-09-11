@@ -1,8 +1,8 @@
 package NextLevel.demo.project.project.entity;
 
 import NextLevel.demo.BasedEntity;
-import NextLevel.demo.funding.entity.FundingEntity;
-import NextLevel.demo.funding.entity.OptionEntity;
+import NextLevel.demo.funding.entity.FreeFundingEntity;
+import NextLevel.demo.option.OptionEntity;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.project.community.entity.ProjectCommunityAskEntity;
 import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
@@ -23,6 +23,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +61,7 @@ public class ProjectEntity extends BasedEntity {
     private Long goal;
 
     @Column(nullable = false)
-    private Date expired;
+    private LocalDateTime expired;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private List<ProjectTagEntity> tags;
@@ -71,7 +73,7 @@ public class ProjectEntity extends BasedEntity {
     private Set<OptionEntity> options;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private Set<FundingEntity> fundings;
+    private Set<FreeFundingEntity> freeFundings;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<LikeEntity> likes;
@@ -103,7 +105,7 @@ public class ProjectEntity extends BasedEntity {
         this.content = content;
         this.goal = goal;
         this.titleImg = titleImg;
-        this.expired = new SimpleDateFormat("yyyy-MM-dd").parse(expired);
+        this.expired = LocalDate.parse(expired, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atTime(32, 59); //LocalDateTime.of(new SimpleDateFormat("yyyy-MM-dd").parse(expired));
         this.tags = tags;
         this.stories = stories;
     }

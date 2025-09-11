@@ -1,36 +1,19 @@
 package NextLevel.demo.funding.dto.request;
 
-import NextLevel.demo.funding.entity.OptionEntity;
-import NextLevel.demo.project.project.entity.ProjectEntity;
-import NextLevel.demo.user.entity.UserEntity;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
+@Getter @Setter
 public class RequestFundingDto {
+    private RequestFreeFundingDto free;
+    private RequestOptionFundingDto option;
 
-    @NotNull
-    private int price;
-    @NotNull
-    private int count;
-
-    private Long optionId;
-
-    @NotNull
-    private Long projectId;
-
-    private Long userId;
-
-    private UserEntity user;
-    private ProjectEntity project;
-    private OptionEntity option;
-
-    //    public static FundingDto of(FundingEntity fundingEntity){
-//
-//    }
-
+    public void setUserId(Long userId) {
+        if(free != null)
+            free.setUserId(userId);
+        if(option != null)
+            option.setUserId(userId);
+    }
 }

@@ -1,7 +1,5 @@
-package NextLevel.demo.funding.repository;
+package NextLevel.demo.option;
 
-import NextLevel.demo.funding.entity.OptionEntity;
-import NextLevel.demo.project.project.entity.ProjectEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

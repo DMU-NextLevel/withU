@@ -2,17 +2,19 @@ package NextLevel.demo.funding.service;
 
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
-import NextLevel.demo.funding.dto.request.RequestFundingDto;
-import NextLevel.demo.funding.entity.FundingEntity;
-import NextLevel.demo.funding.entity.OptionEntity;
-import NextLevel.demo.funding.repository.FundingRepository;
-import NextLevel.demo.funding.repository.OptionRepository;
+import NextLevel.demo.funding.dto.request.RequestCancelFundingDto;
+import NextLevel.demo.funding.dto.request.RequestFreeFundingDto;
+import NextLevel.demo.funding.dto.request.RequestOptionFundingDto;
+import NextLevel.demo.funding.entity.FreeFundingEntity;
+import NextLevel.demo.option.OptionEntity;
+import NextLevel.demo.funding.entity.OptionFundingEntity;
+import NextLevel.demo.funding.repository.FreeFundingRepository;
+import NextLevel.demo.funding.repository.OptionFundingRepository;
+import NextLevel.demo.option.OptionValidateService;
 import NextLevel.demo.project.project.entity.ProjectEntity;
-import NextLevel.demo.project.project.repository.ProjectRepository;
+import NextLevel.demo.project.project.service.ProjectValidateService;
 import NextLevel.demo.user.entity.UserEntity;
-import NextLevel.demo.user.repository.UserRepository;
-import java.util.List;
-import java.util.Optional;
+import NextLevel.demo.user.service.UserValidateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,98 +25,56 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class FundingService {
 
-    private final UserRepository userRepository;
-    private final FundingRepository fundingRepository;
-    private final OptionRepository optionRepository;
-    private final ProjectRepository projectRepository;
+    private final UserValidateService userValidateService;
+    private final ProjectValidateService projectValidateService;
+    private final OptionValidateService optionValidateService;
 
-    @Transactional
-    public void funding(RequestFundingDto dto) {
-        UserEntity user = userRepository.findById(dto.getUserId()).orElseThrow(
-            ()->{throw new CustomException(ErrorCode.ACCESS_TOKEN_ERROR);}
+    private final OptionFundingRepository optionFundingRepository;
+    private final FreeFundingRepository freeFundingRepository;
+
+    public void cancelFreeFunding(RequestCancelFundingDto dto) {
+        UserEntity user = userValidateService.getUserInfo(dto.getUserId());
+        FreeFundingEntity funding = freeFundingRepository.findById(dto.getId()).orElseThrow(
+                ()->{return new CustomException(ErrorCode.NOT_FOUND, "freeFunding");}
         );
-        dto.setUser(user);
-        dto.setProject(projectRepository.findByIdWithAll(dto.getProjectId()).orElseThrow(
-            ()->{throw new CustomException(ErrorCode.NOT_FOUND, "project");}
-        ));
-        if(dto.getOptionId() != null && dto.getOptionId() > 0)
-            dto.setOption(optionRepository.findById(dto.getOptionId()).orElse(null));
+        if(!user.getId().equals(funding.getUser().getId()))
+            throw new CustomException(ErrorCode.NOT_AUTHOR);
+        freeFundingRepository.deleteById(dto.getId());
+    }
 
-        // user 금액 먼저 확인
-        if(user.getPoint() < dto.getPrice())
-            throw new CustomException(ErrorCode.NOT_ENOUGH_POINT, String.valueOf(user.getPoint()), String.valueOf(dto.getPrice()));
-
-        int totalPrice = dto.getPrice();
-        int optionPrice = optionFunding(dto.getOption(), user, totalPrice, dto.getCount());
-        freeFunding(dto.getProject(), user, totalPrice - optionPrice);
-
-        // user 정보 update
-        userRepository.minusPointByUserId(totalPrice, dto.getUserId());
+    public void cancelOptionFunding(RequestCancelFundingDto dto) {
+        UserEntity user = userValidateService.getUserInfo(dto.getUserId());
+        OptionFundingEntity funding = optionFundingRepository.findById(dto.getId()).orElseThrow(
+                ()->{return new CustomException(ErrorCode.NOT_FOUND, "optionFunding");}
+        );
+        if(!user.getId().equals(funding.getUser().getId()))
+            throw new CustomException(ErrorCode.NOT_AUTHOR);
+        optionFundingRepository.deleteById(dto.getId());
     }
 
     @Transactional
-    public void cancelFunding(Long fundingId, Long userId) {
-        FundingEntity oldFunding = fundingRepository.findById(fundingId).orElseThrow(
-            ()->{throw new CustomException(ErrorCode.NOT_FOUND, "funding");}
-        );
+    public void optionFunding(RequestOptionFundingDto dto) {
+        UserEntity user = userValidateService.getUserInfo(dto.getUserId());
+        OptionEntity option = optionValidateService.getOption(dto.getOptionId());
 
-        int cancelPrice = 0;
+        // validate price <> option.price * count
+        long totalPrice = option.getPrice() * dto.getCount();
 
-        if(oldFunding.getOption() == null)
-            cancelPrice = oldFunding.getFreePrice();
-        else
-            cancelPrice = oldFunding.getOption().getPrice() * oldFunding.getCount();
+        if(totalPrice > user.getPoint())
+            throw new CustomException(ErrorCode.NOT_ENOUGH_POINT, String.valueOf(user.getPoint()), String.valueOf(totalPrice));
 
-        userRepository.addPointByUserId(cancelPrice, userId);
-        fundingRepository.delete(oldFunding);
+        optionFundingRepository.save(dto.toEntity(user, option));
     }
 
-    private int optionFunding(OptionEntity option, UserEntity user, int totalPrice, int count) {
-        if(option == null)
-            return 0;
+    @Transactional
+    public void freeFunding(RequestFreeFundingDto dto) {
+        UserEntity user = userValidateService.getUserInfo(dto.getUserId());
+        ProjectEntity project = projectValidateService.getProjectEntity(dto.getProjectId());
 
-        if(option.getPrice() * count > totalPrice)
-            throw new CustomException(ErrorCode.NOT_ENOUGH_PRICE_OPTION, String.valueOf(option.getPrice()), String.valueOf(totalPrice));
+        if(dto.getFreePrice() > user.getPoint())
+            throw new CustomException(ErrorCode.NOT_ENOUGH_POINT, String.valueOf(user.getPoint()), String.valueOf(dto.getFreePrice()));
 
-        // 이전 주문 확인
-        Optional<FundingEntity> oldFunding = fundingRepository.findByUser_IdAndOption_Id(user.getId(), option.getId());
-
-        if(oldFunding.isEmpty())
-            fundingRepository.save(FundingEntity
-                .builder()
-                .option(option)
-                .project(option.getProject())
-                .user(user)
-                .freePrice(0)
-                .count(count)
-                .build()
-            );
-        else
-            oldFunding.get().upCount(count);
-
-        return option.getPrice();
-    }
-
-    private int freeFunding(ProjectEntity project, UserEntity user, int freePrice) {
-        if(freePrice == 0)
-            return 0;
-
-        // 이전 주문 확인
-        Optional<FundingEntity> oldFunding = fundingRepository.findByUser_IdAndProject_IdAndOption_IdIsNull(user.getId(), project.getId());
-
-        if(oldFunding.isEmpty())
-            fundingRepository.save(FundingEntity
-                .builder()
-                .option(null)
-                .project(project)
-                .user(user)
-                .freePrice(freePrice)
-                .build()
-            );
-        else
-            oldFunding.get().upFreePrice(freePrice);
-
-        return freePrice;
+        freeFundingRepository.save(dto.toEntity(user, project));
     }
 
 }

@@ -1,10 +1,6 @@
-package NextLevel.demo.funding.controller;
+package NextLevel.demo.option;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.funding.dto.request.SaveOptionRequestDto;
-import NextLevel.demo.funding.dto.response.OptionResponseDto;
-import NextLevel.demo.funding.entity.OptionEntity;
-import NextLevel.demo.funding.service.OptionService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -28,8 +24,7 @@ public class OptionController {
 
     @GetMapping("/api1/option/{projectId}")
     public ResponseEntity<?> getAllOptions(@PathVariable("projectId") Long projectId) {
-        List<OptionEntity> entities = optionService.getAllOptions(projectId);
-        List<OptionResponseDto> dtos = entities.stream().map(OptionResponseDto::of).toList();
+        List<ResponseOptionDto> dtos = optionService.getAllOptions(projectId);
         return ResponseEntity.ok().body(new SuccessResponse("success", dtos));
     }
 

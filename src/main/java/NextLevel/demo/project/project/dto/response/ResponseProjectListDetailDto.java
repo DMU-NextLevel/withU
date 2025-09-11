@@ -2,6 +2,7 @@ package NextLevel.demo.project.project.dto.response;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -32,18 +33,18 @@ public class ResponseProjectListDetailDto {
     private Long userCount;
     private Long viewCount;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     private Boolean isLiked;
-    private Date expired;
+    private LocalDateTime expired;
     private Boolean isExpired;
 
     public ResponseProjectListDetailDto(
         Long id,
         String title,
         ImgEntity titleImg,
-        Date createdAt,
-        Date expired,
+        LocalDateTime createdAt,
+        LocalDateTime expired,
         long goal,
         Double completionRate,
         long likeCount,
@@ -60,7 +61,7 @@ public class ResponseProjectListDetailDto {
         this.createdAt = createdAt;
         this.userCount = userCount;
         this.isLiked = isLiked != 0L;
-        this.isExpired = expired.before(new Date());
+        this.isExpired = expired.isBefore(LocalDateTime.now());
         this.expired = expired;
         this.viewCount = viewCount;
         this.totalCount = totalCount;

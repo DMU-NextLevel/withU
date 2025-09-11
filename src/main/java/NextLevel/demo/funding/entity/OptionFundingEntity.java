@@ -1,7 +1,7 @@
 package NextLevel.demo.funding.entity;
 
 import NextLevel.demo.BasedEntity;
-import NextLevel.demo.project.project.entity.ProjectEntity;
+import NextLevel.demo.option.OptionEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,28 +12,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.sql.Timestamp;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "funding")
+@Table(name = "option_funding")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class FundingEntity extends BasedEntity {
+public class OptionFundingEntity extends BasedEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(targetEntity = ProjectEntity.class)
-    @JoinColumn(name = "project_id", nullable = false)
-    private ProjectEntity project;
 
     @ManyToOne(targetEntity = OptionEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "option_id")
@@ -44,21 +39,10 @@ public class FundingEntity extends BasedEntity {
     private UserEntity user;
 
     @Column
-    private int count;
+    private long count;
 
-    @Column
-    private int freePrice;
-
-    public void upCount(int count) {
+    public void updateCount(int count) {
         this.count += count;
-    }
-
-    public void upFreePrice(int freePrice) {
-        this.freePrice += freePrice;
-    }
-
-    public Long getTotalPrice() {
-        return (long)freePrice + option.getPrice() * count;
     }
 
     @Override
@@ -66,7 +50,6 @@ public class FundingEntity extends BasedEntity {
         return "FundingEntity{" +
             "id=" + id +
             ", count=" + count +
-            ", freePrice=" + freePrice +
             '}';
     }
 }

@@ -1,11 +1,11 @@
 package NextLevel.demo.project.project.repository;
 
-import static NextLevel.demo.funding.entity.QFundingEntity.fundingEntity;
 import static NextLevel.demo.project.project.entity.QProjectEntity.projectEntity;
 import static NextLevel.demo.project.project.entity.QProjectViewEntity.projectViewEntity;
 import static NextLevel.demo.project.tag.entity.QProjectTagEntity.projectTagEntity;
 import static NextLevel.demo.user.entity.QLikeEntity.likeEntity;
 
+import NextLevel.demo.funding.repository.FundingDslRepository;
 import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.entity.QProjectEntity;
@@ -16,6 +16,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -29,6 +30,7 @@ public class ProjectDslRepository {
     @Value("${page_count}")
     private int pageCount;
     private final JPAQueryFactory queryFactory;
+    private final FundingDslRepository fundingDslRepository;
 
     public List<ResponseProjectListDetailDto> selectProjectDsl(SelectProjectListRequestDto dto) {
 
@@ -42,13 +44,13 @@ public class ProjectDslRepository {
                 projectEntity.goal,
 
                 // completeRate
-                completeRate(projectEntity),
+                fundingDslRepository.completeRate(projectEntity),
 
                 // like count
                 likeCount(projectEntity),
 
                 // user_count
-                fundingUserCount(projectEntity),
+                fundingDslRepository.fundingUserCount(projectEntity),
 
                 // is_like
                 isLike(projectEntity, dto.getUserId()),
@@ -62,7 +64,6 @@ public class ProjectDslRepository {
             .from(projectEntity)
             .leftJoin(projectTagEntity).on(projectEntity.id.eq(projectTagEntity.project.id))
             .leftJoin(likeEntity).on(projectEntity.id.eq(likeEntity.project.id)).fetchJoin()
-            .leftJoin(fundingEntity).on(fundingEntity.id.eq(fundingEntity.project.id))
             .where(
                 where(projectEntity, projectTagEntity, dto.getUserId(), dto.getTagIds(), dto.getSearch(), dto.getMyPageWhere())
             )
@@ -96,7 +97,7 @@ public class ProjectDslRepository {
             case MyPageWhere.LIKE:
                 return likeEntity.user.id.eq(userId);
             case MyPageWhere.FUNDING:
-                return fundingEntity.user.id.eq(userId);
+                return fundingDslRepository.isFunding(projectEntity, userId);
         }
         return Expressions.TRUE;
     }
@@ -114,13 +115,13 @@ public class ProjectDslRepository {
                 order = projectEntity.expired;
                 break;
             case ProjectOrderType.USER:
-                order = Expressions.asNumber(fundingUserCount(projectEntity));
+                order = Expressions.asNumber(fundingDslRepository.fundingUserCount(projectEntity));
                 break;
             case ProjectOrderType.VIEW:
                 order = Expressions.asNumber(viewCount(projectEntity));
                 break;
             case ProjectOrderType.COMPLETION:
-                order = Expressions.asNumber(completeRate(projectEntity));
+                order = Expressions.asNumber(fundingDslRepository.completeRate(projectEntity));
                 break;
         }
         if(desc)
@@ -135,24 +136,7 @@ public class ProjectDslRepository {
             .from(projectEntity)
             .leftJoin(projectTagEntity).on(projectEntity.id.eq(projectTagEntity.project.id))
             .leftJoin(likeEntity).on(projectEntity.id.eq(likeEntity.project.id))
-            .leftJoin(fundingEntity).on(fundingEntity.id.eq(fundingEntity.project.id))
             .where(where(projectEntity, projectTagEntity, dto.getUserId(), dto.getTagIds(), dto.getSearch(), dto.getMyPageWhere()));
-    }
-
-    // 추후 funding entity 정규화 후 다시 수정 (일단 작동은 함)
-    private Expression<Double> completeRate(QProjectEntity projectEntity) {
-        return JPAExpressions
-            .select(
-                fundingEntity
-                    .freePrice.sum().coalesce(0)
-                    .add(fundingEntity.option.price.multiply(fundingEntity.count).sum().coalesce(0))
-                    .doubleValue()
-                    .divide(projectEntity.goal)
-                    .multiply(100)
-            )
-            .from(fundingEntity)
-            .leftJoin(fundingEntity.option)
-            .where(fundingEntity.project.id.eq(projectEntity.id));
     }
 
     private Expression<Long> isLike(QProjectEntity projectEntity, Long userId) {
@@ -172,13 +156,6 @@ public class ProjectDslRepository {
             .where(projectViewEntity.project.id.eq(projectEntity.id));
     }
 
-    // 자유, option 펀딩 각각 임으로 user 별 distinct한 값이 더 정확하지 않을까?
-    private Expression<Long> fundingUserCount(QProjectEntity projectEntity) {
-        return JPAExpressions
-            .select(fundingEntity.count())
-            .from(fundingEntity)
-            .where(fundingEntity.project.id.eq(projectEntity.id));
-    }
 
     private Expression<Long> likeCount(QProjectEntity projectEntity) {
         return JPAExpressions

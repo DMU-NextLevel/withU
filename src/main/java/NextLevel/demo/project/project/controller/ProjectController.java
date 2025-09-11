@@ -105,11 +105,4 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
     }
 
-    @GetMapping("/api1/project/{projectId}/funding")
-    public ResponseEntity<?> getAllFundings(@PathVariable("projectId") Long projectId) {
-        List<FundingResponseDto> dto = projectService.getAllOptionWithFunding(projectId, JWTUtil.getUserIdFromSecurityContext());
-
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", dto));
-    }
-
 }

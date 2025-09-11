@@ -1,0 +1,40 @@
+funding service
+    funding()
+    cancel funding()
+    update free funding()
+    update option funding count()
+
+    select funding(Option option) // option 별 funding 조회
+    select funding(Project project) // project 별 Option 별 funding 조회
+
+option service <- funding validate service, project validate service, user validate service
+    create option()
+    update option()
+    remove option()
+
+funding validate service
+    validate not exist funding (Option option)
+    validate not exist funding (Project project) // db 조회인데 구지 option validate service에 둘 이유가 없어 보임
+    Long getTotalFundingPrice
+
+option validate service
+    get option(optionId)
+
+--- dto ---
+
+Project Funding List Dto // select at funding service
+    List<OptionFundingDto> // select option with funding
+    List<FreeFundingDto> // select free funding
+
+Option Funding Dto
+    Option Dto
+    List<OptionFunding Dto>
+
+option funding dto
+    userFundingInfoDto, count
+
+free funding dto
+    userFundingInfoDto, price
+
+option dto
+    id name, price

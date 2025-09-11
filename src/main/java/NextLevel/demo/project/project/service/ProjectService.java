@@ -3,10 +3,10 @@ package NextLevel.demo.project.project.service;
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.funding.dto.response.FundingResponseDto;
-import NextLevel.demo.funding.entity.FundingEntity;
-import NextLevel.demo.funding.entity.OptionEntity;
-import NextLevel.demo.funding.repository.FundingRepository;
-import NextLevel.demo.funding.repository.OptionRepository;
+import NextLevel.demo.funding.service.FundingValidateService;
+import NextLevel.demo.option.OptionEntity;
+import NextLevel.demo.funding.repository.OptionFundingRepository;
+import NextLevel.demo.option.OptionRepository;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.img.service.ImgTransaction;
@@ -51,8 +51,7 @@ public class ProjectService {
     private final ProjectStoryService projectStoryService;
 
     // 밑에는 잘못된 의존성
-    private final OptionRepository optionRepository;
-    private final FundingRepository fundingRepository;
+    private final FundingValidateService fundingValidateService;
 
     // 추가
     @ImgTransaction
@@ -149,8 +148,9 @@ public class ProjectService {
         );
 
         projectViewService.save(project, userId);
+        Long fundingPrice = fundingValidateService.getTotalFundingPrice(project.getId());
 
-        return ResponseProjectDetailDto.of(project, userId);
+        return ResponseProjectDetailDto.of(project, fundingPrice, userId);
     }
 
     // notice and community and story
@@ -166,24 +166,6 @@ public class ProjectService {
                 .notice(new ResponseNoticeListDto(project.getNotices()))
                 .story(new ResponseProjectStoryListDto(project.getStories()))
                 .build();
-    }
-
-    @Transactional
-    // 이 함수 왜 여기 와있는 거죠? 예??!
-    public List<FundingResponseDto> getAllOptionWithFunding(Long projectId, Long userId) {
-        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(
-            () -> new CustomException(ErrorCode.NOT_FOUND, "project")
-        );
-        if(project.getUser().getId() != userId)
-            throw new CustomException(ErrorCode.NOT_AUTHOR);
-
-        List<OptionEntity> options = optionRepository.findByProjectIdWithAll(projectId);
-        List<FundingEntity> freeFundings = fundingRepository.findByProjectIdAndOptionIdIsNull(project.getId());
-
-        List<FundingResponseDto> dto = new ArrayList<>(options.stream().map(FundingResponseDto::new).toList());
-        dto.add(new FundingResponseDto(freeFundings.stream().map(FundingEntity::getUser).toList()));
-
-        return  dto;
     }
 
 }

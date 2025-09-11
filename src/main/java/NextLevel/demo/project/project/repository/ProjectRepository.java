@@ -24,7 +24,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     @Query("select p from ProjectEntity p "
         + "left join fetch p.user u "
-        + "left join fetch p.fundings f "
+        + "left join fetch p.freeFundings f "
         + "left join fetch p.likes r "
         + "where p.id = :id")
     Optional<ProjectEntity> findProjectDetailById(@Param("id") Long id);

@@ -33,7 +33,6 @@ public class SaveProjectNoticeRequestDto {
             .content(content)
             .img(imgEntity)
             .project(projectEntity)
-            .createdAt(new Date())
             .build();
     }
 }

@@ -1,6 +1,5 @@
-package NextLevel.demo.funding.dto.request;
+package NextLevel.demo.option;
 
-import NextLevel.demo.funding.entity.OptionEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -20,9 +19,7 @@ public class SaveOptionRequestDto {
     private Long projectId;
     private Long userId;
 
-    private ProjectEntity project;
-
-    public OptionEntity toEntity(){
+    public OptionEntity toEntity(ProjectEntity project){
         return OptionEntity.builder()
             .id(optionId)
             .price(price)

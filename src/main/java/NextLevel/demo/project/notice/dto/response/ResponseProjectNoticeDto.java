@@ -2,7 +2,8 @@ package NextLevel.demo.project.notice.dto.response;
 
 import NextLevel.demo.img.ImgDto;
 import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class ResponseProjectNoticeDto {
 
     private ImgDto img;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     public static ResponseProjectNoticeDto of(ProjectNoticeEntity entity) {
         ResponseProjectNoticeDto dto = new ResponseProjectNoticeDto();

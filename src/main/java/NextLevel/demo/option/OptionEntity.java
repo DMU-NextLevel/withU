@@ -1,7 +1,7 @@
-package NextLevel.demo.funding.entity;
+package NextLevel.demo.option;
 
+import NextLevel.demo.funding.entity.OptionFundingEntity;
 import NextLevel.demo.project.project.entity.ProjectEntity;
-import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,7 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.List;
+
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -42,7 +42,14 @@ public class OptionEntity {
     private ProjectEntity project;
 
     @OneToMany(mappedBy = "option", fetch = FetchType.LAZY)
-    private Set<FundingEntity> fundings;
+    private Set<OptionFundingEntity> fundings;
+
+    public void update(SaveOptionRequestDto dto) {
+        if(dto.getDescription() != null && !dto.getDescription().isEmpty())
+            this.description = dto.getDescription();
+        if(dto.getPrice() != null)
+            this.price = dto.getPrice();
+    }
 
     @Override
     public String toString() {
