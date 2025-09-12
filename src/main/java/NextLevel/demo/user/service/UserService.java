@@ -4,10 +4,14 @@ import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
 import NextLevel.demo.img.service.ImgService;
 import NextLevel.demo.img.service.ImgTransaction;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
+import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
+import NextLevel.demo.user.dto.user.request.RequestMyPageProjectListDto;
 import NextLevel.demo.user.dto.user.request.RequestUpdatePasswordDto;
 import NextLevel.demo.user.dto.user.request.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.repository.UserDetailRepository;
+import NextLevel.demo.user.repository.UserProjectDslRepository;
 import NextLevel.demo.user.repository.UserRepository;
 import NextLevel.demo.util.StringUtil;
 import NextLevel.demo.util.jwt.JWTUtil;
@@ -18,6 +22,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +44,7 @@ public class UserService {
     @Qualifier("passwordEncoder")
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
+    private final UserProjectDslRepository userProjectDslRepository;
 
     @Transactional
     public UserEntity updateUserInfo(RequestUpdateUserInfoDto dto, HttpServletRequest request, HttpServletResponse response) {
@@ -116,6 +122,11 @@ public class UserService {
         // emailService.sendEmailCode(email, );
 
         user.getUserDetail().setPassword(randomPassword);
+    }
+
+    public ResponseProjectListDto mypageProjectList(RequestMyPageProjectListDto dto) {
+        List<ResponseProjectListDetailDto> projectList = userProjectDslRepository.selectProjectDsl(dto);
+        return new ResponseProjectListDto(projectList, dto.getPageCount(), dto.getPage());
     }
 
 }

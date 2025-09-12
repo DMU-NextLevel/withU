@@ -1,0 +1,31 @@
+select project list dsl repository :: mypage, project view 에서 사용
+    public List<ResponseProjectListDetailDto> select project list(Long userId, where, orderBy, limit, offset)
+    private select project
+    private void set project tag (List<ResponseProjectListDetailDto> project list)
+
+project :: project dsl repository
+    type : tag, search
+    select project dsl repository, SelectProjectListRequestDto에 의존함
+    project service에서만 사용함
+
+mypage :: project dsl repository
+    type : 내가 만든, 내가 좋아요한, 내가 펀딩한, 내가 최근 조회한
+
+사용 방법
+    select project list dsl repository
+        .select()
+        .join()
+        .where(()->{}) // project 와 다른 거 한개 까지
+        .oderBy(()->{}) // 다른 한개, default project.createdAt desc
+        .limit()
+        .offset()
+        .build()
+
+    구지 이렇게 까지 만들 필요가 있을까? 과연 확장성에서 올바른가?
+    1. 한번 구현해 두면 다양한 service에서 편하게 사용 가능하다.
+    2. 다른 dsl repo를 만들 필요 없이 바로 service layer에서도 사용 가능하다
+
+    1. 각각의 service에서의 중복 코드가 불가피하다
+    2. 사용하는 부분이 2가지 부분인데 "구지" 이다
+
+    결론 : 아 몰라 일단 시도해본다

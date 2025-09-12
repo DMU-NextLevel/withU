@@ -12,11 +12,8 @@ public class ResponseProjectListDto {
     private long pageCount; // page 당 반환 project 갯수
     private long page; // 요청시 들어옴
 
-    public ResponseProjectListDto(List<ResponseProjectListDetailDto> projects) {
+    public ResponseProjectListDto(List<ResponseProjectListDetailDto> projects, long pageCount, long page) {
         this.projects = projects;
-    }
-
-    public void setPageCount(long pageCount, long page) {
         this.pageCount = pageCount;
         this.page = page;
         if(projects != null && projects.size() > 0) {

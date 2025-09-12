@@ -8,6 +8,8 @@ import java.util.List;
 
 import NextLevel.demo.img.ImgDto;
 import NextLevel.demo.img.entity.ImgEntity;
+import NextLevel.demo.project.tag.entity.ProjectTagEntity;
+import NextLevel.demo.project.tag.entity.TagEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
