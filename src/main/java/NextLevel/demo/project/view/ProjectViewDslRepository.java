@@ -1,16 +1,7 @@
 package NextLevel.demo.project.view;
 
-import NextLevel.demo.project.project.dto.request.RequestMainPageProjectListDto;
-import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
-import NextLevel.demo.project.project.repository.SelectProjectListDslRepository;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
-import static NextLevel.demo.project.project.entity.QProjectEntity.projectEntity;
 
 @Repository
 @RequiredArgsConstructor

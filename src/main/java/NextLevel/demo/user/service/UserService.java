@@ -10,6 +10,7 @@ import NextLevel.demo.user.dto.user.request.RequestMyPageProjectListDto;
 import NextLevel.demo.user.dto.user.request.RequestUpdatePasswordDto;
 import NextLevel.demo.user.dto.user.request.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.entity.UserEntity;
+import NextLevel.demo.user.repository.MyPageProjectListType;
 import NextLevel.demo.user.repository.UserDetailRepository;
 import NextLevel.demo.user.repository.UserProjectDslRepository;
 import NextLevel.demo.user.repository.UserRepository;
@@ -125,8 +126,7 @@ public class UserService {
     }
 
     public ResponseProjectListDto mypageProjectList(RequestMyPageProjectListDto dto) {
-        List<ResponseProjectListDetailDto> projectList = userProjectDslRepository.selectProjectDsl(dto);
-        return new ResponseProjectListDto(projectList, dto.getPageCount(), dto.getPage());
+        return userProjectDslRepository.myProject(dto);
     }
 
 }

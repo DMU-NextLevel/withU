@@ -104,7 +104,7 @@ public class ProjectEntity extends BasedEntity {
         this.content = content;
         this.goal = goal;
         this.titleImg = titleImg;
-        this.expired = LocalDate.parse(expired, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atTime(32, 59); //LocalDateTime.of(new SimpleDateFormat("yyyy-MM-dd").parse(expired));
+        this.expired = LocalDate.parse(expired, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atTime(23, 59); //LocalDateTime.of(new SimpleDateFormat("yyyy-MM-dd").parse(expired));
         this.tags = tags;
         this.stories = stories;
     }

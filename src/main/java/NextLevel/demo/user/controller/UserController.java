@@ -96,6 +96,7 @@ public class UserController {
 
     @GetMapping("/my-project")
     public ResponseEntity<?> getMyQuestion(@RequestBody RequestMyPageProjectListDto dto) {
+        dto.setUserId(JWTUtil.getUserIdFromSecurityContext());
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", userService.mypageProjectList(dto)));
     }
 
