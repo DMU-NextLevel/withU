@@ -1,9 +1,10 @@
 package NextLevel.demo.user.controller;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
+import NextLevel.demo.project.project.dto.request.RequestMainPageProjectListDto;
 import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.user.dto.LikeDto;
+import NextLevel.demo.user.dto.user.request.RequestMyPageProjectListDto;
 import NextLevel.demo.user.dto.user.request.RequestUpdatePasswordDto;
 import NextLevel.demo.user.dto.user.request.RequestUpdateUserInfoDto;
 import NextLevel.demo.user.dto.user.response.ResponseUserInfoDetailDto;
@@ -34,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
     private final LikeService likeService;
-    private final ProjectService projectService;
     private final JWTUtil jwtUtil;
     private final UserValidateService userValidateService;
 
@@ -95,8 +95,9 @@ public class UserController {
     }
 
     @GetMapping("/my-project")
-    public ResponseEntity<?> getMyQuestion(@RequestBody SelectProjectListRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", projectService.getAllProjects(dto)));
+    public ResponseEntity<?> getMyQuestion(@RequestBody RequestMyPageProjectListDto dto) {
+        dto.setUserId(JWTUtil.getUserIdFromSecurityContext());
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", userService.mypageProjectList(dto)));
     }
 
 }

@@ -1,9 +1,8 @@
 package NextLevel.demo.project.project.controller;
 
 import NextLevel.demo.common.SuccessResponse;
-import NextLevel.demo.funding.dto.response.FundingResponseDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
-import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
+import NextLevel.demo.project.project.dto.request.RequestMainPageProjectListDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectAllDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
@@ -11,6 +10,8 @@ import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
 import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,7 @@ public class ProjectController {
     {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
 
-        SelectProjectListRequestDto dto = SelectProjectListRequestDto.builder()
+        RequestMainPageProjectListDto dto = RequestMainPageProjectListDto.builder()
             .tag(tagId)
             .page(page)
             .order(order)
@@ -79,7 +80,7 @@ public class ProjectController {
 
     @PostMapping("/public/project/all")
     public ResponseEntity<?> getAllProjects(
-        @RequestBody SelectProjectListRequestDto dto)
+        @RequestBody RequestMainPageProjectListDto dto)
     {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
         dto.setUserId(userId);
@@ -90,7 +91,7 @@ public class ProjectController {
 
     // 상세 조회
     @GetMapping("/public/project/{projectId}")
-    public ResponseEntity<?> getProjectDetailById(@PathVariable("projectId") Long projectId) {
+    public ResponseEntity<?> getProjectDetailById(@PathVariable("projectId") @NotNull Long projectId) {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
 
         ResponseProjectDetailDto dto = projectService.getProjectDetailById(projectId, userId);

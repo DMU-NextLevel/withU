@@ -2,18 +2,14 @@ package NextLevel.demo.project.project.service;
 
 import NextLevel.demo.exception.CustomException;
 import NextLevel.demo.exception.ErrorCode;
-import NextLevel.demo.funding.dto.response.FundingResponseDto;
 import NextLevel.demo.funding.service.FundingValidateService;
-import NextLevel.demo.option.OptionEntity;
-import NextLevel.demo.funding.repository.OptionFundingRepository;
-import NextLevel.demo.option.OptionRepository;
 import NextLevel.demo.img.entity.ImgEntity;
 import NextLevel.demo.img.service.ImgServiceImpl;
 import NextLevel.demo.img.service.ImgTransaction;
 import NextLevel.demo.project.community.dto.response.ResponseCommunityListDto;
 import NextLevel.demo.project.notice.dto.response.ResponseNoticeListDto;
 import NextLevel.demo.project.project.dto.request.CreateProjectDto;
-import NextLevel.demo.project.project.dto.request.SelectProjectListRequestDto;
+import NextLevel.demo.project.project.dto.request.RequestMainPageProjectListDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectAllDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
@@ -24,6 +20,7 @@ import NextLevel.demo.project.project.repository.ProjectRepository;
 import NextLevel.demo.project.story.dto.ResponseProjectStoryListDto;
 import NextLevel.demo.project.story.service.ProjectStoryService;
 import NextLevel.demo.project.tag.service.TagService;
+import NextLevel.demo.project.view.ProjectViewService;
 import NextLevel.demo.user.entity.UserEntity;
 import NextLevel.demo.user.service.UserValidateService;
 
@@ -41,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final ProjectDslRepository projectDslRepository;
 
     private final UserValidateService userValidateService;
 
@@ -50,8 +46,8 @@ public class ProjectService {
     private final TagService tagService;
     private final ProjectStoryService projectStoryService;
 
-    // 밑에는 잘못된 의존성
     private final FundingValidateService fundingValidateService;
+    private final ProjectDslRepository projectDslRepository;
 
     // 추가
     @ImgTransaction
@@ -122,23 +118,8 @@ public class ProjectService {
     }
 
     // get list
-    public ResponseProjectListDto getAllProjects(SelectProjectListRequestDto dto) {
-        List<ResponseProjectListDetailDto> detailDtos = projectDslRepository.selectProjectDsl(dto);
-
-        Map<Long, ResponseProjectListDetailDto> dtoMap = new HashMap<>();
-        detailDtos.forEach(e -> {dtoMap.put(e.getId(), e);});
-
-        List<ProjectEntity> tags = projectRepository.findTagsByIds(dtoMap.keySet().stream().toList());
-        tags.forEach((e)->
-            dtoMap.get(e.getId()).setTags(
-                e.getTags().stream().map(pt->pt.getTag().getName()).toList()
-            )
-        );
-
-        ResponseProjectListDto resultDto = new ResponseProjectListDto(detailDtos);
-        resultDto.setPageCount(dto.getPageCount(), dto.getPage());
-
-        return resultDto;
+    public ResponseProjectListDto getAllProjects(RequestMainPageProjectListDto dto) {
+        return projectDslRepository.selectProjectDsl(dto);
     }
 
     @Transactional

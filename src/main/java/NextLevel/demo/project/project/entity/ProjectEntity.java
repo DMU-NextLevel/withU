@@ -8,6 +8,7 @@ import NextLevel.demo.project.community.entity.ProjectCommunityAskEntity;
 import NextLevel.demo.project.notice.entity.ProjectNoticeEntity;
 import NextLevel.demo.project.story.entity.ProjectStoryEntity;
 import NextLevel.demo.project.tag.entity.ProjectTagEntity;
+import NextLevel.demo.project.view.ProjectViewEntity;
 import NextLevel.demo.user.entity.LikeEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
@@ -22,11 +23,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -105,7 +104,7 @@ public class ProjectEntity extends BasedEntity {
         this.content = content;
         this.goal = goal;
         this.titleImg = titleImg;
-        this.expired = LocalDate.parse(expired, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atTime(32, 59); //LocalDateTime.of(new SimpleDateFormat("yyyy-MM-dd").parse(expired));
+        this.expired = LocalDate.parse(expired, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atTime(23, 59); //LocalDateTime.of(new SimpleDateFormat("yyyy-MM-dd").parse(expired));
         this.tags = tags;
         this.stories = stories;
     }

@@ -8,6 +8,9 @@ import java.util.List;
 
 import NextLevel.demo.img.ImgDto;
 import NextLevel.demo.img.entity.ImgEntity;
+import NextLevel.demo.project.tag.entity.ProjectTagEntity;
+import NextLevel.demo.project.tag.entity.TagEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,6 +42,9 @@ public class ResponseProjectListDetailDto {
     private LocalDateTime expired;
     private Boolean isExpired;
 
+    @JsonIgnore
+    private LocalDateTime projectViewCreateAt;
+
     public ResponseProjectListDetailDto(
         Long id,
         String title,
@@ -51,7 +57,7 @@ public class ResponseProjectListDetailDto {
         long userCount,
         long isLiked,
         long viewCount,
-        long totalCount // 전체 조건에 만족하는 project 갯수
+        LocalDateTime projectViewCreateAt // select distinct 용 column
     ) {
         this.id = id;
         this.title = title;
@@ -64,7 +70,8 @@ public class ResponseProjectListDetailDto {
         this.isExpired = expired.isBefore(LocalDateTime.now());
         this.expired = expired;
         this.viewCount = viewCount;
-        this.totalCount = totalCount;
+        // this.totalCount = totalCount;
+        this.projectViewCreateAt = projectViewCreateAt;
     }
 
 }

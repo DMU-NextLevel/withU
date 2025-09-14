@@ -1,6 +1,8 @@
 package NextLevel.demo.project.project.repository;
 
 import NextLevel.demo.project.project.entity.ProjectEntity;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +22,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     Optional<ProjectEntity> findByIdWithAll(@Param("id") Long id);
 
     @Query("select p from ProjectEntity p left join fetch p.tags pt left join fetch pt.tag where p.id in :ids")
-    List<ProjectEntity> findTagsByIds(@Param("ids") List<Long> ids);
+    List<ProjectEntity> findTagsByIds(@Param("ids") Collection<Long> ids);
 
     @Query("select p from ProjectEntity p "
         + "left join fetch p.user u "

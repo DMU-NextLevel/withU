@@ -1,5 +1,6 @@
-package NextLevel.demo.project.project.entity;
+package NextLevel.demo.project.view;
 
+import NextLevel.demo.project.project.entity.ProjectEntity;
 import NextLevel.demo.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
