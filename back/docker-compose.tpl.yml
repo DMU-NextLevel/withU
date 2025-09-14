@@ -1,0 +1,32 @@
+services:
+  springboot:
+    image: lkh8033/nextlevel-springboot:latest
+    container_name: springboot
+    ports:
+      - "9001:8080"
+    env_file:
+      - ${PROJECT_DIR}/.env
+    volumes:
+      - ${PROJECT_DIR}/.env:/app/.env
+      - ${PROJECT_DIR}/img:/app/img
+    command: ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]
+    networks:
+      - mysql-network
+
+  nginx:
+    image: lkh8033/nextlevel-nginx:latest
+    container_name: nginx
+    ports:
+      - "9000:81"
+    volumes:
+      - ${PROJECT_DIR}/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ${PROJECT_DIR}/img:/usr/share/nginx/html/img
+    depends_on:
+      - springboot
+    networks:
+      - mysql-network
+
+networks:
+  mysql-network:
+    external: true
+    driver: bridge
