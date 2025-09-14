@@ -11,10 +11,13 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static NextLevel.demo.project.tag.entity.QProjectTagEntity.projectTagEntity;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,7 +30,7 @@ public class ProjectDslRepository {
         ResponseProjectListDto projectList = selectProjectRepository
                 .builder()
                 .where(QProjectEntity.class, (project)->whereSearch(project, dto.getSearch()))
-                .where(QProjectTagEntity.class, (projectTagEntity)->whereTag(projectTagEntity, dto.getTagIds()))
+                .where(QProjectEntity.class, (projectEntity)->whereTag(projectEntity, dto.getTagIds()))
                 .orderBy(QProjectEntity.class, (project)->orderByType(project, ProjectOrderType.getType(dto.getOrder()), dto.getDesc()))
                 .limit(dto.getLimit(), dto.getPage())
                 .commit(dto.getUserId());
@@ -42,9 +45,13 @@ public class ProjectDslRepository {
         return Expressions.TRUE;
     }
 
-    private BooleanExpression whereTag(QProjectTagEntity projectTagEntity, List<Long> tagIds){
+    private BooleanExpression whereTag(QProjectEntity projectEntity, List<Long> tagIds){
         if(tagIds != null || !tagIds.isEmpty()) {
-            return projectTagEntity.tag.id.in(tagIds);
+            return JPAExpressions
+                    .select(projectTagEntity.id)
+                    .from(projectTagEntity)
+                    .where(projectTagEntity.project.id.eq(projectEntity.id).and(projectTagEntity.tag.id.in(tagIds)))
+                    .exists();
         }
         return Expressions.TRUE;
     }

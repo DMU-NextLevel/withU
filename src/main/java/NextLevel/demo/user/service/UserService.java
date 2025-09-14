@@ -21,10 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -126,7 +123,16 @@ public class UserService {
     }
 
     public ResponseProjectListDto mypageProjectList(RequestMyPageProjectListDto dto) {
-        return userProjectDslRepository.myProject(dto);
+        ResponseProjectListDto result = userProjectDslRepository.myProject(dto);
+
+        if(dto.getType().equals(MyPageProjectListType.VIEW)){
+            // sort !!
+            Collections.sort(result.getProjects(), (a, b)->{
+                return a.getProjectViewCreateAt().isBefore(b.getProjectViewCreateAt())? 1:-1;
+            });
+        }
+
+        return result;
     }
 
 }

@@ -15,8 +15,10 @@ public class FundingValidateService {
     // validate not exist funding (Project project) // db 조회인데 구지 option validate service에 둘 이유가 없어 보임
 
     public Long getTotalFundingPrice(Long projectId) {
-        return optionFundingRepository.getTotalPriceByProject(projectId) +
-                freeFundingRepository.getTotalPriceByProject(projectId);
+        Long optionFundingPrice = optionFundingRepository.getTotalPriceByProject(projectId);
+        Long freeFundingPrice = freeFundingRepository.getTotalPriceByProject(projectId);
+        return (optionFundingPrice != null ? optionFundingPrice : 0)
+                + (freeFundingPrice != null ? freeFundingPrice : 0);
     }
 
 }

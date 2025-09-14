@@ -10,6 +10,8 @@ import NextLevel.demo.project.project.service.ProjectService;
 import NextLevel.demo.util.jwt.JWTUtil;
 import jakarta.validation.Valid;
 import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -89,7 +91,7 @@ public class ProjectController {
 
     // 상세 조회
     @GetMapping("/public/project/{projectId}")
-    public ResponseEntity<?> getProjectDetailById(@PathVariable("projectId") Long projectId) {
+    public ResponseEntity<?> getProjectDetailById(@PathVariable("projectId") @NotNull Long projectId) {
         Long userId = JWTUtil.getUserIdFromSecurityContextCanNULL();
 
         ResponseProjectDetailDto dto = projectService.getProjectDetailById(projectId, userId);

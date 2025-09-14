@@ -1,18 +1,16 @@
 package NextLevel.demo.user.repository;
 
 import NextLevel.demo.funding.repository.FundingDslRepository;
-import NextLevel.demo.project.project.dto.response.ResponseProjectListDetailDto;
 import NextLevel.demo.project.project.dto.response.ResponseProjectListDto;
 import NextLevel.demo.project.project.entity.QProjectEntity;
 import NextLevel.demo.project.select.SelectProjectListDslRepository;
 import NextLevel.demo.project.view.QProjectViewEntity;
 import NextLevel.demo.user.dto.user.request.RequestMyPageProjectListDto;
 import NextLevel.demo.user.entity.QLikeEntity;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,6 +18,8 @@ public class UserProjectDslRepository {
 
     private final SelectProjectListDslRepository selectProjectRepository;
     private final FundingDslRepository fundingDslRepository;
+
+    private QProjectViewEntity projectViewEntity = new QProjectViewEntity("viewEntity");
 
     public ResponseProjectListDto myProject(RequestMyPageProjectListDto dto) {
         SelectProjectListDslRepository.Builder builder = selectProjectRepository.builder();
@@ -41,11 +41,23 @@ public class UserProjectDslRepository {
                 builder.where(QLikeEntity.class, (like)->like.user.id.eq(userId));
                 break;
             case MyPageProjectListType.VIEW:
-                builder.where(QProjectViewEntity.class, (view)->view.user.id.eq(userId));
-                builder.where(QProjectViewEntity.class, (view)->view.createAt.before(LocalDateTime.now().minusDays(10)));
+                builder.where(QProjectEntity.class, (project)->
+                        findViewOne(project, userId).exists()
+                );
+                // builder.where(QProjectViewEntity.class, (view)->view.createAt.after(LocalDateTime.now().minusDays(10)));
+//                builder.orderBy(QProjectViewEntity.class, (view)->
+//                        projectViewEntity.createAt.desc() // 이건 되면 진짜
+//                );
                 break;
         }
         return builder;
+    }
+
+    private JPQLQuery<Long> findViewOne(QProjectEntity project, Long userId) {
+        return JPAExpressions
+                .select(projectViewEntity.id.min())
+                .from(projectViewEntity)
+                .where(projectViewEntity.project.id.eq(project.id).and(projectViewEntity.user.id.eq(userId)));
     }
 
 }

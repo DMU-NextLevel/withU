@@ -102,12 +102,12 @@ public class SelectProjectListDslRepository {
                         // view_count
                         viewCount(projectEntity),
 
-                        // total _ select count :: totalCount
-                        totalCount(projectEntity, where) // 추후 refactoring!
+                        projectViewEntity.createAt // select distinct 용 컬럼
                 ))
                 .from(projectEntity)
-                .leftJoin(projectTagEntity).on(projectEntity.id.eq(projectTagEntity.project.id))
-                .leftJoin(likeEntity).on(projectEntity.id.eq(likeEntity.project.id)).fetchJoin()
+                // .leftJoin(projectTagEntity).on(projectEntity.id.eq(projectTagEntity.project.id))
+                .leftJoin(likeEntity).on(projectEntity.id.eq(likeEntity.project.id))
+                .leftJoin(projectViewEntity).on(latestProjectViewOn(projectEntity, projectViewEntity, userId))
                 .where(where)
                 .orderBy(orderBy)
                 .limit(limit) //(dto.getPageCount())
@@ -115,11 +115,29 @@ public class SelectProjectListDslRepository {
                 .fetch();
     }
 
+    private BooleanExpression latestProjectViewOn(
+            QProjectEntity project,
+            QProjectViewEntity projectView, Long userId
+    ) {
+        QProjectViewEntity subView = new QProjectViewEntity("subView");
+
+        return projectView.id.eq(
+                JPAExpressions
+                        .select(subView.id.max())
+                        .from(subView)
+                        .where(subView.project.id.eq(project.id).and(subView.user.id.eq(userId)))
+                        .groupBy(subView.user.id)
+        );
+    }
+
+
     private long totalCount(BooleanExpression where){
         return queryFactory
                 .select(projectEntity.count())
                 .from(projectEntity)
-                .leftJoin(projectTagEntity).on(projectEntity.id.eq(projectTagEntity.project.id))
+                // .leftJoin(projectTagEntity).on(projectEntity.id.eq(projectTagEntity.project.id))
+                // .leftJoin(projectViewEntity).on(projectViewEntity.project.id.eq(projectEntity.id))
+                // .leftJoin(projectViewEntity).on(latestProjectViewOn(projectEntity, projectViewEntity))
                 .where(where)
                 .fetchOne();
     }
@@ -138,15 +156,6 @@ public class SelectProjectListDslRepository {
                 projectEntity.setTags(tagMap.get(projectEntity.getId()).getTags().stream().map(ProjectTagEntity::getTag).map(TagEntity::getName).toList())
         );
         return projectList;
-    }
-
-    public Expression<?> totalCount(QProjectEntity projectEntity, BooleanExpression where) {
-        return queryFactory
-            .select(projectEntity.countDistinct())
-            .from(projectEntity)
-            .leftJoin(projectTagEntity).on(projectEntity.id.eq(projectTagEntity.project.id))
-            .leftJoin(likeEntity).on(projectEntity.id.eq(likeEntity.project.id))
-            .where(where);
     }
 
     public Expression<Long> isLike(QProjectEntity projectEntity, Long userId) {
